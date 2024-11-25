@@ -125,24 +125,29 @@ public sealed class HealingSystem : EntitySystem
     {
         var damageableDict = component.Damage.DamageDict;
         var healingDict = healing.Damage.DamageDict;
-        foreach (var type in healingDict)
+        if (healing.CheckedHealingTypes.HasFlag(HealingTypes.Damage))
         {
-            if (damageableDict[type.Key].Value > 0)
+            foreach (var type in healingDict)
             {
-                return true;
+                if (damageableDict[type.Key].Value > 0)
+                {
+                    return true;
+                }
             }
         }
 
         if(TryComp<BloodstreamComponent>(target, out var bloodstream))
         {
-            if (healing.ModifyBloodLevel > 0
+            if (healing.CheckedHealingTypes.HasFlag(HealingTypes.BloodLevel)
+                && healing.ModifyBloodLevel > 0
                 && _solutionContainerSystem.ResolveSolution(target, bloodstream!.BloodSolutionName, ref bloodstream.BloodSolution, out var bloodSolution)
                 && bloodSolution.Volume < bloodSolution.MaxVolume)
             {
                 return true;
             }
 
-            if (healing.BloodlossModifier < 0
+            if (healing.CheckedHealingTypes.HasFlag(HealingTypes.Bleeding)
+                && healing.BloodlossModifier < 0
                 && bloodstream!.BleedAmount > 0)
             {
                 return true;

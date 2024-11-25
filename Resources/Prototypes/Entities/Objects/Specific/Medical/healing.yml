@@ -216,6 +216,8 @@
       path: "/Audio/Items/Medical/brutepack_begin.ogg"
     healingEndSound:
       path: "/Audio/Items/Medical/brutepack_end.ogg"
+    checkedHealingTypes:
+    - BloodLevel
   - type: Stack
     stackType: Bloodpack
     count: 10
@@ -251,6 +253,8 @@
           Asphyxiation: 5 # Essentially Stopping all blood reaching a part of your body
       bloodlossModifier: -10 # Tourniquets stop bleeding
       delay: 0.5
+      checkedHealingTypes:
+      - Bleeding
       healingBeginSound:
         path: "/Audio/Items/Medical/brutepack_begin.ogg"
       healingEndSound:
@@ -283,6 +287,8 @@
       path: "/Audio/Items/Medical/brutepack_begin.ogg"
     healingEndSound:
       path: "/Audio/Items/Medical/brutepack_end.ogg"
+    checkedHealingTypes:
+    - Bleeding
   - type: Stack
     stackType: Gauze
     count: 10

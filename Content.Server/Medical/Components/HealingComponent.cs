@@ -62,5 +62,21 @@ namespace Content.Server.Medical.Components
         /// </summary>
         [DataField("healingEndSound")]
         public SoundSpecifier? HealingEndSound = null;
+
+        /// <summary>
+        ///     Ignored healing types
+        /// </summary>
+        [DataField("checkedHealingTypes")]
+        public HealingTypes CheckedHealingTypes = HealingTypes.All;
+    }
+
+    [Serializable]
+    [Flags]
+    public enum HealingTypes : byte
+    {
+        Damage = 1,
+        BloodLevel = 2,
+        Bleeding = 4,
+        All = Damage | BloodLevel | Bleeding,
     }
 }
