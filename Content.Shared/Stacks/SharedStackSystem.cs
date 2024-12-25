@@ -49,7 +49,7 @@ namespace Content.Shared.Stacks
         private void OnStackInit(EntityUid uid, StackComponent stack, ref ComponentInit args)
         {
             if (stack.CustomSplit)
-                _ui.SetUi(uid, enum.StackCustomSplitUiKey.Key, new InterfaceData("StackCustomSplitBoundUserInterface"));
+                _ui.SetUi(uid, StackCustomSplitUiKey.Key, new InterfaceData("StackCustomSplitBoundUserInterface"));
         }
 
         // client shouldn't try to split stacks so do nothing on client
