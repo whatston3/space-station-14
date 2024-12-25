@@ -6,6 +6,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Storage.EntitySystems;
 using JetBrains.Annotations;
+using Robust.Shared.GameObjects.Systems;
 using Robust.Shared.GameStates;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
@@ -27,11 +28,13 @@ namespace Content.Shared.Stacks
         [Dependency] private readonly SharedPhysicsSystem _physics = default!;
         [Dependency] protected readonly SharedPopupSystem Popup = default!;
         [Dependency] private readonly SharedStorageSystem _storage = default!;
+        [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
 
         public override void Initialize()
         {
             base.Initialize();
 
+            SubscribeLocalEvent<StackComponent, ComponentInit>(OnStackInit);
             SubscribeLocalEvent<StackComponent, ComponentGetState>(OnStackGetState);
             SubscribeLocalEvent<StackComponent, ComponentHandleState>(OnStackHandleState);
             SubscribeLocalEvent<StackComponent, ComponentStartup>(OnStackStarted);
@@ -41,6 +44,12 @@ namespace Content.Shared.Stacks
 
             _vvm.GetTypeHandler<StackComponent>()
                 .AddPath(nameof(StackComponent.Count), (_, comp) => comp.Count, SetCount);
+        }
+
+        private void OnStackInit(EntityUid uid, StackComponent stack, ref ComponentInit args)
+        {
+            if (stack.CustomSplit)
+                _ui.SetUi(uid, enum.StackCustomSplitUiKey.Key, new InterfaceData("StackCustomSplitBoundUserInterface"));
         }
 
         // client shouldn't try to split stacks so do nothing on client

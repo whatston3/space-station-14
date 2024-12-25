@@ -162,10 +162,6 @@
     price: 0
   - type: Stack
     stackType: ArtifactFragment
-  - type: UserInterface
-    interfaces:
-      enum.StackCustomSplitUiKey.Key:
-        type: StackCustomSplitBoundUserInterface
   - type: GuideHelp
     guides:
     - Xenoarchaeology

@@ -78,6 +78,13 @@ namespace Content.Shared.Stacks
         [DataField("layerStates")]
         [ViewVariables(VVAccess.ReadWrite)]
         public List<string> LayerStates = new();
+
+        /// <summary>
+        /// If true, interacting with object will show a custom split dialog.
+        /// </summary>
+        [DataField("customSplit")]
+        [ViewVariables(VVAccess.ReadWrite)]
+        public bool CustomSplit;
     }
 
     [Serializable, NetSerializable]

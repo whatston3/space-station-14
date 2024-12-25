@@ -200,17 +200,20 @@ namespace Content.Server.Stack
                 args.Verbs.Add(verb);
             }
 
-            AlternativeVerb custom = new()
+            if (stack.CustomSplit)
             {
-                Text = Loc.GetString("comp-stack-split-custom"),
-                Category = VerbCategory.Split,
-                Act = () =>
+                AlternativeVerb custom = new()
                 {
-                    _ui.OpenUi(uid, StackCustomSplitUiKey.Key, args.User);
-                },
-                Priority = priority - 1
-            };
-            args.Verbs.Add(custom);
+                    Text = Loc.GetString("comp-stack-split-custom"),
+                    Category = VerbCategory.Split,
+                    Act = () =>
+                    {
+                        _ui.OpenUi(uid, StackCustomSplitUiKey.Key, args.User);
+                    },
+                    Priority = priority - 1
+                };
+                args.Verbs.Add(custom);
+            }
         }
 
         protected override void OnCustomSplitMessage(Entity<StackComponent> ent, ref StackCustomSplitAmountMessage message)

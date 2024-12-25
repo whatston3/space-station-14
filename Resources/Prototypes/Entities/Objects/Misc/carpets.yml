@@ -14,10 +14,6 @@
       - Plating
   - type: Stack
     stackType: FloorCarpetRed
-  - type: UserInterface
-    interfaces:
-      enum.StackCustomSplitUiKey.Key:
-        type: StackCustomSplitBoundUserInterface
   - type: Tag
     tags:
     - CarpetRed
