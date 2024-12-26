@@ -82,7 +82,7 @@ namespace Content.Shared.Stacks
         /// <summary>
         /// The CustomStackSplit prototype to use for the stack interface
         /// </summary>
-        [DataField("customSplit")]
+        [DataField("customSplit", customTypeSerializer: typeof(PrototypeIdSerializer<CustomStackSplitPrototype>))]
         [ViewVariables(VVAccess.ReadWrite)]
         public string? CustomSplit;
     }
