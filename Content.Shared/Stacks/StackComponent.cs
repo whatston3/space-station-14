@@ -78,6 +78,13 @@ namespace Content.Shared.Stacks
         [DataField("layerStates")]
         [ViewVariables(VVAccess.ReadWrite)]
         public List<string> LayerStates = new();
+
+        /// <summary>
+        /// The CustomStackSplit prototype to use for the stack interface
+        /// </summary>
+        [DataField("customSplit", customTypeSerializer: typeof(PrototypeIdSerializer<CustomStackSplitPrototype>))]
+        [ViewVariables(VVAccess.ReadWrite)]
+        public string? CustomSplit;
     }
 
     [Serializable, NetSerializable]

@@ -6,6 +6,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Storage.EntitySystems;
 using JetBrains.Annotations;
+using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
@@ -27,20 +28,32 @@ namespace Content.Shared.Stacks
         [Dependency] private readonly SharedPhysicsSystem _physics = default!;
         [Dependency] protected readonly SharedPopupSystem Popup = default!;
         [Dependency] private readonly SharedStorageSystem _storage = default!;
+        [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
 
         public override void Initialize()
         {
             base.Initialize();
 
+            SubscribeLocalEvent<StackComponent, ComponentInit>(OnStackInit);
             SubscribeLocalEvent<StackComponent, ComponentGetState>(OnStackGetState);
             SubscribeLocalEvent<StackComponent, ComponentHandleState>(OnStackHandleState);
             SubscribeLocalEvent<StackComponent, ComponentStartup>(OnStackStarted);
             SubscribeLocalEvent<StackComponent, ExaminedEvent>(OnStackExamined);
             SubscribeLocalEvent<StackComponent, InteractUsingEvent>(OnStackInteractUsing);
+            SubscribeLocalEvent<StackComponent, StackCustomSplitAmountMessage>(OnCustomSplitMessage);
 
             _vvm.GetTypeHandler<StackComponent>()
                 .AddPath(nameof(StackComponent.Count), (_, comp) => comp.Count, SetCount);
         }
+
+        private void OnStackInit(EntityUid uid, StackComponent stack, ref ComponentInit args)
+        {
+            if (!string.IsNullOrEmpty(stack.CustomSplit) && _prototype.TryIndex<CustomStackSplitPrototype>(stack.CustomSplit, out var customStackSplit))
+                _ui.SetUi(uid, StackCustomSplitUiKey.Key, customStackSplit.Interface);
+        }
+
+        // client shouldn't try to split stacks so do nothing on client
+        protected virtual void OnCustomSplitMessage(Entity<StackComponent> ent, ref StackCustomSplitAmountMessage message) {}
 
         public override void Shutdown()
         {
