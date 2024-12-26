@@ -6,7 +6,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Popups;
 using Content.Shared.Storage.EntitySystems;
 using JetBrains.Annotations;
-using Robust.Shared.GameObjects.Systems;
+using Robust.Shared.GameObjects;
 using Robust.Shared.GameStates;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Player;
