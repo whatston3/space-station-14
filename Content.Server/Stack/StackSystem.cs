@@ -200,7 +200,7 @@ namespace Content.Server.Stack
                 args.Verbs.Add(verb);
             }
 
-            if (stack.CustomSplit)
+            if (_ui.HasUi(uid, StackCustomSplitUiKey.Key))
             {
                 AlternativeVerb custom = new()
                 {

@@ -80,11 +80,11 @@ namespace Content.Shared.Stacks
         public List<string> LayerStates = new();
 
         /// <summary>
-        /// If true, interacting with object will show a custom split dialog.
+        /// The CustomStackSplit prototype to use for the stack interface
         /// </summary>
         [DataField("customSplit")]
         [ViewVariables(VVAccess.ReadWrite)]
-        public bool CustomSplit;
+        public string? CustomSplit;
     }
 
     [Serializable, NetSerializable]
