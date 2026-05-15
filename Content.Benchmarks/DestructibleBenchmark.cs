@@ -59,7 +59,7 @@ public class DestructibleBenchmark
     private TestPair _pair = default!;
     private IEntityManager _entMan = default!;
     private IPrototypeManager _protoMan = default!;
-    private GlobalRandom _random = default!;
+    // private GlobalRandom _random = default!; // TODO: how can the global RNG instance be seeded for tests/benchmarks?
     private ITileDefinitionManager _tileDefMan = default!;
     private DamageableSystem _damageable = default!;
     private DestructibleSystem _destructible = default!;
@@ -75,7 +75,7 @@ public class DestructibleBenchmark
 
         _entMan = server.ResolveDependency<IEntityManager>();
         _protoMan = server.ResolveDependency<IPrototypeManager>();
-        _random = server.ResolveDependency<GlobalRandom>();
+        // _random = server.ResolveDependency<GlobalRandom>(); // TODO: how can the global RNG instance be seeded for tests/benchmarks?
         _tileDefMan = server.ResolveDependency<ITileDefinitionManager>();
         _damageable = _entMan.System<DamageableSystem>();
         _destructible = _entMan.System<DestructibleSystem>();
@@ -86,7 +86,8 @@ public class DestructibleBenchmark
 
         _damage = new DamageSpecifier(type, DamageAmount);
 
-        _random.SetSeed(69420); // Randomness needs to be deterministic for benchmarking.
+        // TODO: how can the global RNG instance be seeded for tests/benchmarks?
+        // _random.SetSeed(69420); // Randomness needs to be deterministic for benchmarking.
     }
 
     [IterationSetup]

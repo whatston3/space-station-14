@@ -64,7 +64,8 @@ public class PvsBenchmark
     private async Task SetupAsync()
     {
         // Spawn the map
-        _pair.Server.ResolveDependency<GlobalRandom>().SetSeed(42);
+        // TODO: how can the global RNG instance be seeded for tests/benchmarks?
+        // _pair.Server.ResolveDependency<GlobalRandom>().SetSeed(42);
         await _pair.Server.WaitPost(() =>
         {
             var path = new ResPath(Map);

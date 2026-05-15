@@ -56,7 +56,7 @@ public class DeltaPressureBenchmark
     private TestPair _pair = default!;
     private IEntityManager _entMan = default!;
     private SharedMapSystem _map = default!;
-    private GlobalRandom _random = default!;
+    // private GlobalRandom _random = default!; // TODO: how can the global RNG instance be seeded for tests/benchmarks?
     private IConfigurationManager _cvar = default!;
     private ITileDefinitionManager _tileDefMan = default!;
     private AtmosphereSystem _atmospereSystem = default!;
@@ -76,12 +76,14 @@ public class DeltaPressureBenchmark
 
         _entMan = server.ResolveDependency<IEntityManager>();
         _map = _entMan.System<SharedMapSystem>();
-        _random = server.ResolveDependency<GlobalRandom>();
+        // TODO: how can the global RNG instance be seeded for tests/benchmarks?
+        // _random = server.ResolveDependency<GlobalRandom>();
         _cvar = server.ResolveDependency<IConfigurationManager>();
         _tileDefMan = server.ResolveDependency<ITileDefinitionManager>();
         _atmospereSystem = _entMan.System<AtmosphereSystem>();
 
-        _random.SetSeed(69420); // Randomness needs to be deterministic for benchmarking.
+        // TODO: how can the global RNG instance be seeded for tests/benchmarks?
+        // _random.SetSeed(69420); // Randomness needs to be deterministic for benchmarking.
 
         _cvar.SetCVar(CCVars.DeltaPressureParallelToProcessPerIteration, EntitiesPerIteration);
         _cvar.SetCVar(CCVars.DeltaPressureParallelBatchSize, BatchSize);
