@@ -48,8 +48,7 @@ public sealed partial class DungeonJob
 
         var config = _prototype.Index(dungen.Proto);
         var nextSeed = random.Next();
-        var newRandom = new RobustRandom();
-        newRandom.SetSeed(nextSeed);
+        var newRandom = IRobustRandom.CreateSeeded(nextSeed);
         var dungeons = await GetDungeons(dungeonSpawn.Value, config, config.Layers, reservedTiles, nextSeed, newRandom);
 
         return dungeons;

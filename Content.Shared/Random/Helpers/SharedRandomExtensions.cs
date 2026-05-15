@@ -203,12 +203,10 @@ namespace Content.Shared.Random.Helpers
         /// <param name="netEnt2">An optional relevant net entity to our seed.
         /// Typically used if we have an entity checking random potentially multiple times per tick, to ensure we get a unique seed each time.
         /// This entity should not be the same entity as <see cref="netEnt"/>.</param>
-        public static IRobustRandom PredictedRandom(IGameTiming timing, NetEntity netEnt, NetEntity? netEnt2 = null)
+        public static IDedicatedRandom PredictedRandom(IGameTiming timing, NetEntity netEnt, NetEntity? netEnt2 = null)
         {
             var seed = HashCodeCombine((int)timing.CurTick.Value, netEnt.Id, netEnt2?.Id ?? 0);
-            var random = new RobustRandom();
-            random.SetSeed(seed);
-            return random;
+            return IRobustRandom.CreateSeeded(seed);
         }
 
         /// <summary>

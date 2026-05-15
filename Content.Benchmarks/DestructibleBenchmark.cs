@@ -59,7 +59,7 @@ public class DestructibleBenchmark
     private TestPair _pair = default!;
     private IEntityManager _entMan = default!;
     private IPrototypeManager _protoMan = default!;
-    private IRobustRandom _random = default!;
+    private GlobalRandom _random = default!;
     private ITileDefinitionManager _tileDefMan = default!;
     private DamageableSystem _damageable = default!;
     private DestructibleSystem _destructible = default!;
@@ -75,7 +75,7 @@ public class DestructibleBenchmark
 
         _entMan = server.ResolveDependency<IEntityManager>();
         _protoMan = server.ResolveDependency<IPrototypeManager>();
-        _random = server.ResolveDependency<IRobustRandom>();
+        _random = server.ResolveDependency<GlobalRandom>();
         _tileDefMan = server.ResolveDependency<ITileDefinitionManager>();
         _damageable = _entMan.System<DamageableSystem>();
         _destructible = _entMan.System<DestructibleSystem>();

@@ -85,7 +85,7 @@ public sealed class SkinTonesTest
     [Test]
     public void TestTintedHuesValidHsl()
     {
-        var random = new RobustRandom();
+        var random = IRobustRandom.CreateRandom();
         var strategy = new ClampedHslColoration()
         {
             Saturation = (0.0f, 0.1f),
@@ -109,7 +109,7 @@ public sealed class SkinTonesTest
     [Test]
     public void TestTintedHuesValidHsv()
     {
-        var random = new RobustRandom();
+        var random = IRobustRandom.CreateRandom();
         var strategy = new ClampedHsvColoration()
         {
             Saturation = (0.0f, 0.1f),
@@ -133,7 +133,7 @@ public sealed class SkinTonesTest
     [Test]
     public void TestClampedHslWithAllChannels()
     {
-        var random = new RobustRandom();
+        var random = IRobustRandom.CreateRandom();
         var strategy = new ClampedHslColoration()
         {
             Hue = (0.1f, 0.3f),
@@ -158,7 +158,7 @@ public sealed class SkinTonesTest
     [Test]
     public void TestClampedHsvWithAllChannels()
     {
-        var random = new RobustRandom();
+        var random = IRobustRandom.CreateRandom();
         var strategy = new ClampedHsvColoration()
         {
             Hue = (0.1f, 0.3f),
@@ -183,7 +183,7 @@ public sealed class SkinTonesTest
     [Test]
     public void TestClampedHslWithCircularHue()
     {
-        var random = new RobustRandom();
+        var random = IRobustRandom.CreateRandom();
         var strategy = new ClampedHslColoration()
         {
             Hue = (0.9f, 0.1f), // A range that wraps around 1.0 (e.g., reds)

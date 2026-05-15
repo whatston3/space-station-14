@@ -160,8 +160,7 @@ public sealed partial class DungeonJob : Job<List<Dungeon>>
     {
         _sawmill.Info($"Generating dungeon {_gen} with seed {_seed} on {_entManager.ToPrettyString(_gridUid)}");
         _grid.CanSplit = false;
-        var random = new RobustRandom() as IRobustRandom;
-        random.SetSeed(_seed);
+        var random = IRobustRandom.CreateSeeded(_seed);
         var position = (_position + random.NextVector2(_gen.MinOffset, _gen.MaxOffset)).Floored();
 
         // Tiles we can no longer generate on due to being reserved elsewhere.

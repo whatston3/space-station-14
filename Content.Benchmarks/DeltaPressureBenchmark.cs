@@ -56,7 +56,7 @@ public class DeltaPressureBenchmark
     private TestPair _pair = default!;
     private IEntityManager _entMan = default!;
     private SharedMapSystem _map = default!;
-    private IRobustRandom _random = default!;
+    private GlobalRandom _random = default!;
     private IConfigurationManager _cvar = default!;
     private ITileDefinitionManager _tileDefMan = default!;
     private AtmosphereSystem _atmospereSystem = default!;
@@ -76,7 +76,7 @@ public class DeltaPressureBenchmark
 
         _entMan = server.ResolveDependency<IEntityManager>();
         _map = _entMan.System<SharedMapSystem>();
-        _random = server.ResolveDependency<IRobustRandom>();
+        _random = server.ResolveDependency<GlobalRandom>();
         _cvar = server.ResolveDependency<IConfigurationManager>();
         _tileDefMan = server.ResolveDependency<ITileDefinitionManager>();
         _atmospereSystem = _entMan.System<AtmosphereSystem>();

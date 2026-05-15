@@ -59,16 +59,7 @@ public sealed partial class MeteorSwarmSystem : GameRuleSystem<MeteorSwarmCompon
 
         var center = playableArea.Center;
 
-        IRobustRandom random;
-        if (component.NonDirectional)
-        {
-            random = RobustRandom;
-        }
-        else
-        {
-            random = new RobustRandom();
-            random.SetSeed(uid.Id);
-        }
+        IRobustRandom random = component.NonDirectional ? RobustRandom : IRobustRandom.CreateSeeded(uid.Id);
 
         var meteorsToSpawn = component.MeteorsPerWave.Next(RobustRandom);
         for (var i = 0; i < meteorsToSpawn; i++)

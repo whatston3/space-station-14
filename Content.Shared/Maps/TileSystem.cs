@@ -113,9 +113,7 @@ public sealed partial class TileSystem : EntitySystem
     /// </summary>
     public byte PickVariant(ContentTileDefinition tile, int seed)
     {
-        var rand = new RobustRandom();
-        rand.SetSeed(seed);
-        return PickVariant(tile, rand);
+        return PickVariant(tile, IRobustRandom.CreateSeeded(seed));
     }
 
     /// <summary>
@@ -154,9 +152,7 @@ public sealed partial class TileSystem : EntitySystem
     /// </summary>
     public Tile GetVariantTile(ContentTileDefinition tile, int seed)
     {
-        var rand = new RobustRandom();
-        rand.SetSeed(seed);
-        return new Tile(tile.TileId, variant: PickVariant(tile, rand));
+        return new Tile(tile.TileId, variant: PickVariant(tile, IRobustRandom.CreateSeeded(seed)));
     }
 
     public bool PryTile(Vector2i indices, EntityUid gridId)

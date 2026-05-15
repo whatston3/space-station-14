@@ -1081,8 +1081,7 @@ public sealed partial class AdminVerbSystem
         // I would do it now but theres a massive rod rewrite, and I don't wanna poke it for this.
         // find reasonable spawn location (use gamerule and find rod?) but respect map not on grid etc etc
 
-        var random = new RobustRandom() as IRobustRandom;
-        random.SetSeed(target.Id);
+        var random = IRobustRandom.CreateSeeded(target.Id);
         var offset = random.NextAngle().RotateVec(new Vector2(distance, 0));
         var spawnCoords = _transformSystem.GetMapCoordinates(target).Offset(offset);
         var rod = Spawn(proto, spawnCoords);

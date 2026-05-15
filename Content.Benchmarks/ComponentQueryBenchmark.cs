@@ -52,7 +52,7 @@ public class ComponentQueryBenchmark
         _clothingQuery = _entMan.GetEntityQuery<ClothingComponent>();
         _mapQuery = _entMan.GetEntityQuery<MapComponent>();
 
-        _pair.Server.ResolveDependency<IRobustRandom>().SetSeed(42);
+        _pair.Server.ResolveDependency<GlobalRandom>().SetSeed(42);
         _pair.Server.WaitPost(() =>
         {
             var map = new ResPath(Map);

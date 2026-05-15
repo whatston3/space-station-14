@@ -53,8 +53,9 @@ public sealed class StoreTests : GameTest
         var testMap = await pair.CreateTestMap();
         await server.WaitIdleAsync();
 
-        var serverRandom = server.ResolveDependency<IRobustRandom>();
-        serverRandom.SetSeed(534);
+        // TODO: set the global seed to a fixed value.
+        // var serverRandom = server.ResolveDependency<GlobalRandom>();
+        // serverRandom.SetSeed(534);
 
         var entManager = server.ResolveDependency<IEntityManager>();
 

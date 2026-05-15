@@ -64,7 +64,7 @@ public class PvsBenchmark
     private async Task SetupAsync()
     {
         // Spawn the map
-        _pair.Server.ResolveDependency<IRobustRandom>().SetSeed(42);
+        _pair.Server.ResolveDependency<GlobalRandom>().SetSeed(42);
         await _pair.Server.WaitPost(() =>
         {
             var path = new ResPath(Map);
@@ -97,9 +97,7 @@ public class PvsBenchmark
 
         // Repeatedly move players around so that they "explore" the map and see lots of entities.
         // This will populate their PVS data with out-of-view entities.
-        var rng = new RobustRandom();
-        rng.SetSeed(42);
-        ShufflePlayers(rng, 100);
+        ShufflePlayers(IRobustRandom.CreateSeeded(42), 100);
 
         _pair.Server.PvsTick(_players);
         _pair.Server.PvsTick(_players);

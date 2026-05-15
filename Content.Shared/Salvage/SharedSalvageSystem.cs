@@ -23,8 +23,7 @@ public abstract partial class SharedSalvageSystem : EntitySystem
 
     public string GetFTLName(LocalizedDatasetPrototype dataset, int seed)
     {
-        var random = new RobustRandom();
-        random.SetSeed(seed);
+        var random = IRobustRandom.CreateSeeded(seed);
         return $"{Loc.GetString(dataset.Values[random.Next(dataset.Values.Count)])}-{random.Next(10, 100)}-{(char) (65 + random.Next(26))}";
     }
 
@@ -32,8 +31,7 @@ public abstract partial class SharedSalvageSystem : EntitySystem
     {
         // This is on shared to ensure the client display for missions and what the server generates are consistent
         var modifierBudget = difficulty.ModifierBudget;
-        var rand = new RobustRandom();
-        rand.SetSeed(seed);
+        var rand = IRobustRandom.CreateSeeded(seed);
 
         // Run budget in order of priority
         // - Biome
