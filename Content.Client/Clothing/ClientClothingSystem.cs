@@ -326,10 +326,20 @@ public sealed partial class ClientClothingSystem : ClothingSystem
             _sprite.LayerSetData((equipee, sprite), index, layerData);
             _sprite.LayerSetOffset(layer, layer.Offset + slotDef.Offset);
 
+            if (layer.RSI != null
+                && inventory.SpeciesId != null
+                && layerData.State != null
+                && !layerData.State.EndsWith(inventory.SpeciesId))
+            {
+                var speciesLayer = $"{layerData.State}-{inventory.SpeciesId}";
+                if (layer.RSI.TryGetState(speciesLayer, out _))
+                    _sprite.LayerSetRsiState(layer, speciesLayer);
+            }
+
             if (displacementData is not null)
             {
-                //Checking that the state is not tied to the current race. In this case we don't need to use the displacement maps.
-                if (layerData.State is not null && inventory.SpeciesId is not null && layerData.State.EndsWith(inventory.SpeciesId))
+                //Checking that the layer's state is not tied to the current race. In this case we don't need to use the displacement maps.
+                if (layer.State.Name is not null && inventory.SpeciesId is not null && layer.State.Name.EndsWith(inventory.SpeciesId))
                     continue;
 
                 if (_displacement.TryAddDisplacement(displacementData, (equipee, sprite), index, key, out var displacementKey))
