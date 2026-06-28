@@ -143595,7 +143595,7 @@ entities:
   - uid: 20557
     components:
     - type: Transform
-      rot: 1.5707963267948966 rad
+      rot: -1.5707963267948966 rad
       pos: -44.5,-42.5
       parent: 2
 - proto: ReinforcedGirder
@@ -163582,9 +163582,9 @@ entities:
           - Off
         14656:
         - - Right
-          - Reverse
-        - - Left
           - Forward
+        - - Left
+          - Reverse
         - - Middle
           - Off
   - uid: 23764

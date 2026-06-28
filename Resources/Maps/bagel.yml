@@ -140873,9 +140873,9 @@ entities:
           - Off
         18894:
         - - Left
-          - Forward
-        - - Right
           - Reverse
+        - - Right
+          - Forward
         - - Middle
           - Off
   - uid: 24108
@@ -140887,9 +140887,9 @@ entities:
       linkedPorts:
         4073:
         - - Left
-          - Forward
-        - - Right
           - Reverse
+        - - Right
+          - Forward
         - - Middle
           - Off
 - proto: UnfinishedMachineFrame

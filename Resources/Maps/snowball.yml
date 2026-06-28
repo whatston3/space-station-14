@@ -90434,7 +90434,7 @@ entities:
   - uid: 2792
     components:
     - type: Transform
-      rot: 1.5707963267948966 rad
+      rot: -1.5707963267948966 rad
       pos: 86.5,96.5
       parent: 1
   - uid: 17020
@@ -100742,9 +100742,9 @@ entities:
         - - Middle
           - Off
         - - Right
-          - Reverse
-        - - Left
           - Forward
+        - - Left
+          - Reverse
         17021:
         - - Left
           - Reverse

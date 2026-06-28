@@ -91,6 +91,7 @@
   - type: MaterialStorage
     insertOnInteract: false
   - type: Conveyor
+    angle: 180 # Pulls northward when facing south.
   - type: Rotatable
   - type: Repairable
     doAfterDelay: 5

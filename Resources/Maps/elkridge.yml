@@ -109999,9 +109999,9 @@ entities:
         - - Middle
           - Off
         7654:
-        - - Right
-          - Reverse
         - - Left
+          - Reverse
+        - - Right
           - Forward
         - - Middle
           - Off
@@ -110014,9 +110014,9 @@ entities:
       linkedPorts:
         14116:
         - - Left
-          - Forward
-        - - Right
           - Reverse
+        - - Right
+          - Forward
         - - Middle
           - Off
         14113:

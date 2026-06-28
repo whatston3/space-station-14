@@ -90339,9 +90339,9 @@ entities:
           - Off
         5855:
         - - Left
-          - Forward
-        - - Right
           - Reverse
+        - - Right
+          - Forward
         - - Middle
           - Off
   - uid: 5857
@@ -90388,9 +90388,9 @@ entities:
           - Off
         13115:
         - - Left
-          - Forward
-        - - Right
           - Reverse
+        - - Right
+          - Forward
         - - Middle
           - Off
 - proto: UniformPrinter

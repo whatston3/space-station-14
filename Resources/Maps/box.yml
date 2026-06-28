@@ -161433,9 +161433,9 @@ entities:
           - Off
         16588:
         - - Right
-          - Reverse
-        - - Left
           - Forward
+        - - Left
+          - Reverse
         - - Middle
           - Off
   - uid: 16780
@@ -161447,9 +161447,9 @@ entities:
       linkedPorts:
         16779:
         - - Left
-          - Forward
-        - - Right
           - Reverse
+        - - Right
+          - Forward
         - - Middle
           - Off
   - uid: 20027

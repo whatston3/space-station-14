@@ -152934,9 +152934,9 @@ entities:
       linkedPorts:
         1357:
         - - Left
-          - Forward
-        - - Right
           - Reverse
+        - - Right
+          - Forward
         - - Middle
           - Off
         4369:
@@ -153108,9 +153108,9 @@ entities:
           - Off
         20287:
         - - Left
-          - Forward
-        - - Right
           - Reverse
+        - - Right
+          - Forward
         - - Middle
           - Off
         7315:

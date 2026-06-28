@@ -47575,7 +47575,7 @@ entities:
   - uid: 8745
     components:
     - type: Transform
-      rot: -1.5707963267948966 rad
+      rot: 1.5707963267948966 rad
       pos: -4.5,-10.5
       parent: 1668
 - proto: RegenerativeMesh

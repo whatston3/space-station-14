@@ -96897,12 +96897,13 @@ entities:
   - uid: 10332
     components:
     - type: Transform
+      rot: 3.141592653589793 rad
       pos: 77.5,-64.5
       parent: 2
   - uid: 11474
     components:
     - type: Transform
-      rot: -1.5707963267948966 rad
+      rot: 1.5707963267948966 rad
       pos: 50.5,-96.5
       parent: 2
 - proto: ReinforcedGirder
