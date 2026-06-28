@@ -60,8 +60,10 @@
   - type: RecyclerVisuals
   - type: DirectionalArrowIndicator
     arrows:
-    - offset: 0, -1.35
-    - offset: 0, 0
+    - offset: 0, -1.65
+      rotation: 180
+    - offset: 0, -0.2
+      rotation: 180
 
   - type: CollideMaterialReclaimer
   - type: MaterialReclaimer

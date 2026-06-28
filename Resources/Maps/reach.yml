@@ -16457,9 +16457,9 @@ entities:
       linkedPorts:
         1823:
         - - Left
-          - Reverse
-        - - Right
           - Forward
+        - - Right
+          - Reverse
         - - Middle
           - Off
   - uid: 2107
