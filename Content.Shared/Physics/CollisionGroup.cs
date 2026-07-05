@@ -52,7 +52,7 @@ public enum CollisionGroup
 
     // Machines, computers
     MachineMask = Impassable | MidImpassable | LowImpassable,
-    MachineLayer = Opaque | MidImpassable | LowImpassable | BulletImpassable | AirlockOpener,
+    MachineLayer = Opaque | MidImpassable | LowImpassable | BulletImpassable | AirlockOpener | ShutterOpener,
     ConveyorMask = Impassable | MidImpassable | LowImpassable,
 
     // Crates

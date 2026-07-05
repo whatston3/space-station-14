@@ -62,7 +62,7 @@
         - FullTileMask
         layer:
         - AirlockLayer
-      opener:
+      opener: &openerFixture
         shape: *shape
         density: 0
         mask:
@@ -223,14 +223,13 @@
   - type: Fixtures
     fixtures:
       fix1:
-        shape:
-          !type:PhysShapeAabb
-          bounds: "-0.49,-0.49,0.49,0.49" # don't want this colliding with walls or they won't close
+        shape: *shape
         density: 100
         mask:
         - FullTileMask
         layer:     #removed opaque from the layer, allowing lasers to pass through glass airlocks
         - GlassAirlockLayer
+      opener: *openerFixture
   - type: LayerChangeOnWeld
     unWeldedLayer: GlassAirlockLayer
     weldedLayer: GlassLayer

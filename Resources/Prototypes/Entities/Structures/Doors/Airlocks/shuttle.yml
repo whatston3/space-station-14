@@ -19,16 +19,16 @@
           bounds: "-0.49,-0.49,0.49,0.49" # don't want this colliding with walls or they won't close
         density: 100
         mask:
-          - FullTileMask
+        - FullTileMask
         layer:
-          - AirlockLayer
-      opener:
+        - AirlockLayer
+      opener: &openerFixture
         shape: *shape
         density: 0
         mask:
         - AirlockOpener
         hard: false
-      docking:
+      docking: &dockingFixture
         shape:
           !type:PhysShapeCircle
           radius: 0.2
@@ -108,8 +108,14 @@
   - type: Fixtures
     fixtures:
       fix1:
-        layer:     #removed opaque from the layer, allowing lasers to pass through glass airlocks
+        shape: *shape
+        density: 100
+        mask:
+        - FullTileMask
+        layer:
         - GlassAirlockLayer
+      opener: *openerFixture
+      docking: *dockingFixture
 
 - type: entity
   id: AirlockShuttleAssembly
