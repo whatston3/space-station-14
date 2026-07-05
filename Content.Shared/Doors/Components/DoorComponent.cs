@@ -81,25 +81,25 @@ public sealed partial class DoorComponent : Component
     /// <summary>
     /// Sound to play when the door opens.
     /// </summary>
-    [DataField("openSound")]
+    [DataField]
     public SoundSpecifier? OpenSound;
 
     /// <summary>
     /// Sound to play when the door closes.
     /// </summary>
-    [DataField("closeSound")]
+    [DataField]
     public SoundSpecifier? CloseSound;
 
     /// <summary>
     /// Sound to play if the door is denied.
     /// </summary>
-    [DataField("denySound")]
+    [DataField]
     public SoundSpecifier? DenySound;
 
     /// <summary>
     /// Sound to play when door has been emagged or possibly electrically tampered
     /// </summary>
-    [DataField("sparkSound")]
+    [DataField]
     public SoundSpecifier SparkSound = new SoundCollectionSpecifier("sparks");
     #endregion
 
@@ -127,6 +127,12 @@ public sealed partial class DoorComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool PerformCollisionCheck = true;
+
+    /// <summary>
+    /// The fixture to check for collisions.  If null, no fixture will be checked.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public string? CollisionFixture;
 
     /// <summary>
     /// List of EntityUids of entities we're currently crushing. Cleared in OnPartialOpen().
@@ -308,18 +314,11 @@ public sealed partial class DoorComponent : Component
     [DataField]
     public bool CheckFixtureCollision;
 
-    /// <summary>
-    /// If true, the door will be able to close over entities with the MachineLayer fixture layer.
-    /// Useful for windoors or other thin doors.
-    /// </summary>
-    [DataField]
-    public bool AllowMachineLayer;
+    [DataField(customTypeSerializer: typeof(ConstantSerializer<DrawDepthTag>))]
+    public int OpenDrawDepth = (int)DrawDepth.DrawDepth.Doors;
 
     [DataField(customTypeSerializer: typeof(ConstantSerializer<DrawDepthTag>))]
-    public int OpenDrawDepth = (int) DrawDepth.DrawDepth.Doors;
-
-    [DataField(customTypeSerializer: typeof(ConstantSerializer<DrawDepthTag>))]
-    public int ClosedDrawDepth = (int) DrawDepth.DrawDepth.Doors;
+    public int ClosedDrawDepth = (int)DrawDepth.DrawDepth.Doors;
 }
 
 [Serializable, NetSerializable]

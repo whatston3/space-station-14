@@ -51,7 +51,7 @@
   - type: Fixtures
     fixtures:
       fix1:
-        shape:
+        shape: &shape
           !type:PhysShapeAabb
           bounds: "-0.49,-0.49,0.49,0.49" # don't want this colliding with walls or they won't close
         density: 100
@@ -59,6 +59,12 @@
         - FullTileMask
         layer:
         - WallLayer
+      opener:
+        shape: *shape
+        density: 0
+        mask:
+        - AirlockOpener
+        hard: false
   - type: ContainerFill
     containers:
       board: [ DoorElectronics ]
@@ -75,6 +81,7 @@
       path: /Audio/Machines/airlock_close.ogg
     denySound:
       path: /Audio/Machines/airlock_deny.ogg
+    collisionFixture: opener
   - type: Weldable
     fuel: 10
     time: 10

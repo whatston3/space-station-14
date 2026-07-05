@@ -37,6 +37,7 @@ namespace Content.IntegrationTests.Tests.Doors
   id: AirlockDummy
   components:
   - type: Door
+    collisionFixture: opener
   - type: Airlock
   - type: DoorBolt
   - type: ApcPowerReceiver
@@ -46,9 +47,13 @@ namespace Content.IntegrationTests.Tests.Doors
   - type: Fixtures
     fixtures:
       fix1:
-        shape:
+        shape: &shape
           !type:PhysShapeAabb
             bounds: ""-0.49,-0.49,0.49,0.49""
+        mask:
+        - Impassable
+      opener:
+        shape: *shape
         mask:
         - Impassable
 ";

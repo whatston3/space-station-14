@@ -25,7 +25,6 @@ using Robust.Shared.Network;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Utility;
 
 namespace Content.Shared.Doors.Systems;
 
@@ -457,7 +456,7 @@ public abstract partial class SharedDoorSystem : EntitySystem
         if (!HasAccess(uid, user, door))
             return false;
 
-        return !ev.PerformCollisionCheck || !GetColliding(uid, null, null, door.CheckFixtureCollision, door.PerformCollisionCheck).Any();
+        return !ev.PerformCollisionCheck || !GetColliding(uid, door.CollisionFixture, null, null).Any();
     }
 
     public void StartClosing(EntityUid uid, DoorComponent? door = null, EntityUid? user = null, bool predicted = false)
@@ -541,7 +540,7 @@ public abstract partial class SharedDoorSystem : EntitySystem
 
         // Find entities and apply curshing effects
         var stunTime = door.DoorStunTime + door.OpenTimeOne;
-        foreach (var entity in GetColliding(uid, physics, null, door.CheckFixtureCollision, door.AllowMachineLayer))
+        foreach (var entity in GetColliding(uid, door.CollisionFixture, physics, null))
         {
             door.CurrentlyCrushing.Add(entity);
             if (door.CrushDamage != null)
@@ -562,12 +561,12 @@ public abstract partial class SharedDoorSystem : EntitySystem
     /// Checks if there are any entities colliding with the door, passing them back out to use e.g. to prevent closing.
     /// </summary>
     /// <param name="uid">The door entity to check.</param>
+    /// <param name="fixture">The name of the fixture of the door to use.</param>
     /// <param name="physics">The door's <see cref="PhysicsComponent"/>.</param>
-    /// <param name="checkFixtureCollision">If true, the door will do a more exact check based on its first fixture.</param>
     /// <param name="fixtures">The door's <see cref="FixturesComponent"/>.</param>
     /// <param name="allowMachineLayer">The door will be able to close over <see cref="CollisionGroup.MachineLayer"/>.</param>
     /// <returns>The list of entities inside the door.</returns>
-    public IEnumerable<EntityUid> GetColliding(EntityUid uid, PhysicsComponent? physics = null, FixturesComponent? fixtures = null, bool checkFixtureCollision = false, bool allowMachineLayer = false)
+    public IEnumerable<EntityUid> GetColliding(EntityUid uid, string? fixtureName, PhysicsComponent? physics = null, FixturesComponent? fixtures = null)
     {
         if (!Resolve(uid, ref physics) || !Resolve(uid, ref fixtures))
             yield break;
@@ -575,29 +574,21 @@ public abstract partial class SharedDoorSystem : EntitySystem
         var xform = Transform(uid);
         // Getting the world bounds from the gridUid allows us to use the version of
         // GetCollidingEntities that returns Entity<PhysicsComponent>
-        if (!TryComp<MapGridComponent>(xform.GridUid, out var mapGridComp))
+        if (!HasComp<MapGridComponent>(xform.GridUid))
             yield break;
-        var tileRef = _mapSystem.GetTileRef(xform.GridUid.Value, mapGridComp, xform.Coordinates);
 
         _doorIntersecting.Clear();
 
-        if (checkFixtureCollision && fixtures.Fixtures.TryFirstOrNull(out var fixture))
-        {
-            var localTransform = PhysicsSystem.GetLocalPhysicsTransform(uid, xform);
-            var localAABB = fixture.Value.Value.Shape.ComputeAABB(localTransform, 0);
-            localAABB = localAABB.Enlarged(DoorFixtureCheckExpansion); // We have to resize since ComputeAABBs tend to make the box larger than it is.
-            _entityLookup.GetLocalEntitiesIntersecting(xform.GridUid.Value,
-                localAABB,
-                _doorIntersecting,
-                flags: (LookupFlags.All & ~LookupFlags.Sensors));
-        }
-        else
-        {
-            _entityLookup.GetLocalEntitiesIntersecting(xform.GridUid.Value, tileRef.GridIndices, _doorIntersecting, gridComp: mapGridComp, flags: (LookupFlags.All & ~LookupFlags.Sensors));
-        }
+        if (fixtureName == null || !fixtures.Fixtures.TryGetValue(fixtureName, out var fixture))
+            yield break;
 
-        // TODO SLOTH fix electro's code.
-        // ReSharper disable once InconsistentNaming
+        var localTransform = PhysicsSystem.GetLocalPhysicsTransform(uid, xform);
+        var localAABB = fixture.Shape.ComputeAABB(localTransform, 0);
+        localAABB = localAABB.Enlarged(DoorFixtureCheckExpansion); // We have to resize since ComputeAABBs tend to make the box larger than it is.
+        _entityLookup.GetLocalEntitiesIntersecting(xform.GridUid.Value,
+            localAABB,
+            _doorIntersecting,
+            flags: LookupFlags.All);
 
         foreach (var otherPhysics in _doorIntersecting)
         {
@@ -607,24 +598,7 @@ public abstract partial class SharedDoorSystem : EntitySystem
             if (!otherPhysics.Comp.CanCollide)
                 continue;
 
-            //TODO: Make only shutters ignore these objects upon colliding instead of all airlocks
-            // Excludes Glasslayer for windows, GlassAirlockLayer for windoors, TableLayer for tables
-            if (otherPhysics.Comp.CollisionLayer == (int) CollisionGroup.GlassLayer || otherPhysics.Comp.CollisionLayer == (int) CollisionGroup.GlassAirlockLayer || otherPhysics.Comp.CollisionLayer == (int) CollisionGroup.TableLayer)
-                continue;
-
-            // Ignore low-passable entities.
-            if ((otherPhysics.Comp.CollisionMask & (int)CollisionGroup.LowImpassable) == 0)
-                continue;
-
-            //For when doors need to close over conveyor belts
-            if (otherPhysics.Comp.CollisionLayer == (int) CollisionGroup.ConveyorMask)
-                continue;
-
-            // We want windoors to be able to close over machines
-            if (allowMachineLayer && otherPhysics.Comp.CollisionLayer == (int) CollisionGroup.MachineLayer)
-                continue;
-
-            if ((physics.CollisionMask & otherPhysics.Comp.CollisionLayer) == 0 && (otherPhysics.Comp.CollisionMask & physics.CollisionLayer) == 0)
+            if ((fixture.CollisionMask & otherPhysics.Comp.CollisionLayer) == 0 && (otherPhysics.Comp.CollisionMask & fixture.CollisionLayer) == 0)
                 continue;
 
             yield return otherPhysics.Owner;

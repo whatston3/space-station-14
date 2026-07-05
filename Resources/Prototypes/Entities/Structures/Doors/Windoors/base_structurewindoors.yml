@@ -20,7 +20,7 @@
   - type: Fixtures
     fixtures:
       fix1:
-        shape:
+        shape: &shape
           !type:PhysShapeAabb
           bounds: "-0.49,-0.49,0.49,-0.36"
         density: 1500
@@ -28,6 +28,12 @@
         - TabletopMachineMask
         layer:
         - GlassAirlockLayer
+      opener:
+        shape: *shape
+        density: 0
+        mask:
+        - WindoorOpener
+        hard: false
   - type: Sprite
     sprite: Structures/Doors/Windoors/windoor.rsi
     layers:
@@ -132,8 +138,7 @@
       path: /Audio/Machines/windoor_open.ogg
     denySound:
       path: /Audio/Machines/airlock_deny.ogg
-    checkFixtureCollision: true
-    allowMachineLayer: true
+    collisionFixture: opener
   - type: Airlock
     keepOpenIfClicked: true
     openPanelVisible: true
