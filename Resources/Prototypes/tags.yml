@@ -248,6 +248,9 @@
 - type: Tag # NOT bullets. This is for the cart to load PDA programs.
   id: Cartridge # Storage whitelist: BasePDA
 
+- type: Tag
+  id: CatwalkPlaceable # Used for tagging tile definitions for placing catwalk.
+
 #region Cartridge (Ammo)
 
 # Entities tagged with the following are some fashion of bullet. Guns, magazines, and ammo boxes have storage whitelists for these tags.
@@ -1119,6 +1122,9 @@
   id: Plastic # Used by MicrowaveSystem to turn tagged entities into trash.
 
 - type: Tag
+  id: Plating # Used for tagging tile definitions.
+
+- type: Tag
   id: Plunger # Storage whitelist: BaseBow, ClothingBeltQuiver, ClothingBeltJanitor, JanitorialTrolley. ItemMapper: ClothingBeltJanitor, JanitorialTrolley.
               # Storage blacklist on BaseToilet due to conflicting actions.
 
@@ -1420,7 +1426,7 @@
 
 - type: Tag
   id: TeleportScrollWarpBlacklist # blacklists a warp point for the wizard's teleport scroll
-  
+
 - type: Tag
   id: TheaterBagel # used for Bagel Station's randomized theater
 

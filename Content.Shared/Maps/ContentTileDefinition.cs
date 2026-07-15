@@ -1,15 +1,12 @@
 using Content.Shared.Atmos;
-using Content.Shared.Light.Components;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Shuttles.Systems;
+using Content.Shared.Tag;
 using Content.Shared.Tools;
 using Robust.Shared.Audio;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.Array;
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.List;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Maps
@@ -25,24 +22,24 @@ namespace Content.Shared.Maps
         public string[]? Parents { get; private set; }
 
         [NeverPushInheritance]
-        [AbstractDataFieldAttribute]
+        [AbstractDataField]
         public bool Abstract { get; private set; }
 
         [IdDataField] public string ID { get; private set; } = string.Empty;
 
         public ushort TileId { get; private set; }
 
-        [DataField("name")]
-        public string Name { get; private set; } = "";
-        [DataField("sprite")] public ResPath? Sprite { get; private set; }
+        [DataField]
+        public LocId Name { get; private set; } = "";
+        [DataField] public ResPath? Sprite { get; private set; }
 
-        [DataField("edgeSprites")] public Dictionary<Direction, ResPath> EdgeSprites { get; private set; } = new();
+        [DataField] public Dictionary<Direction, ResPath> EdgeSprites { get; private set; } = new();
 
-        [DataField("edgeSpritePriority")] public int EdgeSpritePriority { get; private set; } = 0;
+        [DataField] public int EdgeSpritePriority { get; private set; } = 0;
 
         [DataField("isSubfloor")] public bool IsSubFloor { get; private set; }
 
-        [DataField("baseTurf")]
+        [DataField]
         public ProtoId<ContentTileDefinition>? BaseTurf { get; private set; }
 
         /// <summary>
@@ -68,19 +65,19 @@ namespace Content.Shared.Maps
         /// <summary>
         /// These play when the mob has shoes on.
         /// </summary>
-        [DataField("footstepSounds")] public SoundSpecifier? FootstepSounds { get; private set; }
+        [DataField] public SoundSpecifier? FootstepSounds { get; private set; }
 
         /// <summary>
         /// These play when the mob has no shoes on.
         /// </summary>
-        [DataField("barestepSounds")] public SoundSpecifier? BarestepSounds { get; private set; } = new SoundCollectionSpecifier("BarestepHard");
+        [DataField] public SoundSpecifier? BarestepSounds { get; private set; } = new SoundCollectionSpecifier("BarestepHard");
 
         /// <summary>
         /// Base friction modifier for this tile.
         /// </summary>
-        [DataField("friction")] public float Friction { get; set; } = 1f;
+        [DataField] public float Friction { get; set; } = 1f;
 
-        [DataField("variants")] public byte Variants { get; set; } = 1;
+        [DataField] public byte Variants { get; set; } = 1;
 
         /// <summary>
         ///     Allows the tile to be rotated/mirrored when placed on a grid.
@@ -90,15 +87,15 @@ namespace Content.Shared.Maps
         /// <summary>
         /// This controls what variants the `variantize` command is allowed to use.
         /// </summary>
-        [DataField("placementVariants")] public float[] PlacementVariants { get; set; } = { 1f };
+        [DataField] public float[] PlacementVariants { get; set; } = { 1f };
 
-        [DataField("thermalConductivity")] public float ThermalConductivity = 0.04f;
+        [DataField] public float ThermalConductivity = 0.04f;
 
         // Heat capacity is opt-in, not opt-out.
-        [DataField("heatCapacity")] public float HeatCapacity = Atmospherics.MinimumHeatCapacity;
+        [DataField] public float HeatCapacity = Atmospherics.MinimumHeatCapacity;
 
-        [DataField("itemDrop", customTypeSerializer:typeof(PrototypeIdSerializer<EntityPrototype>))]
-        public string ItemDropPrototypeName { get; private set; } = "FloorTileItemSteel";
+        [DataField("itemDrop")]
+        public EntProtoId ItemDropPrototypeName { get; private set; } = "FloorTileItemSteel";
 
         // TODO rename data-field in yaml
         /// <summary>
@@ -109,31 +106,36 @@ namespace Content.Shared.Maps
         /// <summary>
         ///     Friction override for mob mover in <see cref="SharedMoverController"/>
         /// </summary>
-        [DataField("mobFriction")]
+        [DataField]
         public float? MobFriction { get; private set; }
 
         /// <summary>
         ///     Accel override for mob mover in <see cref="SharedMoverController"/>
         /// </summary>
-        [DataField("mobAcceleration")]
+        [DataField]
         public float? MobAcceleration { get; private set; }
 
-        [DataField("sturdy")] public bool Sturdy { get; private set; } = true;
+        [DataField] public bool Sturdy { get; private set; } = true;
 
         /// <summary>
         /// Can weather affect this tile.
         /// </summary>
-        [DataField("weather")] public bool Weather = false;
+        [DataField] public bool Weather = false;
 
         /// <summary>
         /// Is this tile immune to RCD deconstruct.
         /// </summary>
-        [DataField("indestructible")] public bool Indestructible = false;
+        [DataField] public bool Indestructible = false;
 
         /// <summary>
-        ///     Hide this tile in the tile placement editor.
+        /// Hide this tile in the tile placement editor.
         /// </summary>
         [DataField] public bool EditorHidden { get; private set; } = false;
+
+        /// <summary>
+        /// The set of tags that this tile has.
+        /// </summary>
+        [DataField] public List<ProtoId<TagPrototype>> Tags { get; private set; } = new();
 
         public void AssignTileId(ushort id)
         {

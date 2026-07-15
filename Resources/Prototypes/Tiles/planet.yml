@@ -7,6 +7,8 @@
     collection: FootstepAsteroid
   weather: true
   indestructible: true
+  tags:
+  - CatwalkPlaceable
 
 - type: tile
   id: FloorPlanetDirt
