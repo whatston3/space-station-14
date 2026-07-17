@@ -1,6 +1,7 @@
 using Content.Shared.Atmos;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Shuttles.Systems;
+using Content.Shared.Tag;
 using Content.Shared.Tools;
 using Robust.Shared.Audio;
 using Robust.Shared.Map;
@@ -42,10 +43,17 @@ public sealed partial class ContentTileDefinition : IPrototype, IInheritingProto
     public ProtoId<ContentTileDefinition>? BaseTurf { get; private set; }
 
     /// <summary>
-    /// On what tiles this tile can be placed on. BaseTurf is already included.
+    /// What tags this tile needs to be placed on.
+    /// If empty, can only be placed on BaseTurf.
     /// </summary>
     [DataField]
-    public List<ProtoId<ContentTileDefinition>> BaseWhitelist { get; private set; } = new();
+    public List<ProtoId<TagPrototype>> BaseTags { get; private set; } = new();
+
+    /// <summary>
+    /// The set of tags for this tile type.
+    /// </summary>
+    [DataField]
+    public List<ProtoId<TagPrototype>> Tags { get; private set; } = new();
 
     [DataField]
     public PrototypeFlags<ToolQualityPrototype> DeconstructTools { get; set; } = new();

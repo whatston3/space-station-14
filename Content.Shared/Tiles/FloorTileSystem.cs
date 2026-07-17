@@ -184,7 +184,7 @@ public sealed partial class FloorTileSystem : EntitySystem
             return true;
 
         // Check whitelist match
-        if (tileDef.BaseWhitelist.Count > 0 && tileDef.BaseWhitelist.Contains(currentTurfId))
+        if (ProtoMan.TryIndex(currentTurfId, out var currentTileDef) && tileDef.BaseTags.Count > 0 && tileDef.BaseTags.Any(currentTileDef.Tags.Contains))
             return true;
 
         return false;

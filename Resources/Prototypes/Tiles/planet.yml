@@ -1,38 +1,45 @@
 - type: tile
-  id: BaseFloorPlanet
   abstract: true
-  heatCapacity: 10000
+  id: BaseFloorPlanet
   isSubfloor: true
+  heatCapacity: 10000
   footstepSounds:
     collection: FootstepAsteroid
   weather: true
   indestructible: true
+  baseTurf: FloorPlanetDirt
+  itemDrop: null
+  tags:
+  - TilePlanet
 
 - type: tile
-  id: FloorPlanetDirt
   parent: BaseFloorPlanet
+  id: FloorPlanetDirt
   name: tiles-dirt-planet-floor
   sprite: /Textures/Tiles/Planet/dirt.rsi/dirt.png
   variants: 4
 
 # Desert
 - type: tile
-  id: FloorDesert
   parent: BaseFloorPlanet
+  id: FloorDesert
   name: tiles-desert-floor
   sprite: /Textures/Tiles/Planet/Desert/desert.png
   variants: 6
+  baseTurf: FloorDesert
 
 - type: tile
+  parent: BaseFloorPlanet
   id: FloorLowDesert
   name: tiles-low-desert-floor
   sprite: /Textures/Tiles/Planet/Desert/low_desert.png
   variants: 6
+  baseTurf: FloorLowDesert
 
 # Grass
 - type: tile
-  id: FloorPlanetGrass
   parent: BaseFloorPlanet
+  id: FloorPlanetGrass
   name: tiles-grass-planet-floor
   sprite: /Textures/Tiles/Planet/Grass/grass.png
   variants: 4
@@ -46,21 +53,21 @@
     East: /Textures/Tiles/Planet/Grass/double_edge.png
     North: /Textures/Tiles/Planet/Grass/double_edge.png
     West: /Textures/Tiles/Planet/Grass/double_edge.png
-  baseTurf: FloorPlanetDirt
   footstepSounds:
     collection: FootstepGrass
 
 # Lava
 - type: tile
+  parent: BaseFloorPlanet
   id: FloorBasalt
   name: tiles-basalt-floor
-  parent: BaseFloorPlanet
   sprite: /Textures/Tiles/Planet/basalt.png
+  baseTurf: FloorBasalt
 
 # Snow
 - type: tile
-  id: FloorSnow
   parent: BaseFloorPlanet
+  id: FloorSnow
   name: tiles-snow
   sprite: /Textures/Tiles/Planet/Snow/snow.png
   variants: 13
@@ -86,23 +93,22 @@
     West: /Textures/Tiles/Planet/Snow/snow_double_edge_west.png
   footstepSounds:
     collection: FootstepSnow
+  baseTurf: FloorSnowDug
 
 # Ice
 - type: tile
+  parent: BaseFloorPlanet
   id: FloorIce
   name: tiles-ice
   sprite: /Textures/Tiles/Planet/Snow/ice.png
-  isSubfloor: true
   friction: 0.05
-  heatCapacity: 10000
-  weather: true
+  mobFriction: 0.05
   mobAcceleration: 0.1
-  indestructible: true
 
 # Dug snow
 - type: tile
-  id: FloorSnowDug
   parent: BaseFloorPlanet
+  id: FloorSnowDug
   name: tiles-snow-dug
   sprite: /Textures/Tiles/Planet/Snow/snow_dug.png
   edgeSpritePriority: 1

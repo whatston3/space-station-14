@@ -7,3 +7,6 @@
   sturdy: false
   thermalConductivity: 0.4
   heatCapacity: 700000
+  itemDrop: null
+  tags:
+  - TileSpace

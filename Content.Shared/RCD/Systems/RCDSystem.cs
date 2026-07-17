@@ -423,12 +423,12 @@ public sealed partial class RCDSystem : EntitySystem
 
             var tileDef = _turf.GetContentTileDefinition(tile);
 
-            // Check rule: Respect baseTurf and baseWhitelist
+            // Check rule: Respect baseTurf and baseTags
             if (prototype.Prototype != null && _tileDefMan.TryGetDefinition(prototype.Prototype, out var replacementDef))
             {
-                var replacementContentDef = (ContentTileDefinition) replacementDef;
+                var replacementContentDef = (ContentTileDefinition)replacementDef;
 
-                if (replacementContentDef.BaseTurf != tileDef.ID && !replacementContentDef.BaseWhitelist.Contains(tileDef.ID))
+                if (replacementContentDef.BaseTurf != tileDef.ID && !replacementContentDef.BaseTags.Any(tileDef.Tags.Contains))
                 {
                     if (popMsgs)
                         _popup.PopupEntity(Loc.GetString("rcd-component-cannot-build-on-empty-tile-message"), uid, user);
