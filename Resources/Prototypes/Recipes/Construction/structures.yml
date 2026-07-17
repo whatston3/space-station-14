@@ -340,9 +340,9 @@
   - !type:TileNotBlocked
     failIfSpace: false
   - !type:TileType
-    targets:
-    - Lattice
-    - Plating
+    targetTags:
+    - TileLattice
+    - TilePlating
 
 - type: construction
   parent: BaseStructureFullTile
@@ -353,8 +353,8 @@
   - !type:TileNotBlocked
     failIfSpace: false
   - !type:TileType
-    targets:
-    - Plating
+    targetTags:
+    - TilePlating
 # endregion Floors
 
 # region Barricades

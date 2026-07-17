@@ -1420,9 +1420,33 @@
 
 - type: Tag
   id: TeleportScrollWarpBlacklist # blacklists a warp point for the wizard's teleport scroll
-  
+
 - type: Tag
   id: TheaterBagel # used for Bagel Station's randomized theater
+
+- type: Tag
+  id: TileAsteroid # ContentTileDefinition matching tag
+
+- type: Tag
+  id: TileFloor # ContentTileDefinition matching tag
+
+- type: Tag
+  id: TileIronsand # ContentTileDefinition matching tag
+
+- type: Tag
+  id: TileLattice # ContentTileDefinition matching tag
+
+- type: Tag
+  id: TilePlating # ContentTileDefinition matching tag
+
+- type: Tag
+  id: TilePlanet # ContentTileDefinition matching tag
+
+- type: Tag
+  id: TileSpace # ContentTileDefinition matching tag
+
+- type: Tag
+  id: TileTerrain # ContentTileDefinition matching tag
 
 - type: Tag
   id: TimerBrigElectronics # ConstructionGraph: Timer

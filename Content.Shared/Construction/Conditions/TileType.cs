@@ -1,6 +1,9 @@
-﻿using Content.Shared.Maps;
+﻿using System.Linq;
+using Content.Shared.Maps;
+using Content.Shared.Tag;
 using JetBrains.Annotations;
 using Robust.Shared.Map;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
 
 namespace Content.Shared.Construction.Conditions
@@ -12,10 +15,13 @@ namespace Content.Shared.Construction.Conditions
         [DataField("targets")]
         public List<string> TargetTiles { get; private set; } = new();
 
-        [DataField("guideText")]
+        [DataField]
+        public List<ProtoId<TagPrototype>> TargetTags { get; private set; } = new();
+
+        [DataField]
         public string? GuideText;
 
-        [DataField("guideIcon")]
+        [DataField]
         public SpriteSpecifier? GuideIcon;
 
         public bool Condition(EntityUid user, EntityCoordinates location, Direction direction)
@@ -27,12 +33,9 @@ namespace Content.Shared.Construction.Conditions
                 return false;
 
             var tile = turfSystem.GetContentTileDefinition(tileFound.Value);
-            foreach (var targetTile in TargetTiles)
-            {
-                if (tile.ID == targetTile)
-                    return true;
-            }
-            return false;
+
+            // Look for our ID, and failing that, if the tile type matches any tags.
+            return TargetTiles.Contains(tile.ID) || TargetTags.Any(tile.Tags.Contains);
         }
 
         public ConstructionGuideEntry? GenerateGuideEntry()
