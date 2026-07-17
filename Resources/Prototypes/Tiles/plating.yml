@@ -23,12 +23,12 @@
   id: PlatingRCD
   name: tiles-rcd-plating
   baseTags:
-  - TileSpace
-  - TileLattice
-  - TileTerrain
-  - TilePlanet
   - TileAsteroid
   - TileIronsand
+  - TileLattice
+  - TilePlanet
+  - TileSpace
+  - TileTerrain
 
 - type: tile
   parent: BasePlating

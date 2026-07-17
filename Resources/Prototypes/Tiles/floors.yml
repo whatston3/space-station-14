@@ -14,11 +14,11 @@
   tags:
   - TileFloor
   baseTags:
-  - TilePlating
+  - TileAsteroid
   - TileIronsand
   - TilePlanet
+  - TilePlating
   - TileTerrain
-  - TileAsteroid
 
 # region Steel
 - type: tile
