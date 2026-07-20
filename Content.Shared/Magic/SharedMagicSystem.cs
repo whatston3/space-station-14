@@ -302,7 +302,7 @@ public abstract partial class SharedMagicSystem : EntitySystem
             var dotProduct = Vector2.Dot(direction, userLocalVelocity);
             if (dotProduct < 0.0f)
             {
-                compensation += -dotProduct / direction.Length(); // Get length relative to
+                compensation += -dotProduct / direction.Length(); // Get length relative to user's local velocity
             }
         }
 
