@@ -18,8 +18,9 @@ public sealed partial class ProjectileSpellEvent : WorldTargetActionEvent
     public float ProjectileSpeed = 25f;
 
     /// <summary>
-    /// Wether or not this should inherit the velocity of the shooter.
+    /// A coefficient to adjust for velocity behind you.
+    /// Useful for slow projectiles to prevent them from feeling sluggish.
     /// </summary>
     [DataField]
-    public bool InheritVelocity = true;
+    public float BehindCompensation;
 }
