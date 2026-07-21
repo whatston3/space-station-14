@@ -19,6 +19,8 @@
   category: construction-category-structures
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - FullTileLayer
 
 - type: construction
   parent: BaseWebStructure
@@ -26,6 +28,9 @@
   targetNode: table
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - TableLayer
 
 - type: construction
   parent: BaseWebStructure
@@ -33,6 +38,9 @@
   targetNode: bed
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - TableLayer
 
 - type: construction
   parent: BaseWebStructure
@@ -41,6 +49,9 @@
   canRotate: true
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - TableLayer
 
 - type: construction
   parent: BaseWebStructure
@@ -48,6 +59,8 @@
   targetNode: crate
   placementMode: PlaceFree
   category: construction-category-storage
+  conditions:
+  - !type:TileNotBlocked
 
 - type: construction
   parent: BaseWebStructure
@@ -56,4 +69,6 @@
   category: construction-category-structures
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - FullTileLayer
 # endregion Web

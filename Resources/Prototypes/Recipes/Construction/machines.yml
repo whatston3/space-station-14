@@ -6,6 +6,9 @@
   placementMode: SnapgridCenter
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - MachineLayer
 
 - type: construction
   abstract: true

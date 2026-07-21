@@ -2,16 +2,36 @@ using Content.Shared.Maps;
 using Content.Shared.Physics;
 using JetBrains.Annotations;
 using Robust.Shared.Map;
+using Robust.Shared.Physics.Dynamics;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
 namespace Content.Shared.Construction.Conditions;
 
+/// <summary>
+/// A construction conditions that checks entities on the tile for construction.
+/// </summary>
 [UsedImplicitly]
 [DataDefinition]
 public sealed partial class TileNotBlocked : IConstructionCondition
 {
-    [DataField("filterMobs")] private bool _filterMobs = false;
-    [DataField("failIfSpace")] private bool _failIfSpace = true;
-    [DataField("failIfNotSturdy")] private bool _failIfNotSturdy = true;
+    /// <summary>
+    /// The collision mask that this condition should use to check for collisions.
+    /// Any entity with hard fixtures of sufficient size whose layers overlap with this mask will prevent construction.
+    /// </summary>
+    [DataField(customTypeSerializer: typeof(FlagSerializer<CollisionMask>))]
+    public int Mask { get; private set; } = (int)CollisionGroup.Impassable;
+
+    /// <summary>
+    /// If true, this condition will fail when placed on space tiles.
+    /// </summary>
+    [DataField]
+    public bool FailIfSpace { get; private set; } = true;
+
+    /// <summary>
+    /// If true, this condition will fail when placed on non-sturdy tiles.
+    /// </summary>
+    [DataField]
+    public bool FailIfNotSturdy { get; private set; } = true;
 
     public bool Condition(EntityUid user, EntityCoordinates location, Direction direction)
     {
@@ -19,21 +39,15 @@ public sealed partial class TileNotBlocked : IConstructionCondition
             return false;
 
         if (!turfSystem.TryGetTileRef(location, out var tileRef))
-        {
             return false;
-        }
 
-        if (turfSystem.IsSpace(tileRef.Value) && _failIfSpace)
-        {
+        if (FailIfSpace && turfSystem.IsSpace(tileRef.Value))
             return false;
-        }
 
-        if (!turfSystem.GetContentTileDefinition(tileRef.Value).Sturdy && _failIfNotSturdy)
-        {
+        if (FailIfNotSturdy && !turfSystem.GetContentTileDefinition(tileRef.Value).Sturdy)
             return false;
-        }
 
-        return !turfSystem.IsTileBlocked(tileRef.Value, _filterMobs ? CollisionGroup.MobMask : CollisionGroup.Impassable);
+        return !turfSystem.IsTileBlocked(tileRef.Value, (CollisionGroup)Mask);
     }
 
     public ConstructionGuideEntry GenerateGuideEntry()

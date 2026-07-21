@@ -12,6 +12,9 @@
   graph: Seat
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - TableLayer
 
 - type: construction
   abstract: true
@@ -21,6 +24,9 @@
   canRotate: false
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - TableLayer
 
 - type: construction
   abstract: true
@@ -30,6 +36,9 @@
   canRotate: false
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - TableLayer
 
 - type: construction
   abstract: true
@@ -346,6 +355,9 @@
   canRotate: false
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - TableLayer
 
 - type: construction
   parent: BaseTable # close enough
@@ -383,3 +395,6 @@
   canRotate: true
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassible
+    - TableLayer

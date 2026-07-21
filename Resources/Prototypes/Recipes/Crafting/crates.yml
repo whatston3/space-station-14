@@ -4,6 +4,8 @@
   id: BaseCrate
   category: construction-category-storage
   canRotate: false
+  conditions:
+  - !type:TileNotBlocked
 
 - type: construction
   abstract: true

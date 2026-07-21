@@ -12,6 +12,8 @@
   canRotate: false
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - FullTileLayer
 
 - type: construction
   abstract: true
@@ -19,6 +21,8 @@
   id: BaseStructureFullTileDirectional
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - FullTileLayer
 
 - type: construction
   abstract: true
@@ -139,6 +143,8 @@
   targetNode: cardwall
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - FullTileLayer
     failIfSpace: false
 # endregion Walls
 
@@ -150,6 +156,8 @@
   targetNode: grille
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - FullTileLayer
     failIfSpace: false
 
 - type: construction
@@ -549,6 +557,9 @@
   targetNode: tubeLight
   conditions:
   - !type:TileNotBlocked
+    mask:
+    - Impassable
+    - TabletopMachineLayer
   - !type:AgainstWall
 
 - type: construction
