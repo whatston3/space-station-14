@@ -3,12 +3,11 @@ using System.Numerics;
 using Content.Client.CrewManifest;
 using Content.Client.GameTicking.Managers;
 using Content.Client.Lobby;
-using Content.Client.UserInterface.Controls;
 using Content.Client.Players.PlayTimeTracking;
+using Content.Client.UserInterface.Controls;
 using Content.Shared.CCVar;
 using Content.Shared.Preferences;
 using Content.Shared.Roles;
-using Content.Shared.StatusIcon;
 using Robust.Client.Console;
 using Robust.Client.GameObjects;
 using Robust.Client.UserInterface;
@@ -73,8 +72,6 @@ namespace Content.Client.LateJoin
                 _consoleHost.ExecuteCommand($"joingame {CommandParsing.Escape(jobId)} {station}");
                 Close();
             };
-
-            _gameTicker.LobbyJobsAvailableUpdated += JobsAvailableUpdated;
         }
 
         private void RebuildUI()
@@ -275,7 +272,7 @@ namespace Content.Client.LateJoin
                             {
                                 TextureScale = new Vector2(0.4f, 0.4f),
                                 Stretch = TextureRect.StretchMode.KeepCentered,
-                                Texture = _sprites.Frame0(new SpriteSpecifier.Texture(new ("/Textures/Interface/Nano/lock.svg.192dpi.png"))),
+                                Texture = _sprites.Frame0(new SpriteSpecifier.Texture(new("/Textures/Interface/Nano/lock.svg.192dpi.png"))),
                                 HorizontalExpand = true,
                                 HorizontalAlignment = HAlignment.Right,
                             });
@@ -300,41 +297,45 @@ namespace Content.Client.LateJoin
         {
             foreach (var stationEntries in updatedJobs)
             {
-                if (_jobButtons.ContainsKey(stationEntries.Key))
-                {
-                    var jobsAvailable = stationEntries.Value;
+                if (!_jobButtons.ContainsKey(stationEntries.Key))
+                    continue;
 
-                    var existingJobEntries = _jobButtons[stationEntries.Key];
-                    foreach (var existingJobEntry in existingJobEntries)
+                var jobsAvailable = stationEntries.Value;
+
+                var existingJobEntries = _jobButtons[stationEntries.Key];
+                foreach (var existingJobEntry in existingJobEntries)
+                {
+                    if (!jobsAvailable.ContainsKey(existingJobEntry.Key))
+                        continue;
+
+                    var updatedJobValue = jobsAvailable[existingJobEntry.Key];
+                    foreach (var matchingJobButton in existingJobEntry.Value)
                     {
-                        if (jobsAvailable.ContainsKey(existingJobEntry.Key))
-                        {
-                            var updatedJobValue = jobsAvailable[existingJobEntry.Key];
-                            foreach (var matchingJobButton in existingJobEntry.Value)
-                            {
-                                if (matchingJobButton.Amount != updatedJobValue)
-                                {
-                                    matchingJobButton.RefreshLabel(updatedJobValue);
-                                    matchingJobButton.Disabled |= matchingJobButton.Amount == 0;
-                                }
-                            }
-                        }
+                        if (matchingJobButton.Amount == updatedJobValue)
+                            continue;
+
+                        matchingJobButton.RefreshLabel(updatedJobValue);
+                        matchingJobButton.Disabled |= matchingJobButton.Amount == 0;
                     }
                 }
             }
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void EnteredTree()
         {
-            base.Dispose(disposing);
+            base.EnteredTree();
 
-            if (disposing)
-            {
-                _jobRequirements.Updated -= RebuildUI;
-                _gameTicker.LobbyJobsAvailableUpdated -= JobsAvailableUpdated;
-                _jobButtons.Clear();
-                _jobCategories.Clear();
-            }
+            _gameTicker.LobbyJobsAvailableUpdated += JobsAvailableUpdated;
+        }
+
+        protected override void ExitedTree()
+        {
+            base.ExitedTree();
+
+            _jobRequirements.Updated -= RebuildUI;
+            _gameTicker.LobbyJobsAvailableUpdated -= JobsAvailableUpdated;
+            _jobButtons.Clear();
+            _jobCategories.Clear();
         }
     }
 
