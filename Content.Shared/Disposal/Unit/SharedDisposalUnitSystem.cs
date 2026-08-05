@@ -401,28 +401,32 @@ public abstract partial class SharedDisposalUnitSystem : EntitySystem
     /// <param name="toRemove">The entity to remove.</param>
     public void Remove(Entity<DisposalUnitComponent> ent, EntityUid toRemove)
     {
-
-        var worldPosition = _xform.GetWorldPosition(ent);
-
-
-
-        var offset = ent.Comp.EjectionOffset;
-        var ejectOffset = new EntityCoordinates(ent, offset);
-
         if (_timing.ApplyingState)
             return;
 
-        if (ent.Comp.WallMounted == false)
+        if (!ent.Comp.WallMounted)
         {
-            if (!Terminating(toRemove) && ent.Comp.Container != null && _container.Remove(toRemove, ent.Comp.Container))
+            if (!Terminating(toRemove)
+                && ent.Comp.Container != null
+                && _container.Remove(toRemove, ent.Comp.Container))
             {
                 _climb.Climb(toRemove, toRemove, ent, silent: true);
             }
         }
-        else if (ent.Comp.WallMounted == true)
+        else
         {
-            if (!Terminating(toRemove) && ent.Comp.Container != null && _container.Remove(toRemove, ent.Comp.Container, true, true, ejectOffset))
-                return;
+            if (!Terminating(toRemove)
+                && ent.Comp.Container != null)
+            {
+                // Find our position on the grid to spit the ejected entity out, then remove it there.
+                var offset = ent.Comp.EjectionOffset;
+                var disposalXform = Transform(ent);
+                var ejectOffset = new EntityCoordinates(ent, offset);
+                var ejectMapCoords = _xform.ToMapCoordinates(ejectOffset);
+                var ejectGridCoords = _xform.ToCoordinates(disposalXform.GridUid ?? disposalXform.MapUid!.Value, ejectMapCoords);
+
+                _container.Remove(toRemove, ent.Comp.Container, reparent: true, force: false, ejectGridCoords);
+            }
         }
 
         RecalculateFlushTime(ent);
