@@ -29,7 +29,9 @@ using Robust.Shared.Physics.Events;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Timing;
 using System.Linq;
+//
 using Robust.Shared.Map;
+using System.Numerics;
 
 
 namespace Content.Shared.Disposal.Unit;
@@ -400,6 +402,10 @@ public abstract partial class SharedDisposalUnitSystem : EntitySystem
     public void Remove(Entity<DisposalUnitComponent> ent, EntityUid toRemove)
     {
 
+        var worldPosition = _xform.GetWorldPosition(ent);
+
+
+
         var offset = ent.Comp.EjectionOffset;
         var ejectOffset = new EntityCoordinates(ent, offset);
 
@@ -415,14 +421,21 @@ public abstract partial class SharedDisposalUnitSystem : EntitySystem
         }
         else if (ent.Comp.WallMounted == true)
         {
-            if (!Terminating(toRemove) && ent.Comp.Container != null && _container.Remove(toRemove, ent.Comp.Container, true, false, ejectOffset))
+            if (!Terminating(toRemove) && ent.Comp.Container != null && _container.Remove(toRemove, ent.Comp.Container, true, true, ejectOffset))
                 return;
         }
 
         RecalculateFlushTime(ent);
         UpdateVisualState(ent);
     }
-    // BPL CODE VERSION - BORKED
+
+    // IGNORE THE BELOW. DIDNT WORK
+        // // Calculate the direction away from the wall based on rotation
+        // var rotation = _xform.GetWorldRotation(ent).Degrees; // Get the rotation in degrees
+        // var direction = new Vector2(MathF.Cos(MathHelper.DegreesToRadians((float)rotation)), MathF.Sin( MathHelper.DegreesToRadians((float)rotation)));
+        // var newLoc = worldPosition + direction * 1f; // Adjust the multiplier as needed
+
+    // Old disposal code version - BORKED
     // public void Remove(EntityUid uid, DisposalUnitComponent component, EntityUid toRemove)
     // {
 
