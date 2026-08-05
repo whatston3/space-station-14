@@ -40,13 +40,13 @@ public sealed class CardsInteractionTest : InteractionTest
         if (!SEntMan.TryGetComponent<CardsComponent>(SEntMan.GetEntity(cards), out var sCardsComp))
             Assert.Fail($"Missing {nameof(CardsComponent)}");
 
-        Assert.That(sCardsComp!.Flipped, Is.False);
+        Assert.That(sCardsComp.Flipped, Is.False);
 
         await Activate();
-        Assert.That(sCardsComp!.Flipped, Is.True);
+        Assert.That(sCardsComp.Flipped, Is.True);
 
         await Activate();
-        Assert.That(sCardsComp!.Flipped, Is.False);
+        Assert.That(sCardsComp.Flipped, Is.False);
     }
 
     [Test]
@@ -57,7 +57,7 @@ public sealed class CardsInteractionTest : InteractionTest
         if (!SEntMan.TryGetComponent<CardsComponent>(SEntMan.GetEntity(cards), out var sCardsComp))
             Assert.Fail("Missing CardsComponent");
 
-        var cardCountBefore = sCardsComp!.Cards.Count;
+        var cardCountBefore = sCardsComp.Cards.Count;
 
         await Pickup();
         // Flip so cards are face-up (needed for the throw-one-card behaviour)
@@ -71,6 +71,17 @@ public sealed class CardsInteractionTest : InteractionTest
             Is.EqualTo(cardCountBefore - 1),
             "Throwing one card should decrease the deck by 1"
         );
+
+        await Server.WaitPost(() =>
+            {
+                var cardsQuery = SEntMan.EntityQueryEnumerator<CardsComponent>();
+                while (cardsQuery.MoveNext(out var uid, out _))
+                {
+                    SQueueDel(uid);
+                }
+
+                Server.RunTicks(1);
+            });
     }
 
     [Test]
@@ -81,25 +92,36 @@ public sealed class CardsInteractionTest : InteractionTest
         if (!SEntMan.TryGetComponent<CardsComponent>(SEntMan.GetEntity(cards), out var sCardsComp))
             Assert.Fail($"Missing {nameof(CardsComponent)}");
 
-        var cardCountBefore = sCardsComp!.Cards.Count;
+        var cardCountBefore = sCardsComp.Cards.Count;
 
         await Pickup();
 
         // Flip the deck
         await UseInHand();
-        Assert.That(sCardsComp.Flipped, Is.EqualTo(true));
+        Assert.That(sCardsComp.Flipped, Is.True);
 
         // Fan the deck
         await UseInHand();
-        Assert.That(sCardsComp.Flipped, Is.EqualTo(true));
-        Assert.That(sCardsComp.Fanned, Is.EqualTo(true));
+        Assert.That(sCardsComp.Flipped, Is.True);
+        Assert.That(sCardsComp.Fanned, Is.True);
 
         // Throw one card
         var coords = Transform.GetMapCoordinates(CPlayer).Offset(new Vector2(0, 10));
         await ThrowItem(SEntMan.GetNetCoordinates(Transform.ToCoordinates(CPlayer, coords)));
 
         Assert.That(sCardsComp.Cards.Count, Is.EqualTo(cardCountBefore - 1));
-        Assert.That(sCardsComp.Flipped, Is.EqualTo(true));
-        Assert.That(sCardsComp.Fanned, Is.EqualTo(true));
+        Assert.That(sCardsComp.Flipped, Is.True);
+        Assert.That(sCardsComp.Fanned, Is.True);
+
+        await Server.WaitPost(() =>
+            {
+                var cardsQuery = SEntMan.EntityQueryEnumerator<CardsComponent>();
+                while (cardsQuery.MoveNext(out var uid, out _))
+                {
+                    SQueueDel(uid);
+                }
+
+                Server.RunTicks(1);
+            });
     }
 }

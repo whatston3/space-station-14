@@ -183,15 +183,15 @@ public sealed partial class CardSystem : SharedCardSystem
 
     private void BuildLayer(string layer, string? rsi, string layerState, Color? layerColor, Entity<SpriteComponent?> sprite)
     {
-        _sprite.LayerSetVisible(sprite, layer, true);
+        if (!_sprite.LayerMapTryGet(sprite, layer, out var layerIndex, logMissing: true))
+            return;
 
+        _sprite.LayerSetVisible(sprite, layerIndex, true);
+        _sprite.LayerSetColor(sprite, layerIndex, layerColor ?? Color.White);
         if (rsi == null)
-            _sprite.LayerSetRsiState(sprite, layer, layerState);
+            _sprite.LayerSetRsiState(sprite, layerIndex, layerState);
         else
             _sprite.LayerSetSprite(sprite, layer, new SpriteSpecifier.Rsi(new ResPath(rsi), layerState));
-
-        if (layerColor != null)
-            _sprite.LayerSetColor(sprite, layer, layerColor.Value);
     }
 
     private void TransformLayer(string layer, Vector2 movement, Angle rotation, Entity<SpriteComponent?> sprite)
@@ -221,10 +221,10 @@ public sealed partial class CardSystem : SharedCardSystem
         {
             //If our value exceeds threshold, the next layer should be displayed.
             //Note: we must ensure actual <= MaxCount.
-            if (actual >= threshold && newActual < maxCount)
-                newActual++;
-            else
+            if (actual < threshold || newActual >= maxCount)
                 break;
+
+            newActual++;
         }
 
         actual = newActual;

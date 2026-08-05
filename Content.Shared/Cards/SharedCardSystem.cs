@@ -40,6 +40,7 @@ public abstract partial class SharedCardSystem : EntitySystem
             if (!card.BaseState.IsWhiteSpace()
                 || !PrototypeManager.Resolve(card.CardId, out var prototype))
                 continue;
+
             // Sets the card sprites to either the sprites set by the card or by the deck.
             card.BaseState = prototype.BaseState ?? ent.Comp.BaseState;
             card.CardBack = prototype.CardBack ?? ent.Comp.CardBack;
@@ -79,7 +80,6 @@ public abstract partial class SharedCardSystem : EntitySystem
         out int transferred,
         int? amount = null,
         List<int>? selected = null
-
     )
     {
         transferred = 0;
