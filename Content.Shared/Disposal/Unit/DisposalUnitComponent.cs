@@ -6,6 +6,7 @@ using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
+using System.Numerics;
 
 namespace Content.Shared.Disposal.Components;
 
@@ -155,6 +156,20 @@ public sealed partial class DisposalUnitComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool Engaged;
+
+    //# - BPL
+    /// <summary>
+    /// Relative coordinates for which to eject contents.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public Vector2 EjectionOffset = new(0, 0);
+
+    /// <summary>
+    /// Denotes a wallmounted disposal unit when true.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool WallMounted = false;
+    // End BPL
 
     /// <summary>
     /// Next time this unit will flush. Is the lesser of <see cref="FlushDelay"/> and <see cref="AutomaticEngageTime"/>

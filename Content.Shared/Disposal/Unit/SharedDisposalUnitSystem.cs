@@ -29,6 +29,8 @@ using Robust.Shared.Physics.Events;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Timing;
 using System.Linq;
+using Robust.Shared.Map;
+
 
 namespace Content.Shared.Disposal.Unit;
 
@@ -397,6 +399,9 @@ public abstract partial class SharedDisposalUnitSystem : EntitySystem
     /// <param name="toRemove">The entity to remove.</param>
     public void Remove(Entity<DisposalUnitComponent> ent, EntityUid toRemove)
     {
+
+        var ejectOffset = new EntityCoordinates(ent, ent.EjectionOffset);
+
         if (_timing.ApplyingState)
             return;
 
