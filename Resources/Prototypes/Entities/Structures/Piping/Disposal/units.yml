@@ -164,6 +164,8 @@
     graph: DisposalMachine
     node: disposal_unit
   - type: DisposalUnit
+    wallMounted: True
+    ejectionOffset: 0, -1
     whitelist:
       components:
       - Item

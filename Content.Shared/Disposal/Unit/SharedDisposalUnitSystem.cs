@@ -400,16 +400,23 @@ public abstract partial class SharedDisposalUnitSystem : EntitySystem
     public void Remove(Entity<DisposalUnitComponent> ent, EntityUid toRemove)
     {
 
-        var ejectOffset = new EntityCoordinates(ent, ent.EjectionOffset);
+        var offset = ent.Comp.EjectionOffset;
+        var ejectOffset = new EntityCoordinates(ent, offset);
 
         if (_timing.ApplyingState)
             return;
 
-        if (!Terminating(toRemove) &&
-            ent.Comp.Container != null &&
-            _container.Remove(toRemove, ent.Comp.Container))
+        if (ent.Comp.WallMounted == false)
         {
-            _climb.Climb(toRemove, toRemove, ent, silent: true);
+            if (!Terminating(toRemove) && ent.Comp.Container != null && _container.Remove(toRemove, ent.Comp.Container))
+            {
+                _climb.Climb(toRemove, toRemove, ent, silent: true);
+            }
+        }
+        else if (ent.Comp.WallMounted == true)
+        {
+            if (!Terminating(toRemove) && ent.Comp.Container != null && _container.Remove(toRemove, ent.Comp.Container, true, false, ejectOffset))
+                return;
         }
 
         RecalculateFlushTime(ent);
@@ -426,7 +433,7 @@ public abstract partial class SharedDisposalUnitSystem : EntitySystem
 
     //     if (component.WallMounted == true)
     //     {
-    //         if (!Containers.Remove(toRemove, component.Container, false, false, ejectOffset))
+    //         if (!Containers.Remove(toRemove, component.Container, true, false, ejectOffset))
     //             return;
     //     }
     //     else if (component.WallMounted == false)
