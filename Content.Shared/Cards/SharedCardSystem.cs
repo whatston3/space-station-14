@@ -12,6 +12,9 @@ using Robust.Shared.Timing;
 
 namespace Content.Shared.Cards;
 
+/// <summary>
+/// A system to simulate decks of playing cards.
+/// </summary>
 public abstract partial class SharedCardSystem : EntitySystem
 {
     [Dependency] protected IGameTiming Timing = default!;
@@ -34,10 +37,8 @@ public abstract partial class SharedCardSystem : EntitySystem
             var card = ent.Comp.Cards[i];
             // Checks if this card has already been modified.
             // A card will only have a whitespace BaseState on initialization.
-            if (
-                !card.BaseState.IsWhiteSpace()
-                || !PrototypeManager.Resolve(card.CardId, out var prototype)
-            )
+            if (!card.BaseState.IsWhiteSpace()
+                || !PrototypeManager.Resolve(card.CardId, out var prototype))
                 continue;
             // Sets the card sprites to either the sprites set by the card or by the deck.
             card.BaseState = prototype.BaseState ?? ent.Comp.BaseState;
@@ -334,13 +335,11 @@ public abstract partial class SharedCardSystem : EntitySystem
     )
     {
         split = null;
-        if (!Resolve(user.Owner, ref user.Comp, false))
+        if (!Resolve(user.Owner, ref user.Comp, logMissing: false))
             return false;
 
-        if (
-            !Hands.TryGetActiveItem(user.Owner, out split)
-            || !TryMergeDecks(cards.AsNullable(), (split.Value, null), out _, amount: 1, selected: new List<int> { cardIndex })
-        )
+        if (!Hands.TryGetActiveItem(user.Owner, out split)
+            || !TryMergeDecks(cards.AsNullable(), (split.Value, null), out _, amount: 1, selected: new List<int> { cardIndex }))
         {
             split = SplitDeck(cards, user.Comp.Coordinates, new List<int> { cardIndex });
             if (split == null)
@@ -391,5 +390,4 @@ public abstract partial class SharedCardSystem : EntitySystem
     {
         return cards.Where(c => cardIndexes.Contains(c.CardIndex)).ToList();
     }
-
 }

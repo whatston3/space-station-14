@@ -35,13 +35,7 @@ public sealed partial class CardsComponent : Component
     /// e.g. <code>_spriteLayers[0]</code> is lower stack level than <code>_spriteLayers[1]</code>.
     /// </summary>
     [DataField]
-    public List<string> LayerStates = new();
-
-    /// <summary>
-    ///     layer for layerStates sprite.
-    /// </summary>
-    [DataField]
-    public string BaseLayer = "base";
+    public List<string?> LayerStates = new();
 
     /// <summary>
     /// A list of thresholds to check against the number of things in the deck.

@@ -1,7 +1,7 @@
 using System.Numerics;
-using Content.Client.Storage.Systems;
 using Content.Shared.Cards;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Rounding;
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
 using Robust.Client.Player;
@@ -13,7 +13,6 @@ namespace Content.Client.Cards;
 [UsedImplicitly]
 public sealed partial class CardSystem : SharedCardSystem
 {
-    [Dependency] private ItemCounterSystem _counterSystem = default!;
     [Dependency] private IPlayerManager _playerManager = default!;
     [Dependency] private SpriteSystem _sprite = default!;
 
@@ -35,10 +34,8 @@ public sealed partial class CardSystem : SharedCardSystem
 
         // Hide in strip menu
         // TODO: This should be done in a less bad way. The strip menu system should have a method or field for setting this.
-        if (
-            HasComp<MobStateComponent>(xform.ParentUid)
-            && xform.ParentUid != _playerManager.LocalSession?.AttachedEntity
-        )
+        if (HasComp<MobStateComponent>(xform.ParentUid)
+            && xform.ParentUid != _playerManager.LocalSession?.AttachedEntity)
         {
             flipped = false;
         }
@@ -48,16 +45,14 @@ public sealed partial class CardSystem : SharedCardSystem
         var hiddenCount = ent.Comp.Cards.Count - visualState.Count + 1;
         var maxCount = GetMaxCount(ent.Comp);
         ApplyThreshold(ent.Comp.Thresholds, ref hiddenCount, ref maxCount);
-        _sprite.LayerSetVisible((ent.Owner, sprite), ent.Comp.BaseLayer, true);
-        _counterSystem.ProcessOpaqueSprite(
-            ent.Owner,
-            ent.Comp.BaseLayer,
-            hiddenCount,
-            maxCount,
-            ent.Comp.LayerStates,
-            false,
-            sprite: args.Sprite
-        );
+
+        // FIXME: ItemCounterSystem.ProcessOpaqueSprite doesn't support nullable layers.
+        if (_sprite.LayerMapTryGet((ent, args.Sprite), CardVisualLayers.Base, out var layerKey, logMissing: true))
+        {
+            var activeState = ContentHelpers.RoundToEqualLevels(hiddenCount, maxCount, ent.Comp.LayerStates.Count);
+            _sprite.LayerSetRsiState((ent, args.Sprite), layerKey, ent.Comp.LayerStates[activeState]);
+            _sprite.LayerSetVisible((ent, args.Sprite), layerKey, true);
+        }
 
         // Delete all layers which are not used here
         // Assumes that all layers will have the card before it have a layer
@@ -65,18 +60,12 @@ public sealed partial class CardSystem : SharedCardSystem
         // Might run into problems if the MaxFanned changes frequently
         for (var i = 0; i < visualState.MaxFanned; i++)
         {
-            // don't like this magic number
-            var cardLayers = CardLayers(i, 10);
+            var cardLayers = CardLayers(i, ent.Comp.MaxFanned);
             if (!_sprite.LayerExists((ent.Owner, sprite), cardLayers[0]))
                 break;
 
             foreach (var layer in cardLayers)
-            {
-                if (!_sprite.LayerExists((ent.Owner, sprite), layer))
-                    break;
-
-                _sprite.RemoveLayer((ent.Owner, sprite), layer);
-            }
+                _sprite.RemoveLayer((ent.Owner, sprite), layer, logMissing: false);
         }
 
         var radius = FanRadius(numCards);
@@ -109,7 +98,7 @@ public sealed partial class CardSystem : SharedCardSystem
             }
             // Moves the stack texture below the left most card
             if (i == 0)
-                TransformLayer(ent.Comp.BaseLayer, position, rotation, (ent.Owner, sprite));
+                TransformLayer(CardVisualLayers.Base, position, rotation, (ent.Owner, sprite));
         }
     }
 
@@ -167,11 +156,11 @@ public sealed partial class CardSystem : SharedCardSystem
     private static List<string> CardLayers(int index, int layerCount)
     {
         List<string> list = new();
+
         list.Add($"card_{index}_base");
         for (var i = 0; i < layerCount; i++)
-        {
             list.Add($"card_{index}_{i}");
-        }
+
         return list;
     }
 
@@ -195,22 +184,32 @@ public sealed partial class CardSystem : SharedCardSystem
     private void BuildLayer(string layer, string? rsi, string layerState, Color? layerColor, Entity<SpriteComponent?> sprite)
     {
         _sprite.LayerSetVisible(sprite, layer, true);
+
         if (rsi == null)
-        {
             _sprite.LayerSetRsiState(sprite, layer, layerState);
-        }
         else
-        {
             _sprite.LayerSetSprite(sprite, layer, new SpriteSpecifier.Rsi(new ResPath(rsi), layerState));
-        }
+
         if (layerColor != null)
             _sprite.LayerSetColor(sprite, layer, layerColor.Value);
     }
 
     private void TransformLayer(string layer, Vector2 movement, Angle rotation, Entity<SpriteComponent?> sprite)
     {
-        _sprite.LayerSetOffset(sprite, layer, movement);
-        _sprite.LayerSetRotation(sprite, layer, rotation);
+        if (!_sprite.LayerMapTryGet(sprite, layer, out var layerIndex, logMissing: true))
+            return;
+
+        _sprite.LayerSetOffset(sprite, layerIndex, movement);
+        _sprite.LayerSetRotation(sprite, layerIndex, rotation);
+    }
+
+    private void TransformLayer(Enum layer, Vector2 movement, Angle rotation, Entity<SpriteComponent?> sprite)
+    {
+        if (!_sprite.LayerMapTryGet(sprite, layer, out var layerIndex, logMissing: true))
+            return;
+
+        _sprite.LayerSetOffset(sprite, layerIndex, movement);
+        _sprite.LayerSetRotation(sprite, layerIndex, rotation);
     }
 
     private static void ApplyThreshold(List<int> thresholds, ref int actual, ref int maxCount)
