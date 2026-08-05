@@ -126,6 +126,8 @@
     idlePowerDraw: 5
     workingPowerDraw: 1000
 
+
+
 - type: entity
   id: DisposalUnit
   parent: DisposalUnitBase
@@ -148,6 +150,41 @@
     table: !type:NestedSelector
       tableId: RatKingLoot
   - type: RequireProjectileTarget
+
+- type: entity
+  id: WallDisposalUnit
+  parent: DisposalUnitBase
+  name: wall disposal unit
+  description: A specialized disposal unit that is embedded into the wall, saving precious floor space. Due to its compact nature, the device's open port cannot fit large objects.
+  components:
+  # - type: Sprite
+  #   sprite: Structures/Piping/disposal.rsi
+  #   snapCardinals: false
+  - type: Construction
+    graph: DisposalMachine
+    node: disposal_unit
+  - type: DisposalUnit
+    whitelist:
+      components:
+      - Item
+    blacklist:
+      sizes:
+      - Large
+      - Huge
+      - Ginormous
+      components:
+      - EntityStorage
+  - type: WallMount
+  - type: UserInterface
+    interfaces:
+      enum.DisposalUnitUiKey.Key:
+        type: DisposalUnitBoundUserInterface
+  - type: Rummageable
+    table: !type:NestedSelector
+      tableId: RatKingLoot
+  - type: RequireProjectileTarget
+  - type: Transform
+    noRot: false
 
 - type: entity
   id: MailingUnit

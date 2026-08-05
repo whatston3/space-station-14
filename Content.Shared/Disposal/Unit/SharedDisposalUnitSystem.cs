@@ -410,6 +410,39 @@ public abstract partial class SharedDisposalUnitSystem : EntitySystem
         RecalculateFlushTime(ent);
         UpdateVisualState(ent);
     }
+    // BPL CODE VERSION - BORKED
+    // public void Remove(EntityUid uid, DisposalUnitComponent component, EntityUid toRemove)
+    // {
+
+    //     var ejectOffset = new EntityCoordinates(uid, component.EjectionOffset);
+
+    //     if (GameTiming.ApplyingState)
+    //         return;
+
+    //     if (component.WallMounted == true)
+    //     {
+    //         if (!Containers.Remove(toRemove, component.Container, false, false, ejectOffset))
+    //             return;
+    //     }
+    //     else if (component.WallMounted == false)
+    //     {
+    //         if (!Containers.Remove(toRemove, component.Container))
+    //             return;
+    //         _climb.Climb(toRemove, toRemove, uid, silent: true);
+    //     }
+    //     if (component.Container.ContainedEntities.Count == 0)
+    //     {
+    //         // If not manually engaged then reset the flushing entirely.
+    //         if (!component.Engaged)
+    //         {
+    //             component.NextFlush = null;
+    //             Dirty(uid, component);
+    //             UpdateUI((uid, component));
+    //         }
+    //     }
+
+    //     UpdateVisualState(uid, component);
+    // }
 
     /// <summary>
     /// Recalculates when a disposal will flush next
