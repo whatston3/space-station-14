@@ -47,11 +47,11 @@ public sealed partial class CardSystem : SharedCardSystem
         ApplyThreshold(ent.Comp.Thresholds, ref hiddenCount, ref maxCount);
 
         // FIXME: ItemCounterSystem.ProcessOpaqueSprite doesn't support nullable layers.
-        if (_sprite.LayerMapTryGet((ent, args.Sprite), CardVisualLayers.Base, out var layerKey, logMissing: true))
+        if (_sprite.LayerMapTryGet((ent, args.Sprite), CardVisualLayers.Base, out var layerIndex, logMissing: true))
         {
             var activeState = ContentHelpers.RoundToEqualLevels(hiddenCount, maxCount, ent.Comp.LayerStates.Count);
-            _sprite.LayerSetRsiState((ent, args.Sprite), layerKey, ent.Comp.LayerStates[activeState]);
-            _sprite.LayerSetVisible((ent, args.Sprite), layerKey, true);
+            _sprite.LayerSetRsiState((ent, args.Sprite), layerIndex, ent.Comp.LayerStates[activeState]);
+            _sprite.LayerSetVisible((ent, args.Sprite), layerIndex, true);
         }
 
         // Delete all layers which are not used here
