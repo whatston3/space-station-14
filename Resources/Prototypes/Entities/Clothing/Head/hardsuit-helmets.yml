@@ -22,32 +22,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PointLight
     color: "#adffe6"
@@ -77,32 +56,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PointLight
     color: "#ffdbad"
@@ -129,32 +87,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PointLight
     radius: 6
@@ -185,32 +122,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: Tag
     tags:
@@ -232,25 +148,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PointLight
     radius: 6
@@ -276,14 +178,6 @@
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.08
@@ -312,32 +206,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.525
@@ -404,32 +277,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.525
@@ -456,32 +308,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.3
@@ -507,32 +338,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PointLight
     color: "#daffad"
@@ -562,25 +372,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.6
@@ -605,32 +401,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.60
@@ -655,32 +430,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.45
@@ -714,32 +468,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshadedExpand commentComment on lines R795 to R818Resolved
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
 
 #ANTAG HARDSUITS
@@ -761,32 +494,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.08
@@ -820,32 +532,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.08
@@ -876,32 +567,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.08
@@ -937,32 +607,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.08
@@ -996,32 +645,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-monkey:
-      - state: equipped-head-light-monkey
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-monkey:
-      - state: equipped-head-monkey
-      - state: equipped-head-unshaded-monkey
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.3
@@ -1053,25 +681,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.27
@@ -1122,10 +736,6 @@
       - state: equipped-head
       - state: equipped-head-unshaded
         shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.3
     lowPressureMultiplier: 1000
@@ -1145,26 +755,12 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     sprite: Clothing/Head/Hardsuits/piratecaptainhelm.rsi
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: PointLight # Color matches visor colors, radius/energy same as mining hardsuit for the big captain.
     color: "#f3ea9c"
@@ -1198,32 +794,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: Armor
     modifiers:
@@ -1249,18 +824,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
         shader: unshaded
 
 #ERT Engineer Hardsuit
@@ -1279,32 +847,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: FireProtection
     reduction: 0.2
@@ -1332,32 +879,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
 
 #ERT Security Hardsuit
@@ -1376,32 +902,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
   - type: Armor
     modifiers:
@@ -1427,32 +932,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-light-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
 
 #CBURN Hardsuit
@@ -1470,26 +954,12 @@
       - state: equipped-head
       - state: equipped-head-unshaded
         shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
-        shader: unshaded
   - type: PointLight
     color: orange
   - type: ToggleableVisuals
     clothingVisuals:
       head:
       - state: equipped-head-light
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.08
@@ -1519,14 +989,6 @@
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-vulpkanin:
-      - state: equipped-head-vulpkanin
-      - state: equipped-head-unshaded-vulpkanin
         shader: unshaded
   - type: PressureProtection
     highPressureMultiplier: 0.08
@@ -1559,12 +1021,6 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-light-reptilian
-        shader: unshaded
   - type: Clothing
     equipSound: /Audio/Mecha/mechmove03.ogg
     unequipSound: /Audio/Effects/Emotes/parp1.ogg
@@ -1572,14 +1028,6 @@
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
-        shader: unshaded
-      head-reptilian:
-      - state: equipped-head-reptilian
-      - state: equipped-head-unshaded-reptilian
         shader: unshaded
 
 #Mime Hardsuit
@@ -1597,18 +1045,11 @@
       head:
       - state: equipped-head-light
         shader: unshaded
-      head-vox:
-      - state: equipped-head-light-vox
-        shader: unshaded
   - type: Clothing
     clothingVisuals:
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
         shader: unshaded
 
 #Santas Hardsuit
@@ -1630,8 +1071,4 @@
       head:
       - state: equipped-head
       - state: equipped-head-unshaded
-        shader: unshaded
-      head-vox:
-      - state: equipped-head-vox
-      - state: equipped-head-unshaded-vox
         shader: unshaded
