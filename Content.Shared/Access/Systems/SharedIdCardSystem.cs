@@ -18,14 +18,15 @@ namespace Content.Shared.Access.Systems;
 public abstract partial class SharedIdCardSystem : EntitySystem
 {
     [Dependency] private IConfigurationManager _cfgManager = default!;
-    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private IGameTiming _timing = default!;
-    [Dependency] private SharedAccessSystem _access = default!;
-    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private InventorySystem _inventorySystem = default!;
     [Dependency] private MetaDataSystem _metaSystem = default!;
-    [Dependency] private SharedJobStatusSystem _jobStatus = default!;
+    [Dependency] private SharedAccessSystem _access = default!;
     [Dependency] private SharedAgentIdCardSystem _agentIdCard = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedHandsSystem _hands = default!;
+    [Dependency] private SharedJobStatusSystem _jobStatus = default!;
 
     // CCVar.
     private int _maxNameLength;
@@ -189,6 +190,8 @@ public abstract partial class SharedIdCardSystem : EntitySystem
             _adminLogger.Add(LogType.Identity, LogImpact.Low,
                 $"{ToPrettyString(player.Value):player} has changed the job icon of {ToPrettyString(uid):entity} to {jobIcon} ");
         }
+
+        _appearance.SetData(uid, IdCardVisuals.JobProto, jobIcon.ID);
 
         return true;
     }

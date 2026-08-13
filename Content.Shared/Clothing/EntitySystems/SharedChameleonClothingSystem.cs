@@ -101,6 +101,26 @@ public abstract partial class SharedChameleonClothingSystem : EntitySystem
             _metaData.SetEntityName(uid, proto.Name, meta);
             _metaData.SetEntityDescription(uid, proto.Description, meta);
         }
+        else
+        {
+            if (proto.TryComp(out IdCardVisualsComponent? otherIdCardViz, Factory))
+            {
+                var idCardViz = EnsureComp<IdCardVisualsComponent>(uid);
+                idCardViz.BaseState = otherIdCardViz.BaseState;
+                idCardViz.StripeTopState = otherIdCardViz.StripeTopState;
+                idCardViz.StripeTopColor = otherIdCardViz.StripeTopColor;
+                idCardViz.StripeBottomState = otherIdCardViz.StripeBottomState;
+                idCardViz.StripeBottomColor = otherIdCardViz.StripeBottomColor;
+                idCardViz.JobIconState = otherIdCardViz.JobIconState;
+                idCardViz.StartingVisuals = otherIdCardViz.StartingVisuals;
+                idCardViz.UpdateVisuals = otherIdCardViz.UpdateVisuals;
+                Dirty(uid, idCardViz);
+            }
+            else
+            {
+                RemComp<IdCardVisualsComponent>(uid);
+            }
+        }
 
         // item sprite logic
         if (TryComp(uid, out ItemComponent? item) &&
@@ -121,6 +141,7 @@ public abstract partial class SharedChameleonClothingSystem : EntitySystem
             proto.TryComp(out AppearanceComponent? appearanceOther, Factory))
         {
             _appearance.AppendData(appearanceOther, uid);
+            _appearance.RemoveData(uid, IdCardVisuals.JobProto);
             Dirty(uid, appearance);
         }
 

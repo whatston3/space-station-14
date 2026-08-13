@@ -31,16 +31,17 @@ namespace Content.Server.Access.Systems;
 public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem
 {
     [Dependency] private IConfigurationManager _cfgManager = default!;
-    [Dependency] private StationRecordsSystem _record = default!;
-    [Dependency] private UserInterfaceSystem _userInterface = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private AccessReaderSystem _accessReader = default!;
     [Dependency] private AccessSystem _access = default!;
-    [Dependency] private IdCardSystem _idCard = default!;
-    [Dependency] private ISharedAdminLogManager _adminLogger = default!;
-    [Dependency] private SharedContainerSystem _container = default!;
-    [Dependency] private ThrowingSystem _throwing = default!;
-    [Dependency] private IRobustRandom _random = default!;
     [Dependency] private ChatSystem _chat = default!;
+    [Dependency] private IdCardSystem _idCard = default!;
+    [Dependency] private SharedAppearanceSystem _appearance = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private StationRecordsSystem _record = default!;
+    [Dependency] private ThrowingSystem _throwing = default!;
+    [Dependency] private UserInterfaceSystem _userInterface = default!;
 
     public override void Initialize()
     {
@@ -158,11 +159,18 @@ public sealed partial class IdCardConsoleSystem : SharedIdCardConsoleSystem
         _idCard.TryChangeFullName(targetId, newFullName, player: player);
         _idCard.TryChangeJobTitle(targetId, newJobTitle, player: player);
 
-        if (ProtoMan.TryIndex(newJobProto, out var job)
-            && ProtoMan.Resolve(job.Icon, out var jobIcon))
+        if (ProtoMan.TryIndex(newJobProto, out var job))
         {
-            _idCard.TryChangeJobIcon(targetId, jobIcon, player: player);
-            _idCard.TryChangeJobDepartment(targetId, job);
+            if (ProtoMan.Resolve(job.Icon, out var jobIcon))
+            {
+                _idCard.TryChangeJobIcon(targetId, jobIcon, player: player);
+                _idCard.TryChangeJobDepartment(targetId, job);
+            }
+        }
+        else
+        {
+            // Can't find the job prototype, don't reassign the ID card's proto.
+            newJobProto = null;
         }
 
         UpdateStationRecord(uid, targetId, newFullName, newJobTitle, job);

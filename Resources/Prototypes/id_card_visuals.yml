@@ -1,0 +1,94 @@
+# region Job-specific
+- type: idCardVisuals
+  id: Captain
+  topStripeColor: "#1b67a5"
+  bottomStripeColor: "#0e4069"
+
+- type: idCardVisuals
+  id: Clown
+  bottomStripeState: stripe_clown
+
+# Note: CentComm counts as primary, so ERT roles are a special case.
+- type: idCardVisuals
+  id: ERTChaplain
+  topStripeColor: "#639137"
+  bottomStripeColor: "#446326"
+
+- type: idCardVisuals
+  id: ERTEngineer
+  topStripeColor: "#ffa62b"
+  bottomStripeColor: "#bc5b00"
+
+- type: idCardVisuals
+  id: ERTJanitor
+  topStripeColor: "#639137"
+  bottomStripeColor: "#446326"
+
+- type: idCardVisuals
+  id: ERTMedical
+  topStripeColor: "#68aed6"
+  bottomStripeColor: "#325f7a"
+
+- type: idCardVisuals
+  id: ERTSecurity
+  topStripeColor: "#cb0000"
+  bottomStripeColor: "#830000"
+
+- type: idCardVisuals
+  id: Mime
+  topStripeColor: "#2d2d2d"
+  bottomStripeColor: "#1d1d1d"
+
+- type: idCardVisuals
+  id: Musician
+  topStripeColor: "#6f56b8"
+  bottomStripeColor: "#524089"
+
+# Note: Civilian counts as primary, so Passenger and Visitor need special treatment
+- type: idCardVisuals
+  id: Passenger
+  topStripeColor: "#00000000" # no alpha!
+  bottomStripeColor: "#00000000"
+
+- type: idCardVisuals
+  id: Visitor
+  topStripeColor: "#00000000"
+  bottomStripeColor: "#00000000"
+# endregion Job-specific
+
+# region Department-specific
+- type: idCardVisuals
+  id: Cargo
+  topStripeColor: "#b18644"
+  bottomStripeColor: "#5b4523"
+
+- type: idCardVisuals
+  id: CentralCommand
+  topStripeColor: "#134975"
+  bottomStripeColor: "#0d304d"
+
+- type: idCardVisuals
+  id: Civilian
+  topStripeColor: "#639137"
+  bottomStripeColor: "#446326"
+
+- type: idCardVisuals
+  id: Engineering
+  topStripeColor: "#ffa62b"
+  bottomStripeColor: "#bc5b00"
+
+- type: idCardVisuals
+  id: Medical
+  topStripeColor: "#68aed6"
+  bottomStripeColor: "#325f7a"
+
+- type: idCardVisuals
+  id: Science
+  topStripeColor: "#a53aaa"
+  bottomStripeColor: "#652368"
+
+- type: idCardVisuals
+  id: Security
+  topStripeColor: "#cb0000"
+  bottomStripeColor: "#830000"
+# endregion Department-specific

@@ -17,10 +17,10 @@ namespace Content.Shared.Access.Systems;
 public abstract partial class SharedAgentIdCardSystem : EntitySystem
 {
     [Dependency] private LockSystem _lock = default!;
-    [Dependency] private SharedPopupSystem _popup = default!;
     [Dependency] private SharedIdCardSystem _card = default!;
     [Dependency] private SharedJobSystem _job = default!;
     [Dependency] private SharedJobStatusSystem _jobStatus = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
 
     /// <summary>
     /// Steals access from interacted ids.
@@ -40,7 +40,7 @@ public abstract partial class SharedAgentIdCardSystem : EntitySystem
         access.Tags.UnionWith(targetAccess.Tags);
         var addedLength = access.Tags.Count - beforeLength;
 
-        _popup.PopupPredicted(Loc.GetString("agent-id-new", ("number", addedLength), ("card", args.Target)),
+        _popup.PopupEntity(Loc.GetString("agent-id-new", ("number", addedLength), ("card", args.Target)),
             args.Target.Value,
             args.User);
         if (addedLength > 0)
@@ -86,7 +86,9 @@ public abstract partial class SharedAgentIdCardSystem : EntitySystem
             return;
 
         if (_job.TryGetJobFromIcon(jobIcon.ID, out var job))
+        {
             _card.TryChangeJobDepartment(ent, job);
+        }
 
         _jobStatus.UpdateIdHolderStatus(ent);
         UpdateUi(ent);
