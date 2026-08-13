@@ -544,17 +544,15 @@
 #Antags
 
 - type: entity
-  parent: [IDCardStandard, BaseChameleon]
+  parent: [IDCardStandard, StripedIDCardAppearance, BaseChameleon]
   id: AgentIDCard
   name: passenger ID card
   suffix: Agent
   components:
-  - type: Sprite
-    layers:
-    - state: default
-    - sprite: *icon-rsi
-      offset: *icon-offset
-      state: Passenger
+  - type: IdCardVisuals # Should match the Passenger IDCardVisualsPrototype
+    stripeTopColor: "#00000000" # no alpha!
+    stripeBottomColor: "#00000000"
+    jobIconState: Passenger
   - type: Access
     tags:
     - Maintenance
@@ -624,7 +622,7 @@
     - SyndicateAgent
 
 - type: entity
-  parent: [ SyndicateIDCard, BaseSyndicateContraband ]
+  parent: SyndicateIDCard
   id: SyndiOperativeIDCard
   name: syndicate operative ID card
   components:
@@ -635,7 +633,7 @@
     jobIcon: JobIconSyndicateOperative
 
 - type: entity
-  parent: [ SyndiOperativeIDCard, BaseSyndicateContraband ]
+  parent: SyndiOperativeIDCard
   id: SyndiCorpsmanIDCard
   name: syndicate corpsman ID card
   components:
@@ -645,7 +643,7 @@
     jobIcon: JobIconSyndicateCorpsman
 
 - type: entity
-  parent: [ SyndiOperativeIDCard, BaseSyndicateContraband ]
+  parent: SyndiOperativeIDCard
   id: SyndiCommanderIDCard
   name: syndicate commander ID card
   components:
@@ -690,13 +688,14 @@
     jobIcon: JobIconPirate
 
 - type: entity
-  parent: IDCardStandard
+  parent: [IDCardStandard, StripedIDCardAppearance]
   id: XenoborgIDCard
   name: xenoborg ID card
   components:
-  - type: Sprite
-    layers:
-    - state: default
+  - type: IdCardVisuals
+    baseState: default
+    stripeTopColor: "#00000000"
+    stripeTopColor: "#00000000"
   - type: Access
     tags:
     - Xenoborg

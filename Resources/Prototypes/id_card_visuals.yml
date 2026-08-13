@@ -44,6 +44,11 @@
   topStripeColor: "#6f56b8"
   bottomStripeColor: "#524089"
 
+- type: idCardVisuals
+  id: TramDriver
+  topStripeColor: "#ffc500"
+  bottomStripeColor: "#454a50"
+
 # Note: Civilian counts as primary, so Passenger and Visitor need special treatment
 - type: idCardVisuals
   id: Passenger
