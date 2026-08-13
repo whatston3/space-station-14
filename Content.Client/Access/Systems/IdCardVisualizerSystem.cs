@@ -106,7 +106,7 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
         }
         else
         {
-            jobProto = string.Empty;
+            jobProto = null;
         }
 
         // Finally, look for stripe data in IdCardVisualsPrototype
@@ -146,18 +146,18 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
     /// <summary>
     /// Uses an IdCardVisualsPrototype to set the stripes in <paramref name="data"/> before it can be applied to the ID card sprite.
     /// </summary>
-    private void SetStripeDataFromVisuals(IdCardVisualsPrototype visuals, ref IdCardVisualData data)
+    private void SetStripeDataFromVisuals(IdCardVisualsPrototype visuals, ref IdCardVisualData data, bool changeBase)
     {
-        if (visuals.TopStripeColor != null)
-            data.TopStripeColor ??= visuals.TopStripeColor.Value;
-        if (visuals.BottomStripeColor != null)
-            data.BottomStripeColor ??= visuals.BottomStripeColor.Value;
+        data.TopStripeColor ??= visuals.TopStripeColor;
+        data.BottomStripeColor ??= visuals.BottomStripeColor;
+        data.TopStripeState ??= visuals.TopStripeState;
+        data.BottomStripeState ??= visuals.BottomStripeState;
 
-        // Set states only if not null!
-        if (visuals.TopStripeState != null)
-            data.TopStripeState = visuals.TopStripeState;
-        if (visuals.BottomStripeState != null)
-            data.BottomStripeState = visuals.BottomStripeState;
+        if (changeBase)
+        {
+            data.BaseState ??=
+            data.
+        }
     }
 
     /// <summary>
