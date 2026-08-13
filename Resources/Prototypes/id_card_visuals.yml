@@ -1,99 +1,234 @@
-# region Job-specific
-- type: idCardVisuals
-  id: Captain
-  topStripeColor: "#1b67a5"
-  bottomStripeColor: "#0e4069"
+# Visuals for ID cards.
+# Lookup job/antag
 
+# region Base
 - type: idCardVisuals
-  id: Clown
-  bottomStripeState: stripe_clown
-
-# Note: CentComm counts as primary, so ERT roles are a special case.
-- type: idCardVisuals
-  id: ERTChaplain
-  topStripeColor: "#639137"
-  bottomStripeColor: "#446326"
-
-- type: idCardVisuals
-  id: ERTEngineer
-  topStripeColor: "#ffa62b"
-  bottomStripeColor: "#bc5b00"
-
-- type: idCardVisuals
-  id: ERTJanitor
-  topStripeColor: "#639137"
-  bottomStripeColor: "#446326"
-
-- type: idCardVisuals
-  id: ERTMedical
-  topStripeColor: "#68aed6"
-  bottomStripeColor: "#325f7a"
-
-- type: idCardVisuals
-  id: ERTSecurity
-  topStripeColor: "#cb0000"
-  bottomStripeColor: "#830000"
-
-- type: idCardVisuals
-  id: Mime
-  topStripeColor: "#2d2d2d"
-  bottomStripeColor: "#1d1d1d"
-
-- type: idCardVisuals
-  id: Musician
-  topStripeColor: "#6f56b8"
-  bottomStripeColor: "#524089"
-
-- type: idCardVisuals
-  id: TramDriver
-  topStripeColor: "#ffc500"
-  bottomStripeColor: "#454a50"
-
-# Note: Civilian counts as primary, so Passenger and Visitor need special treatment
-- type: idCardVisuals
-  id: Passenger
+  id: BaseNT
+  baseState: default
+  topStripeState: stripe_top
+  bottomStripeState: stripe_bottom
   topStripeColor: "#00000000" # no alpha!
   bottomStripeColor: "#00000000"
 
-- type: idCardVisuals
-  id: Visitor
-  topStripeColor: "#00000000"
-  bottomStripeColor: "#00000000"
-# endregion Job-specific
-
 # region Department-specific
 - type: idCardVisuals
+  parent: BaseNT
   id: Cargo
   topStripeColor: "#b18644"
   bottomStripeColor: "#5b4523"
 
 - type: idCardVisuals
+  parent: BaseNT
   id: CentralCommand
+  baseState: centcom
+  heldPrefix: blue
   topStripeColor: "#134975"
   bottomStripeColor: "#0d304d"
 
 - type: idCardVisuals
+  parent: BaseNT
   id: Civilian
   topStripeColor: "#639137"
   bottomStripeColor: "#446326"
 
 - type: idCardVisuals
+  parent: BaseNT
   id: Engineering
   topStripeColor: "#ffa62b"
   bottomStripeColor: "#bc5b00"
 
 - type: idCardVisuals
+  parent: BaseNT
   id: Medical
   topStripeColor: "#68aed6"
   bottomStripeColor: "#325f7a"
 
 - type: idCardVisuals
+  parent: BaseNT
   id: Science
   topStripeColor: "#a53aaa"
   bottomStripeColor: "#652368"
 
 - type: idCardVisuals
+  parent: BaseNT
   id: Security
   topStripeColor: "#cb0000"
   bottomStripeColor: "#830000"
 # endregion Department-specific
+
+# region Job-specific
+- type: idCardVisuals
+  parent: Science
+  id: Borg # nonsense, but close enough
+
+- type: idCardVisuals
+  parent: Civilian
+  id: Boxer # no actual department
+
+- type: idCardVisuals
+  parent: Security
+  id: Brigmedic # no actual department
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: Captain
+  baseState: gold
+  heldPrefix: gold
+  topStripeColor: "#1b67a5"
+  bottomStripeColor: "#0e4069"
+
+- type: idCardVisuals
+  parent: Engineering
+  id: ChiefEngineer
+  baseState: silver
+
+- type: idCardVisuals
+  parent: Medical
+  id: ChiefMedicalOfficer
+  baseState: silver
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: Clown
+  bottomStripeState: stripe_clown
+  topStripeState: null
+
+# Note: CentComm counts as primary, so ERT roles are a special case.
+- type: idCardVisuals
+  parent: Civilian
+  id: ERTChaplain
+  baseState: centcom
+
+- type: idCardVisuals
+  parent: Engineering
+  id: ERTEngineer
+  baseState: centcom
+
+- type: idCardVisuals
+  parent: Civilian
+  id: ERTJanitor
+  baseState: centcom
+
+- type: idCardVisuals
+  parent: CentralCommand
+  id: ERTLeader
+  baseState: gold
+
+- type: idCardVisuals
+  parent: Medical
+  id: ERTMedical
+  baseState: centcom
+
+- type: idCardVisuals
+  parent: Security
+  id: ERTSecurity
+  baseState: centcom
+
+- type: idCardVisuals
+  parent: Security
+  id: ERTSecurity
+  baseState: centcom
+
+- type: idCardVisuals
+  parent: Civilian
+  id: HeadOfPersonnel
+  baseState: silver
+
+- type: idCardVisuals
+  parent: Security
+  id: HeadOfSecurity
+  baseState: silver
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: Mime
+  topStripeColor: "#2d2d2d"
+  bottomStripeColor: "#1d1d1d"
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: Musician
+  topStripeColor: "#6f56b8"
+  bottomStripeColor: "#524089"
+
+# Note: Civilian counts as primary, so Passenger and Visitor need special treatment
+- type: idCardVisuals
+  parent: BaseNT
+  id: Passenger
+
+- type: idCardVisuals
+  parent: Cargo
+  id: Quartermaster
+  baseState: silver
+
+- type: idCardVisuals
+  parent: Science
+  id: ResearchDirector
+  baseState: silver
+
+- type: idCardVisuals
+  parent: Science
+  id: StationAI # nonsense, but close enough
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: TramDriver
+  topStripeColor: "#ffc500"
+  bottomStripeColor: "#454a50"
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: Visitor
+
+- type: idCardVisuals
+  parent: Civilian
+  id: Zookeeper # no actual department
+# endregion Job-specific
+
+# region Antag/Meme
+- type: idCardVisuals
+  id: Admin # the true antag
+  baseState: admin
+  heldPrefix: green
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: Cluwne
+  stripeTopColor: "#5dc574"
+  stripeBottomColor: "#3f9b53"
+
+- type: idCardVisuals
+  id: Ninja
+  baseState: ninja
+  heldPrefix: green
+  stripeTopColor: "#38D848"
+  stripeBottomColor: "#309000"
+
+- type: idCardVisuals
+  id: Pirate
+  baseState: pirate
+  heldPrefix: default
+
+- type: idCardVisuals
+  id: Prisoner
+  baseState: orange
+
+- type: idCardVisuals
+  base: BaseNT
+  id: Sus
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: Syndicate
+  baseState: black
+  stripeTopColor: "#e80c0c"
+  stripeBottomColor: "#960606"
+
+- type: idCardVisuals
+  id: Wizard
+  baseState: wizard
+
+- type: idCardVisuals
+  parent: BaseNT
+  id: Xenoborg
+# endregion Antag/Meme

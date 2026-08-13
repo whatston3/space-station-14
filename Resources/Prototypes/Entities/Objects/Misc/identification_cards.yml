@@ -34,27 +34,20 @@
   - type: Sprite
     layers:
     - map: [enum.IdCardVisualLayers.Base]
+      state: default
     - map: [enum.IdCardVisualLayers.TopStripe]
+      state: stripe_top
     - map: [enum.IdCardVisualLayers.BottomStripe]
+      state: stripe_bottom
     - sprite: Interface/Misc/job_icons.rsi
       offset: -0.09375, 0.0625 # 3 pixels left, 2 pixels up
       map: [enum.IdCardVisualLayers.JobIcon]
-  - type: IdCardVisuals
-
-- type: entity
-  abstract: true
-  parent: BaseIDCardAppearance
-  id: StripedIDCardAppearance
-  components:
-  - type: IdCardVisuals
-    baseState: default
-    stripeTopState: stripe_top
-    stripeBottomState: stripe_bottom
+  - type: IdCardVisuals # Redefines sprite layers and item prefix
 
 #IDs with layers
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: PassengerIDCard
   name: passenger ID card
   components:
@@ -64,14 +57,10 @@
 #Command
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance, BaseGrandTheftContraband]
+  parent: [IDCardStandard, BaseIDCardAppearance, BaseGrandTheftContraband]
   id: CaptainIDCard
   name: captain ID card
   components:
-  - type: IdCardVisuals
-    baseState: gold
-  - type: Item
-    heldPrefix: gold
   - type: PresetIdCard
     job: Captain
   - type: Tag
@@ -84,81 +73,57 @@
     stealGroup: CaptainIDCard
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: HoPIDCard
   name: head of personnel ID card
   components:
-  - type: IdCardVisuals
-    baseState: silver
-  - type: Item
-    heldPrefix: silver
   - type: PresetIdCard
     job: HeadOfPersonnel
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: CEIDCard
   name: chief engineer ID card
   components:
-  - type: IdCardVisuals
-    baseState: silver
-  - type: Item
-    heldPrefix: silver
   - type: PresetIdCard
     job: ChiefEngineer
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: CMOIDCard
   name: chief medical officer ID card
   components:
-  - type: IdCardVisuals
-    baseState: silver
-  - type: Item
-    heldPrefix: silver
   - type: PresetIdCard
     job: ChiefMedicalOfficer
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: RDIDCard
   name: research director ID card
   components:
-  - type: IdCardVisuals
-    baseState: silver
-  - type: Item
-    heldPrefix: silver
   - type: PresetIdCard
     job: ResearchDirector
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: HoSIDCard
   name: head of security ID card
   components:
-  - type: IdCardVisuals
-    baseState: silver
-  - type: Item
-    heldPrefix: silver
   - type: PresetIdCard
     job: HeadOfSecurity
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: QuartermasterIDCard
   name: quartermaster ID card
   components:
-  - type: IdCardVisuals
-    baseState: silver
-  - type: Item
-    heldPrefix: silver
   - type: PresetIdCard
     job: Quartermaster
 
 #Engineering
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: TechnicalAssistantIDCard
   name: technical assistant ID card
   components:
@@ -166,7 +131,7 @@
     job: TechnicalAssistant
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: EngineeringIDCard
   name: engineer ID card
   components:
@@ -174,7 +139,7 @@
     job: StationEngineer
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: AtmosIDCard
   name: atmospheric technician ID card
   components:
@@ -192,7 +157,7 @@
 #Medical
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: MedicalInternIDCard
   name: medical intern ID card
   components:
@@ -200,7 +165,7 @@
     job: MedicalIntern
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: MedicalIDCard
   name: medical ID card
   components:
@@ -208,7 +173,7 @@
     job: MedicalDoctor
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ParamedicIDCard
   name: paramedic ID card
   components:
@@ -216,7 +181,7 @@
     job: Paramedic
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ChemistIDCard
   name: chemist ID card
   components:
@@ -224,7 +189,7 @@
     job: Chemist
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: PsychologistIDCard
   name: psychologist ID card
   components:
@@ -242,7 +207,7 @@
 #Science
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ResearchAssistantIDCard
   name: research assistant ID card
   components:
@@ -250,7 +215,7 @@
     job: ResearchAssistant
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ResearchIDCard
   name: research ID card
   components:
@@ -268,7 +233,7 @@
 #Security
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: SecurityCadetIDCard
   name: security cadet ID card
   components:
@@ -276,7 +241,7 @@
     job: SecurityCadet
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: SecurityIDCard
   name: security ID card
   components:
@@ -284,7 +249,7 @@
     job: SecurityOfficer
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: WardenIDCard
   name: warden ID card
   components:
@@ -292,7 +257,7 @@
     job: Warden
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: DetectiveIDCard
   name: detective ID card
   components:
@@ -300,7 +265,7 @@
     job: Detective
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: BrigmedicIDCard
   name: brigmedic ID card
   components:
@@ -319,7 +284,7 @@
 #Service
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ServiceWorkerIDCard
   name: service worker ID card
   components:
@@ -327,7 +292,7 @@
     job: ServiceWorker
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ClownIDCard
   name: clown ID card
   components:
@@ -335,7 +300,7 @@
     job: Clown
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: MimeIDCard
   name: mime ID card
   components:
@@ -343,7 +308,7 @@
     job: Mime
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: MusicianIDCard
   name: musician ID card
   components:
@@ -351,7 +316,7 @@
     job: Musician
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ChaplainIDCard
   name: chaplain ID card
   components:
@@ -359,7 +324,7 @@
     job: Chaplain
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: JanitorIDCard
   name: janitor ID card
   components:
@@ -367,7 +332,7 @@
     job: Janitor
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: BartenderIDCard
   name: bartender ID card
   components:
@@ -386,7 +351,7 @@
     - DoorBumpOpener
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ChefIDCard
   name: chef ID card
   components:
@@ -394,7 +359,7 @@
     job: Chef
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: BotanistIDCard
   name: botanist ID card
   components:
@@ -402,7 +367,7 @@
     job: Botanist
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: LibrarianIDCard
   name: librarian ID card
   components:
@@ -410,7 +375,7 @@
     job: Librarian
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: LawyerIDCard
   name: lawyer ID card
   components:
@@ -418,7 +383,7 @@
     job: Lawyer
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ReporterIDCard
   name: reporter ID card
   components:
@@ -426,7 +391,7 @@
     job: Reporter
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: BoxerIDCard
   name: boxer ID card
   components:
@@ -435,7 +400,7 @@
     startingVisuals: Civilian
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ZookeeperIDCard
   name: zookeeper ID card
   components:
@@ -444,7 +409,7 @@
     startingVisuals: Civilian
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: TramDriverIDCard
   name: tram driver ID card
   components:
@@ -454,7 +419,7 @@
 #Supply
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: CargoIDCard
   name: cargo ID card
   components:
@@ -470,7 +435,7 @@
     jobIconState: SeniorCourier
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: SalvageIDCard
   name: salvage ID card
   components:
@@ -486,7 +451,7 @@
   description: A generically printed ID card for scummy prisoners.
   components:
   - type: IdCardVisuals
-    baseState: orange
+    startingVisuals: Prisoner
     jobIconState: Prisoner
     updateVisuals: false
   - type: Item
@@ -515,14 +480,13 @@
     price: 0
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: CluwneIDCard
   name: cluwne ID card
   suffix: Unremoveable
   components:
   - type: IdCardVisuals
-    stripeTopColor: "#5dc574"
-    stripeBottomColor: "#3f9b53"
+    startingVisuals: Cluwne
     jobIconState: Cluwne
     updateVisuals: false
   - type: IdCard
@@ -531,7 +495,7 @@
   - type: Unremoveable
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: VisitorIDCard
   name: visitor ID card
   components:
@@ -544,14 +508,13 @@
 #Antags
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance, BaseChameleon]
+  parent: [IDCardStandard, BaseIDCardAppearance, BaseChameleon]
   id: AgentIDCard
   name: passenger ID card
   suffix: Agent
   components:
   - type: IdCardVisuals # Should match the Passenger IDCardVisualsPrototype
-    stripeTopColor: "#00000000" # no alpha!
-    stripeBottomColor: "#00000000"
+    startingVisuals: Passenger
     jobIconState: Passenger
   - type: Access
     tags:
@@ -602,14 +565,12 @@
     - NuclearOperative
 
 - type: entity
-  parent: [ IDCardStandard, StripedIDCardAppearance, BaseSyndicateContraband ]
+  parent: [ IDCardStandard, BaseIDCardAppearance, BaseSyndicateContraband ]
   id: SyndicateIDCard
   name: syndicate ID card
   components:
   - type: IdCardVisuals
-    baseState: black
-    stripeTopColor: "#e80c0c"
-    stripeBottomColor: "#960606"
+    startingVisuals: Syndicate
     jobIconState: Syndicate
     updateVisuals: false
   - type: IdCard
@@ -653,15 +614,13 @@
     jobIcon: JobIconSyndicateCommander
 
 - type: entity
-  parent: [ IDCardStandard, StripedIDCardAppearance, BaseHighlyIllegalContraband ]
+  parent: [ IDCardStandard, BaseIDCardAppearance, BaseHighlyIllegalContraband ]
   id: NinjaIDCard
   name: ninja ID card
   suffix: Ninja
   components:
   - type: IdCardVisuals
-    baseState: ninja
-    stripeTopColor: "#38D848"
-    stripeBottomColor: "#309000"
+    startingVisuals: Ninja
     jobIconState: Ninja
     updateVisuals: false
   - type: Item
@@ -679,7 +638,7 @@
   name: pirate ID card
   components:
   - type: IdCardVisuals
-    baseState: pirate
+    startingVisuals: Pirate
     jobIconState: Pirate
     updateVisuals: false
   - type: Item
@@ -688,14 +647,12 @@
     jobIcon: JobIconPirate
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: XenoborgIDCard
   name: xenoborg ID card
   components:
   - type: IdCardVisuals
-    baseState: default
-    stripeTopColor: "#00000000"
-    stripeBottomColor: "#00000000"
+    startingVisuals: Xenoborg
   - type: Access
     tags:
     - Xenoborg
@@ -706,7 +663,7 @@
   name: wizard ID card
   components:
   - type: IdCardVisuals
-    baseState: wizard
+    startingVisuals: Wizard
     jobIconState: Wizard
     updateVisuals: false
   - type: Item
@@ -722,118 +679,77 @@
 #ERT/Centcomm
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: CentcomIDCard
   name: command officer ID card
   components:
   - type: IdCardVisuals
-    baseState: centcom
     jobIconState: Nanotrasen
-  - type: Item
-    heldPrefix: blue
   - type: PresetIdCard
     job: CentralCommandOfficial
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ERTLeaderIDCard
   name: ERT leader ID card
   components:
-  - type: IdCardVisuals
-    baseState: gold
-    jobIconState: ERTLeader
-  - type: Item
-    heldPrefix: gold
   - type: PresetIdCard
     job: ERTLeader
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ERTChaplainIDCard
   name: ERT chaplain ID card
   components:
-  - type: IdCardVisuals
-    baseState: centcom
-    jobIconState: ERTChaplain
-  - type: Item
-    heldPrefix: blue
   - type: PresetIdCard
     job: ERTChaplain
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ERTEngineerIDCard
   name: ERT engineer ID card
   components:
-  - type: IdCardVisuals
-    baseState: centcom
-    jobIconState: ERTEngineer
-  - type: Item
-    heldPrefix: blue
   - type: PresetIdCard
     job: ERTEngineer
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ERTJanitorIDCard
   name: ERT janitor ID card
   components:
-  - type: IdCardVisuals
-    baseState: centcom
-    jobIconState: ERTJanitor
-  - type: Item
-    heldPrefix: blue
   - type: PresetIdCard
     job: ERTJanitor
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ERTMedicIDCard
   name: ERT medic ID card
   components:
-  - type: IdCardVisuals
-    baseState: centcom
-    jobIconState: ERTMedical
-  - type: Item
-    heldPrefix: blue
   - type: PresetIdCard
     job: ERTMedical
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: ERTSecurityIDCard
   name: ERT security ID card
   components:
-  - type: IdCardVisuals
-    baseState: centcom
-    jobIconState: ERTSecurity
-  - type: Item
-    heldPrefix: blue
   - type: PresetIdCard
     job: ERTSecurity
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: CentcomIDCardDeathsquad
   name: death squad ID card
   components:
-  - type: IdCardVisuals
-    baseState: centcom
-    jobIconState: DeathSquad
   - type: PresetIdCard
     job: DeathSquad
 
 - type: entity
-  parent: [IDCardStandard, StripedIDCardAppearance]
+  parent: [IDCardStandard, BaseIDCardAppearance]
   id: CBURNIDcard
   name: CBURN ID card
   suffix: CBURN
   components:
-  - type: IdCardVisuals
-    baseState: centcom
-    jobIconState: CBURN
-  - type: Item
-    heldPrefix: blue
   - type: PresetIdCard
     job: CBURN
 
@@ -845,7 +761,7 @@
   description: An ID card that gives you access beyond your wildest dreams.
   components:
   - type: IdCardVisuals
-    baseState: admin
+    startingVisuals: Admin
     jobIconState: Admin
     updateVisuals: false
   - type: Item

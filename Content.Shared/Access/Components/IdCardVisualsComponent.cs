@@ -16,38 +16,7 @@ namespace Content.Shared.Access.Components;
 public sealed partial class IdCardVisualsComponent : Component
 {
     /// <summary>
-    /// The state of the base layer.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public string? BaseState;
-
-    /// <summary>
-    /// The state of the top stripe.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public string? StripeTopState;
-
-    /// <summary>
-    /// The top color of the top stripe.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public Color? StripeTopColor;
-
-    /// <summary>
-    /// The state of the bottom stripe.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public string? StripeBottomState;
-
-    /// <summary>
-    /// The color of the bottom stripe.
-    /// A null value should imply white.
-    /// </summary>
-    [DataField, AutoNetworkedField]
-    public Color? StripeBottomColor;
-
-    /// <summary>
-    /// The starting job icon.
+    /// An optional starting job icon to use.
     /// Useful for oddball roles (e.g. senior courier) or antag IDs.
     /// </summary>
     [DataField, AutoNetworkedField]
@@ -55,6 +24,7 @@ public sealed partial class IdCardVisualsComponent : Component
 
     /// <summary>
     /// The starting visuals prototype to use.
+    /// If null, defaults to the ID in the PresetIdComponent, then the department.
     /// </summary>
     [DataField, AutoNetworkedField]
     public ProtoId<IdCardVisualsPrototype>? StartingVisuals;

@@ -16,6 +16,11 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
 {
     [Dependency] private SharedJobSystem _job = default!;
 
+    [Dependency] private EntityQuery<IdCardComponent> _idCardQuery = default!;
+    [Dependency] private EntityQuery<PresetIdCardComponent> _presetIdCardQuery = default!;
+    [Dependency] private EntityQuery<SpriteComponent> _spriteQuery = default!;
+
+    /// <inheritdoc />
     protected override void OnAppearanceChange(EntityUid uid, IdCardVisualsComponent component, ref AppearanceChangeEvent args)
     {
         base.OnAppearanceChange(uid, component, ref args);
@@ -29,7 +34,7 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
             return;
 
         component.LastPrototype = prototype;
-        var data = ConstructData((uid, component), initialCheck: false);
+        var data = ConstructData((uid, component));
 
         SetIdVisuals((uid, args.Sprite), data);
     }
@@ -37,7 +42,7 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
     [SubscribeLocalEvent]
     private void OnStartup(Entity<IdCardVisualsComponent> ent, ref ComponentStartup args)
     {
-        if (!TryComp<SpriteComponent>(ent, out var sprite))
+        if (!_spriteQuery.TryComp(ent, out var sprite))
             return;
 
         var prototype = GetPrototypeToDraw(ent);
@@ -45,7 +50,7 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
         ent.Comp.LastPrototype = prototype;
 
         // Construct data, respecting our job icon if one exists!
-        var data = ConstructData(ent, initialCheck: true);
+        var data = ConstructData(ent);
 
         SetIdVisuals((ent, sprite), data);
     }
@@ -53,58 +58,51 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
     private string? GetPrototypeToDraw(EntityUid uid)
     {
         if (AppearanceSystem.TryGetData<string>(uid, IdCardVisuals.JobProto, out var jobProto))
-        {
             return jobProto;
-        }
-        else if (TryComp<IdCardComponent>(uid, out var idCard)
-                && idCard.JobPrototype != null)
-        {
+
+        if (_idCardQuery.TryComp(uid, out var idCard)
+            && idCard.JobPrototype != null)
             return idCard.JobPrototype;
-        }
-        else if (TryComp<PresetIdCardComponent>(uid, out var presetIdCard))
-        {
+
+        if (_presetIdCardQuery.TryComp(uid, out var presetIdCard))
             return presetIdCard.JobName;
-        }
+
         return null;
     }
 
-    private IdCardVisualData ConstructData(Entity<IdCardVisualsComponent> ent, bool initialCheck)
+    private IdCardVisualData ConstructData(Entity<IdCardVisualsComponent> ent)
     {
         IdCardVisualData data = new()
         {
-            BaseState = ent.Comp.BaseState,
-            TopStripeState = ent.Comp.StripeTopState,
-            TopStripeColor = ent.Comp.StripeTopColor,
-            BottomStripeState = ent.Comp.StripeBottomState,
-            BottomStripeColor = ent.Comp.StripeBottomColor,
             JobIconState = ent.Comp.JobIconState
         };
 
         // Try to get job icon, first from appearance data (implying a rewrite),
         // falling back to the ID card itself, then the ID card preset if that isn't set.
         // Note: currently doesn't handle RSI path!
-        string jobProto;
-        if (AppearanceSystem.TryGetData<string>(ent, IdCardVisuals.JobProto, out jobProto)
+        if (AppearanceSystem.TryGetData(ent, IdCardVisuals.JobProto, out string? jobProto)
             && TryGetJobIconState(jobProto, out var jobIconState))
         {
-            if (!initialCheck || data.JobIconState == null)
-                data.JobIconState = jobIconState;
+            data.JobIconState ??= jobIconState;
         }
-        else if (TryComp<IdCardComponent>(ent, out var idCard)
+        else if (ent.Comp.JobIconState != null)
+        {
+            data.JobIconState = ent.Comp.JobIconState;
+            jobProto = null;
+        }
+        else if (_idCardQuery.TryComp(ent, out var idCard)
                 && idCard.JobPrototype != null
                 && TryGetJobIconState(idCard.JobPrototype, out jobIconState))
         {
             jobProto = idCard.JobPrototype;
-            if (!initialCheck || data.JobIconState == null)
-                data.JobIconState = jobIconState;
+            data.JobIconState ??= jobIconState;
         }
-        else if (TryComp<PresetIdCardComponent>(ent, out var presetIdCard)
+        else if (_presetIdCardQuery.TryComp(ent, out var presetIdCard)
             && presetIdCard.JobName != null
             && TryGetJobIconState(presetIdCard.JobName, out jobIconState))
         {
             jobProto = presetIdCard.JobName;
-            if (!initialCheck || data.JobIconState == null)
-                data.JobIconState = jobIconState;
+            data.JobIconState ??= jobIconState;
         }
         else
         {
@@ -112,25 +110,11 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
         }
 
         // Finally, look for stripe data in IdCardVisualsPrototype
-
-        if (initialCheck && ProtoMan.TryIndex(ent.Comp.StartingVisuals, out var idCardVisuals))
+        if (jobProto != null && ProtoMan.TryIndex<IdCardVisualsPrototype>(jobProto, out var idCardVisuals)
+            || ProtoMan.TryIndex(ent.Comp.StartingVisuals, out idCardVisuals)
+            || GetFirstPrimaryDepartmentWithIdVisuals(jobProto, out idCardVisuals))
         {
             SetStripeDataFromVisuals(idCardVisuals, ref data);
-        }
-        else if (ProtoMan.TryIndex(jobProto, out idCardVisuals))
-        {
-            SetStripeDataFromVisuals(idCardVisuals, ref data);
-        }
-        else if (GetFirstPrimaryDepartmentWithIdVisuals(jobProto, out idCardVisuals))
-        {
-            SetStripeDataFromVisuals(idCardVisuals, ref data);
-        }
-        else
-        {
-            if (data.TopStripeColor == null && data.TopStripeState != null)
-                data.TopStripeVisible = false;
-            if (data.BottomStripeColor == null && data.BottomStripeState != null)
-                data.BottomStripeVisible = false;
         }
 
         return data;
@@ -139,11 +123,12 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
     /// <summary>
     /// Writes the first department with ID visuals for a given job prototype into <paramref name="prototype"/>, if one exists.
     /// </summary>
-    private bool GetFirstPrimaryDepartmentWithIdVisuals(string jobProto, [NotNullWhen(true)] out IdCardVisualsPrototype? prototype)
+    private bool GetFirstPrimaryDepartmentWithIdVisuals(string? jobProto, [NotNullWhen(true)] out IdCardVisualsPrototype? prototype)
     {
         prototype = null;
 
-        if (!_job.TryGetAllDepartments(jobProto, out var departments))
+        if (jobProto is null
+            || !_job.TryGetAllDepartments(jobProto, out var departments))
             return false;
 
         foreach (var department in departments)
@@ -204,14 +189,12 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
         if (SpriteSystem.LayerMapTryGet(sprite, IdCardVisualLayers.TopStripe, out layer, logMissing: false))
         {
             SpriteSystem.LayerSetRsiState(sprite, layer, data.TopStripeState);
-            SpriteSystem.LayerSetVisible(sprite, layer, data.TopStripeVisible);
             SpriteSystem.LayerSetColor(sprite, layer, data.TopStripeColor ?? Color.White);
         }
 
         if (SpriteSystem.LayerMapTryGet(sprite, IdCardVisualLayers.BottomStripe, out layer, logMissing: false))
         {
             SpriteSystem.LayerSetRsiState(sprite, layer, data.BottomStripeState);
-            SpriteSystem.LayerSetVisible(sprite, layer, data.BottomStripeVisible);
             SpriteSystem.LayerSetColor(sprite, layer, data.BottomStripeColor ?? Color.White);
         }
 
@@ -226,10 +209,8 @@ public sealed partial class IdCardVisualizerSystem : VisualizerSystem<IdCardVisu
     {
         public string? BaseState;
         public string? TopStripeState;
-        public bool TopStripeVisible = true;
         public Color? TopStripeColor;
         public string? BottomStripeState;
-        public bool BottomStripeVisible = true;
         public Color? BottomStripeColor;
         public string? JobIconState;
     }
