@@ -37,7 +37,7 @@
     - map: [enum.IdCardVisualLayers.TopStripe]
     - map: [enum.IdCardVisualLayers.BottomStripe]
     - sprite: Interface/Misc/job_icons.rsi
-      offset: -0.09375, 0.0625 #3 pixels left, 2 pixels up
+      offset: -0.09375, 0.0625 # 3 pixels left, 2 pixels up
       map: [enum.IdCardVisualLayers.JobIcon]
   - type: IdCardVisuals
 
@@ -695,7 +695,7 @@
   - type: IdCardVisuals
     baseState: default
     stripeTopColor: "#00000000"
-    stripeTopColor: "#00000000"
+    stripeBottomColor: "#00000000"
   - type: Access
     tags:
     - Xenoborg
