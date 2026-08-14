@@ -30,7 +30,6 @@ public sealed partial class TextScreenSystem : VisualizerSystem<TextScreenVisual
 
     [Dependency] private EntityQuery<SpriteComponent> _spriteQuery = default!;
     [Dependency] private EntityQuery<TextScreenTimerComponent> _screenTimerQuery = default!;
-    [Dependency] private EntityQuery<TextScreenVisualsComponent> _screenVisualsQuery = default!;
 
     /// <summary>
     /// Contains char/state Key/Value pairs. <br/>
