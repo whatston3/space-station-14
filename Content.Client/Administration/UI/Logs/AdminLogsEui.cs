@@ -173,7 +173,7 @@ public sealed partial class AdminLogsEui : BaseEui
         });
 
         LogsControl.Orphan();
-        LogsWindow.Dispose();
+        LogsWindow.Close();
         LogsWindow = null;
 
         ClydeWindow.RequestClosed += OnRequestClosed;
@@ -188,7 +188,7 @@ public sealed partial class AdminLogsEui : BaseEui
 
     public override void HandleState(EuiStateBase state)
     {
-        var s = (AdminLogsEuiState) state;
+        var s = (AdminLogsEuiState)state;
 
         if (s.IsLoading)
         {
@@ -260,9 +260,9 @@ public sealed partial class AdminLogsEui : BaseEui
             ClydeWindow.RequestClosed -= OnRequestClosed;
         }
 
-        LogsControl.Dispose();
-        LogsWindow?.Dispose();
-        Root?.Dispose();
+        LogsControl.Orphan();
+        LogsWindow?.Close();
+        Root?.Orphan();
         ClydeWindow?.Dispose();
     }
 }

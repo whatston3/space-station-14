@@ -6,7 +6,6 @@ using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controllers;
 using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Utility;
 
 namespace Content.Client.UserInterface.Systems.DecalPlacer;
 
@@ -25,7 +24,7 @@ public sealed partial class DecalPlacerUIController : UIController, IOnStateExit
         {
             _window.Close();
         }
-        else if(_sandbox.SandboxAllowed)
+        else if (_sandbox.SandboxAllowed)
         {
             _window.Open();
         }
@@ -35,7 +34,7 @@ public sealed partial class DecalPlacerUIController : UIController, IOnStateExit
     {
         if (_window == null)
             return;
-        _window.Dispose();
+        _window.Close();
         _window = null;
     }
 

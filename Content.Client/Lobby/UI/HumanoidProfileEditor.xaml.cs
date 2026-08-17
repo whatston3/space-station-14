@@ -415,20 +415,18 @@ namespace Content.Client.Lobby.UI
             SetDirty();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (!disposing)
-                return;
-
-            _loadoutWindow?.Dispose();
-            _loadoutWindow = null;
-        }
-
         protected override void EnteredTree()
         {
             base.EnteredTree();
             ReloadPreview();
+        }
+
+        protected override void ExitedTree()
+        {
+            base.ExitedTree();
+
+            _loadoutWindow?.Close();
+            _loadoutWindow = null;
         }
 
         private void UpdateSaveButton()

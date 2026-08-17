@@ -95,17 +95,9 @@ public sealed partial class AdminNotesLinePopup : Popup
         DeleteButton.ModulateSelfOverride = null;
     }
 
-    protected override void Dispose(bool disposing)
+    protected override void ExitedTree()
     {
-        base.Dispose(disposing);
-
-        if (!disposing)
-        {
-            return;
-        }
-
-        EditButton.OnPressed -= EditPressed;
-        DeleteButton.OnPressed -= DeletePressed;
+        base.ExitedTree();
 
         OnEditPressed = null;
         OnDeletePressed = null;

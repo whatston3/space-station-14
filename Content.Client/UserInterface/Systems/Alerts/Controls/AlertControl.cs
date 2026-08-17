@@ -143,15 +143,10 @@ namespace Content.Client.UserInterface.Systems.Alerts.Controls
             base.ExitedTree();
 
             if (!_entityManager.Deleted(_spriteViewEntity))
+            {
                 _entityManager.QueueDeleteEntity(_spriteViewEntity);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (!_entityManager.Deleted(_spriteViewEntity))
-                _entityManager.QueueDeleteEntity(_spriteViewEntity);
+                _spriteViewEntity = EntityUid.Invalid;
+            }
         }
     }
 

@@ -80,7 +80,7 @@ public sealed partial class AdminUIController : UIController,
     public void OnSystemUnloaded(AdminSystem system)
     {
         if (_window != null)
-            _window.Dispose();
+            _window.Close();
 
         _admin.AdminStatusUpdated -= AdminStatusUpdated;
 
@@ -93,7 +93,7 @@ public sealed partial class AdminUIController : UIController,
             return;
 
         if (_window?.Disposed ?? false)
-            OnWindowDisposed();
+            OnWindowClosed();
 
         _window = UIManager.CreateWindow<AdminMenuWindow>();
         LayoutContainer.SetAnchorPreset(_window, LayoutContainer.LayoutPreset.Center);
@@ -105,7 +105,6 @@ public sealed partial class AdminUIController : UIController,
         _window.ObjectsTabControl.OnEntryKeyBindDown += ObjectsTabEntryKeyBindDown;
         _window.OnOpen += OnWindowOpen;
         _window.OnClose += OnWindowClosed;
-        _window.OnDisposed += OnWindowDisposed;
     }
 
     public void UnloadButton()
@@ -138,22 +137,6 @@ public sealed partial class AdminUIController : UIController,
         AdminButton?.SetClickPressed(false);
     }
 
-    private void OnWindowDisposed()
-    {
-        if (AdminButton != null)
-            AdminButton.Pressed = false;
-
-        if (_window == null)
-            return;
-
-        _window.PlayerTabControl.OnEntryKeyBindDown -= PlayerTabEntryKeyBindDown;
-        _window.ObjectsTabControl.OnEntryKeyBindDown -= ObjectsTabEntryKeyBindDown;
-        _window.OnOpen -= OnWindowOpen;
-        _window.OnClose -= OnWindowClosed;
-        _window.OnDisposed -= OnWindowDisposed;
-        _window = null;
-    }
-
     private void AdminStatusUpdated()
     {
         if (AdminButton != null)
@@ -167,7 +150,7 @@ public sealed partial class AdminUIController : UIController,
 
     private void Toggle()
     {
-        if (_window is {IsOpen: true})
+        if (_window is { IsOpen: true })
         {
             _window.Close();
         }
@@ -179,7 +162,7 @@ public sealed partial class AdminUIController : UIController,
 
     private void PlayerTabEntryKeyBindDown(GUIBoundKeyEventArgs args, ListData? data)
     {
-        if (data is not PlayerListData {Info: var info})
+        if (data is not PlayerListData { Info: var info })
             return;
 
         if (info.NetEntity == null)

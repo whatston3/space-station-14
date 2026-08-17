@@ -14,7 +14,6 @@ public sealed class AdminLogLabel : RichTextLabel
         var localTime = log.Date.ToLocalTime();
 
         SetMessage($"{localTime:HH:mm:ss}: {log.Message}");
-        OnVisibilityChanged += VisibilityChanged;
     }
 
     public new SharedAdminLog Log { get; }
@@ -26,9 +25,16 @@ public sealed class AdminLogLabel : RichTextLabel
         Separator.Visible = Visible;
     }
 
-    protected override void Dispose(bool disposing)
+    protected override void EnteredTree()
     {
-        base.Dispose(disposing);
+        base.EnteredTree();
+
+        OnVisibilityChanged += VisibilityChanged;
+    }
+
+    protected override void ExitedTree()
+    {
+        base.ExitedTree();
 
         OnVisibilityChanged -= VisibilityChanged;
     }

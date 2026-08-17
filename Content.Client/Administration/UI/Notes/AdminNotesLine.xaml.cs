@@ -14,6 +14,7 @@ namespace Content.Client.Administration.UI.Notes;
 [GenerateTypedNameReferences]
 public sealed partial class AdminNotesLine : BoxContainer
 {
+    private readonly ISawmill _sawmill;
     private readonly SpriteSystem _sprites;
 
     private const string AdminNotesTextureBase = "/Textures/Interface/AdminNotes/";
@@ -34,6 +35,7 @@ public sealed partial class AdminNotesLine : BoxContainer
     {
         RobustXamlLoader.Load(this);
         _sprites = sprites;
+        _sawmill = Logger.GetSawmill("admin.notes");
 
         Note = note;
         MouseFilter = MouseFilterMode.Pass;
@@ -61,7 +63,7 @@ public sealed partial class AdminNotesLine : BoxContainer
         if (iconPath is null)
         {
             SeverityRect.Visible = false;
-            Logger.WarningS("admin.notes", $"Could not find an icon for note ID {Note.Id}");
+            _sawmill.Warning($"Could not find an icon for note ID {Note.Id}");
         }
         else
         {
@@ -197,14 +199,9 @@ public sealed partial class AdminNotesLine : BoxContainer
         Refresh();
     }
 
-    protected override void Dispose(bool disposing)
+    protected override void ExitedTree()
     {
-        base.Dispose(disposing);
-
-        if (!disposing)
-        {
-            return;
-        }
+        base.ExitedTree();
 
         OnClicked = null;
     }

@@ -73,8 +73,6 @@ public sealed class VendingMachineBoundUserInterface(EntityUid owner, Enum uiKey
         if (_menu == null)
             return;
 
-        _menu.OnItemSelected -= OnItemSelected;
-        _menu.OnClose -= Close;
-        _menu.Dispose();
+        _menu.Close();
     }
 }

@@ -10,7 +10,6 @@ using Content.Client.UserInterface.Systems.Inventory.Controls;
 using Content.Client.UserInterface.Systems.Inventory.Widgets;
 using Content.Client.UserInterface.Systems.Inventory.Windows;
 using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Hands.Components;
 using Content.Shared.Input;
 using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Storage;
@@ -78,7 +77,7 @@ public sealed partial class InventoryUIController : UIController, IOnStateEntere
     {
         if (_strippingWindow != null)
         {
-            _strippingWindow.Dispose();
+            _strippingWindow.Close();
             _strippingWindow = null;
         }
 

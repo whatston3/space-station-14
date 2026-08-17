@@ -90,7 +90,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     private void OnScreenLoad()
     {
-       LoadGui();
+        LoadGui();
     }
 
     private void OnScreenUnload()
@@ -165,7 +165,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (!EntityManager.TryGetComponent<ActionsComponent>(user, out var comp))
             return false;
 
-        if (_actionsSystem.GetAction(actionId) is not {} action ||
+        if (_actionsSystem.GetAction(actionId) is not { } action ||
             !EntityManager.TryGetComponent<TargetActionComponent>(action, out var target))
         {
             return false;
@@ -233,7 +233,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
     private void TriggerAction(int index)
     {
         if (!_actions.TryGetValue(index, out var actionId) ||
-            _actionsSystem?.GetAction(actionId) is not {} action)
+            _actionsSystem?.GetAction(actionId) is not { } action)
         {
             return;
         }
@@ -247,7 +247,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     private void OnActionAdded(EntityUid actionId)
     {
-        if (_actionsSystem?.GetAction(actionId) is not {} action)
+        if (_actionsSystem?.GetAction(actionId) is not { } action)
             return;
 
         // TODO: event
@@ -362,7 +362,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
                 continue;
             }
 
-            var button = new ActionButton(EntityManager, this) {Locked = true};
+            var button = new ActionButton(EntityManager, this) { Locked = true };
             button.ActionPressed += OnWindowActionPressed;
             button.ActionUnpressed += OnWindowActionUnPressed;
             button.ActionFocusExited += OnWindowActionFocusExisted;
@@ -372,7 +372,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
         for (; i < existing.Count; i++)
         {
-            existing[i].Dispose();
+            existing[i].Orphan();
         }
     }
 
@@ -461,7 +461,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
     private void DragAction()
     {
-        if (_menuDragHelper.Dragged is not {Action: {} action} dragged)
+        if (_menuDragHelper.Dragged is not { Action: { } action } dragged)
         {
             _menuDragHelper.EndDrag();
             return;
@@ -577,7 +577,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
         _menuDragHelper.EndDrag();
 
-        if (button.Action is not {} action)
+        if (button.Action is not { } action)
             return;
 
         // TODO: make this an event
@@ -600,15 +600,15 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         // TODO ACTIONS
         // The dragging icon shuld be based on the entity's icon style. I.e. if the action has a large icon texture,
         // and a small item/provider sprite, then the dragged icon should be the big texture, not the provider.
-        if (_menuDragHelper.Dragged?.Action is {} action)
+        if (_menuDragHelper.Dragged?.Action is { } action)
         {
             if (EntityManager.TryGetComponent(action.Comp.EntityIcon, out SpriteComponent? itemSprite)
-                && itemSprite.Icon?.GetFrame(RsiDirection.South, 0) is {} itemFrame)
+                && itemSprite.Icon?.GetFrame(RsiDirection.South, 0) is { } itemFrame)
             {
                 _dragShadow.Texture = itemFrame;
             }
             else if (EntityManager.TryGetComponent(action.Owner, out SpriteComponent? actionSprite)
-                && actionSprite.Icon?.GetFrame(RsiDirection.South, 0) is {} actionFrame)
+                && actionSprite.Icon?.GetFrame(RsiDirection.South, 0) is { } actionFrame)
             {
                 _dragShadow.Texture = actionFrame;
             }
@@ -664,7 +664,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             _window.SearchBar.OnTextChanged -= OnSearchChanged;
             _window.FilterButton.OnItemSelected -= OnFilterSelected;
 
-            _window.Dispose();
+            _window.Close();
             _window = null;
         }
     }
@@ -751,7 +751,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
         if (wasDragging != IsDragging)
             UpdateActionBarBackgrounds();
-        if (_window is {UpdateNeeded: true})
+        if (_window is { UpdateNeeded: true })
             SearchAndDisplay();
     }
 
@@ -828,7 +828,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
                 handOverlay.EntityOverride = provider;
             }
             else if (EntityManager.TryGetComponent(uid, out SpriteComponent? actionSprite)
-                && actionSprite.Icon?.GetFrame(RsiDirection.South, 0) is {} frame)
+                && actionSprite.Icon?.GetFrame(RsiDirection.South, 0) is { } frame)
             {
                 handOverlay.IconOverride = frame;
             }

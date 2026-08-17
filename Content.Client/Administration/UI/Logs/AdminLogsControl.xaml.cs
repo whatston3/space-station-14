@@ -63,7 +63,7 @@ public sealed partial class AdminLogsControl : Control
 
     public HashSet<LogImpact> SelectedImpacts { get; } = new();
 
-    private bool firstTimeOpened = true;
+    private bool _firstTimeOpened = true;
 
     public void SetCurrentRound(int round)
     {
@@ -318,7 +318,7 @@ public sealed partial class AdminLogsControl : Control
 
     private void TypeButtonPressed(ButtonEventArgs args)
     {
-        var button = (AdminLogTypeButton) args.Button;
+        var button = (AdminLogTypeButton)args.Button;
         if (button.Pressed)
         {
             SelectedTypes.Add(button.Type);
@@ -333,7 +333,7 @@ public sealed partial class AdminLogsControl : Control
 
     private void PlayerButtonPressed(ButtonEventArgs args)
     {
-        var button = (AdminLogPlayerButton) args.Button;
+        var button = (AdminLogPlayerButton)args.Button;
         if (button.Pressed)
         {
             SelectedPlayers.Add(button.Id);
@@ -348,7 +348,7 @@ public sealed partial class AdminLogsControl : Control
 
     private void ImpactButtonPressed(ButtonEventArgs args)
     {
-        var button = (AdminLogImpactButton) args.Button;
+        var button = (AdminLogImpactButton)args.Button;
         if (button.Pressed)
         {
             SelectedImpacts.Add(button.Impact);
@@ -439,7 +439,7 @@ public sealed partial class AdminLogsControl : Control
     {
         var buttons = new SortedSet<AdminLogPlayerButton>(_adminLogPlayerButtonComparer);
         // we retrieve everything if we open this window for the first time and the selected player list is empty
-        var allSelected = firstTimeOpened && SelectedPlayers.Count == 0;
+        var allSelected = _firstTimeOpened && SelectedPlayers.Count == 0;
 
         foreach (var control in PlayersContainer.Children.ToArray())
         {
@@ -531,26 +531,5 @@ public sealed partial class AdminLogsControl : Control
             "admin-logs-count",
             ("showing", ShownLogs), ("total", TotalLogs), ("round", RoundLogs)
         );
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-
-        TypeSearch.OnTextChanged -= TypeSearchChanged;
-        PlayerSearch.OnTextChanged -= PlayerSearchChanged;
-        LogSearch.OnTextChanged -= LogSearchChanged;
-
-        SelectAllTypesButton.OnPressed -= SelectAllTypes;
-        SelectNoTypesButton.OnPressed -= SelectNoTypes;
-
-        IncludeNonPlayersButton.OnPressed -= IncludeNonPlayers;
-        SelectAllPlayersButton.OnPressed -= SelectAllPlayers;
-        SelectNoPlayersButton.OnPressed -= SelectNoPlayers;
-
-        RoundSpinBox.IsValid = null;
-        RoundSpinBox.ValueChanged -= RoundSpinBoxChanged;
-
-        ResetRoundButton.OnPressed -= ResetRoundPressed;
     }
 }

@@ -42,7 +42,7 @@ public sealed partial class AdminMessagePopupWindow : Control
 
     public void SetState(AdminMessageEuiState state)
     {
-        Timer = (float) state.Time.TotalSeconds;
+        Timer = (float)state.Time.TotalSeconds;
 
         MessageContainer.RemoveAllChildren();
 
@@ -51,8 +51,7 @@ public sealed partial class AdminMessagePopupWindow : Control
             MessageContainer.AddChild(new AdminMessagePopupMessage(message));
         }
 
-        Description.SetMessage(
-            FormattedMessage.FromMarkup(Loc.GetString("admin-notes-message-desc", ("count", state.Messages.Length))));
+        Description.SetMessage(FormattedMessage.FromMarkupOrThrow(Loc.GetString("admin-notes-message-desc", ("count", state.Messages.Length))));
     }
 
     private void OnDismissButtonPressed(BaseButton.ButtonEventArgs obj)

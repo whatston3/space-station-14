@@ -31,7 +31,7 @@ using Robust.Shared.Utility;
 namespace Content.Client.UserInterface.Systems.Bwoink;
 
 [UsedImplicitly]
-public sealed partial class AHelpUIController: UIController, IOnSystemChanged<BwoinkSystem>, IOnStateChanged<GameplayState>, IOnStateChanged<LobbyState>
+public sealed partial class AHelpUIController : UIController, IOnSystemChanged<BwoinkSystem>, IOnStateChanged<GameplayState>, IOnStateChanged<LobbyState>
 {
     [Dependency] private IClientAdminManager _adminManager = default!;
     [Dependency] private IConfigurationManager _config = default!;
@@ -180,7 +180,7 @@ public sealed partial class AHelpUIController: UIController, IOnSystemChanged<Bw
         UIHelper.SendMessageAction = (userId, textMessage, playSound, adminOnly) => _bwoinkSystem?.Send(userId, textMessage, playSound, adminOnly);
         UIHelper.InputTextChanged += (channel, text) => _bwoinkSystem?.SendInputTextUpdated(channel, text.Length > 0);
         UIHelper.OnClose += () => { SetAHelpPressed(false); };
-        UIHelper.OnOpen +=  () => { SetAHelpPressed(true); };
+        UIHelper.OnOpen += () => { SetAHelpPressed(true); };
         SetAHelpPressed(UIHelper.IsOpen);
     }
 
@@ -223,7 +223,7 @@ public sealed partial class AHelpUIController: UIController, IOnSystemChanged<Bw
         }
 
         helper.Control.Orphan();
-        helper.Window.Dispose();
+        helper.Window.Close();
         helper.Window = null;
         helper.EverOpened = false;
 
@@ -381,7 +381,7 @@ public sealed class AdminAHelpUIHandler : IAHelpUIHandler
                 {
                     panel.Orphan();
                 }
-                Control?.Dispose();
+                Control?.Orphan();
             }
             // window wont be closed here so we will invoke ourselves
             OnClose?.Invoke();
@@ -482,7 +482,7 @@ public sealed class AdminAHelpUIHandler : IAHelpUIHandler
 
     public void Dispose()
     {
-        Window?.Dispose();
+        Window?.Close();
         Window = null;
         Control = null;
         _activePanelMap.Clear();
@@ -572,9 +572,9 @@ public sealed class UserAHelpUIHandler : IAHelpUIHandler
         _chatPanel.RelayedToDiscordLabel.Visible = relayActive;
         _window = new DefaultWindow()
         {
-            TitleClass="windowTitleAlert",
-            HeaderClass="windowHeaderAlert",
-            Title=Loc.GetString("bwoink-user-title"),
+            TitleClass = "windowTitleAlert",
+            HeaderClass = "windowHeaderAlert",
+            Title = Loc.GetString("bwoink-user-title"),
             MinSize = new Vector2(500, 300),
         };
         _window.OnClose += () => { OnClose?.Invoke(); };
@@ -589,7 +589,7 @@ public sealed class UserAHelpUIHandler : IAHelpUIHandler
 
     public void Dispose()
     {
-        _window?.Dispose();
+        _window?.Close();
         _window = null;
         _chatPanel = null;
     }

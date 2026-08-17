@@ -19,13 +19,6 @@ namespace Content.Client.Administration.UI.Tabs
             RobustXamlLoader.Load(this);
             IoCManager.InjectDependencies(this);
 
-            _config.OnValueChanged(CCVars.OocEnabled, OocEnabledChanged, true);
-            _config.OnValueChanged(CCVars.LoocEnabled, LoocEnabledChanged, true);
-            _config.OnValueChanged(CCVars.DeadChatEnabled, DeadChatEnabledChanged, true);
-            _config.OnValueChanged(CCVars.AfkTime, AfkTimeChanged, true);
-            _config.OnValueChanged(CCVars.AdminAfkTime, AdminAfkTimeChanged, true);
-            _config.OnValueChanged(CCVars.AfkConfirmTimeout, AfkConfirmTimeoutChanged, true);
-
             ServerShutdownButton.OnPressed += _ => _console.ExecuteCommand("shutdown");
 
             AfkTime.OnTextEntered += args => SendFloatCVar(CCVars.AfkTime.Name, args.Text);
@@ -78,18 +71,28 @@ namespace Content.Client.Administration.UI.Tabs
             AfkConfirmTimeout.PlaceHolder = value.ToString(CultureInfo.InvariantCulture);
         }
 
-        protected override void Dispose(bool disposing)
+        protected override void EnteredTree()
         {
-            base.Dispose(disposing);
+            base.EnteredTree();
 
-            if (disposing)
-            {
-                _config.UnsubValueChanged(CCVars.OocEnabled, OocEnabledChanged);
-                _config.UnsubValueChanged(CCVars.LoocEnabled, LoocEnabledChanged);
-                _config.UnsubValueChanged(CCVars.AfkTime, AfkTimeChanged);
-                _config.UnsubValueChanged(CCVars.AdminAfkTime, AdminAfkTimeChanged);
-                _config.UnsubValueChanged(CCVars.AfkConfirmTimeout, AfkConfirmTimeoutChanged);
-            }
+            _config.OnValueChanged(CCVars.OocEnabled, OocEnabledChanged, true);
+            _config.OnValueChanged(CCVars.LoocEnabled, LoocEnabledChanged, true);
+            _config.OnValueChanged(CCVars.DeadChatEnabled, DeadChatEnabledChanged, true);
+            _config.OnValueChanged(CCVars.AfkTime, AfkTimeChanged, true);
+            _config.OnValueChanged(CCVars.AdminAfkTime, AdminAfkTimeChanged, true);
+            _config.OnValueChanged(CCVars.AfkConfirmTimeout, AfkConfirmTimeoutChanged, true);
+        }
+
+        protected override void ExitedTree()
+        {
+            base.ExitedTree();
+
+            _config.UnsubValueChanged(CCVars.OocEnabled, OocEnabledChanged);
+            _config.UnsubValueChanged(CCVars.LoocEnabled, LoocEnabledChanged);
+            _config.UnsubValueChanged(CCVars.DeadChatEnabled, DeadChatEnabledChanged);
+            _config.UnsubValueChanged(CCVars.AfkTime, AfkTimeChanged);
+            _config.UnsubValueChanged(CCVars.AdminAfkTime, AdminAfkTimeChanged);
+            _config.UnsubValueChanged(CCVars.AfkConfirmTimeout, AfkConfirmTimeoutChanged);
         }
     }
 }

@@ -39,6 +39,7 @@ public sealed partial class ReplayMainScreen : State
     private ResPath _directory;
     private List<(string Name, ResPath Path)> _replays = new();
     private ResPath? _selected;
+    private ISawmill _sawmill = default!;
 
     protected override void Startup()
     {
@@ -50,6 +51,8 @@ public sealed partial class ReplayMainScreen : State
         _mainMenuControl.OptionsButton.OnPressed += OptionsButtonPressed;
         _mainMenuControl.FolderButton.OnPressed += OnFolderPressed;
         _mainMenuControl.LoadButton.OnPressed += OnLoadPressed;
+
+        _sawmill = Logger.GetSawmill("replay_menu");
 
         _directory = new ResPath(_cfg.GetCVar(CVars.ReplayDirectory)).ToRootedPath();
         RefreshReplays();
@@ -263,7 +266,7 @@ public sealed partial class ReplayMainScreen : State
         }
         catch (Exception ex)
         {
-            Logger.Error($"Failed to load replay info. Exception: {ex}");
+            _sawmill.Error($"Failed to load replay info. Exception: {ex}");
             SelectReplay(null);
             return;
         }
@@ -272,8 +275,8 @@ public sealed partial class ReplayMainScreen : State
 
     protected override void Shutdown()
     {
-        _mainMenuControl.Dispose();
-        _selectWindow?.Dispose();
+        _mainMenuControl.Orphan();
+        _selectWindow?.Close();
     }
 
     private void OptionsButtonPressed(BaseButton.ButtonEventArgs args)

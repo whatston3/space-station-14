@@ -79,8 +79,8 @@ public sealed partial class BanListEui : BaseEui
 
             if (_admins.HasAdminFlag(Player, AdminFlags.Pii))
             {
-                ips = [..ban.Addresses.Select(a => (a.address.ToString(), a.cidrMask))];
-                hwids = [..ban.HWIds.Select(h => h.ToString())];
+                ips = [.. ban.Addresses.Select(a => (a.address.ToString(), a.cidrMask))];
+                hwids = [.. ban.HWIds.Select(h => h.ToString())];
             }
 
             list.Add(new SharedBan(
