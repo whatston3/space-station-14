@@ -500,7 +500,9 @@ public sealed partial class ChatUIController : UIController
     {
         bubble.Orphan();
 
-        var list = _activeSpeechBubbles[entityUid];
+        if (!_activeSpeechBubbles.TryGetValue(entityUid, out var list))
+            return;
+
         list.Remove(bubble);
 
         if (list.Count == 0)
