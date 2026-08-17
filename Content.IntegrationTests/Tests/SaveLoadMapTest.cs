@@ -8,7 +8,6 @@ using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Maths;
 using Robust.Shared.Utility;
-using Serilog;
 
 namespace Content.IntegrationTests.Tests
 {
