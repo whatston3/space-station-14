@@ -244,8 +244,16 @@ public abstract partial class GameTest
 
             await CleanUpEntities();
 
+            CheckForLeakedEntities();
+
             // And other teardown logic will go here. Eventually.
 
+        }
+        catch (DirtyTestException)
+        {
+            _pairDestroyed = true;
+            Assert.Fail($"Test was not declared as dirty, but leaked entities.  Server count: {SEntMan.EntityCount}, client count: {CEntMan.EntityCount}");
+            throw;
         }
         catch (Exception)
         {
