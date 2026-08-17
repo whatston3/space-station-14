@@ -15,35 +15,33 @@ namespace Content.IntegrationTests.Tests
         [Test]
         public async Task Test()
         {
-            var pair = Pair;
-            var server = pair.Server;
-            var testMap = await pair.CreateTestMap();
-            var entMgr = server.ResolveDependency<IEntityManager>();
-            var sysManager = server.ResolveDependency<IEntitySystemManager>();
+            var testMap = await Pair.CreateTestMap();
             var coordinates = testMap.GridCoords;
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
                 // Spawn everything.
-                var invSystem = sysManager.GetEntitySystem<InventorySystem>();
+                var invSystem = SEntMan.System<InventorySystem>();
 
-                var container = entMgr.SpawnEntity(null, coordinates);
-                entMgr.EnsureComponent<InventoryComponent>(container);
-                entMgr.EnsureComponent<ContainerManagerComponent>(container);
+                var container = SEntMan.SpawnEntity(null, coordinates);
+                SEntMan.EnsureComponent<InventoryComponent>(container);
+                SEntMan.EnsureComponent<ContainerManagerComponent>(container);
 
-                var child = entMgr.SpawnEntity(null, coordinates);
-                var item = entMgr.EnsureComponent<ClothingComponent>(child);
+                var child = SEntMan.SpawnEntity(null, coordinates);
+                var item = SEntMan.EnsureComponent<ClothingComponent>(child);
 
-                sysManager.GetEntitySystem<ClothingSystem>().SetSlots(child, SlotFlags.HEAD, item);
+                SEntMan.System<ClothingSystem>().SetSlots(child, SlotFlags.HEAD, item);
 
                 // Equip item.
                 Assert.That(invSystem.TryEquip(container, child, "head"), Is.True);
 
                 // Delete parent.
-                entMgr.DeleteEntity(container);
+                SEntMan.DeleteEntity(container);
 
                 // Assert that child item was also deleted.
                 Assert.That(item.Deleted, Is.True);
+
+                SEntMan.System<SharedMapSystem>().DeleteMap(testMap.MapId);
             });
         }
     }

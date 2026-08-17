@@ -32,20 +32,16 @@ namespace Content.IntegrationTests.Tests
         [Test]
         public async Task Test()
         {
-            var pair = Pair;
-            var server = pair.Server;
+            var testMap = await Pair.CreateTestMap();
 
-            var testMap = await pair.CreateTestMap();
-
-            var entityMan = server.EntMan;
-            var mapSys = entityMan.System<SharedMapSystem>();
+            var mapSys = Server.System<SharedMapSystem>();
 
             EntityUid generator = default;
             Entity<MapGridComponent> grid1 = default;
             Entity<MapGridComponent> grid2 = default;
 
             // Create grids
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
                 var mapId = testMap.MapId;
                 grid1 = mapSys.CreateGridEntity(mapId);
@@ -54,29 +50,29 @@ namespace Content.IntegrationTests.Tests
                 mapSys.SetTile(grid1, grid1, Vector2i.Zero, new Tile(1));
                 mapSys.SetTile(grid2, grid2, Vector2i.Zero, new Tile(1));
 
-                generator = entityMan.SpawnEntity("GridGravityGeneratorDummy", new EntityCoordinates(grid1, 0.5f, 0.5f));
+                generator = SEntMan.SpawnAttachedTo("GridGravityGeneratorDummy", new EntityCoordinates(grid1, 0.5f, 0.5f));
                 Assert.Multiple(() =>
                 {
-                    Assert.That(entityMan.HasComponent<GravityGeneratorComponent>(generator));
-                    Assert.That(entityMan.HasComponent<ApcPowerReceiverComponent>(generator));
+                    Assert.That(SEntMan.HasComponent<GravityGeneratorComponent>(generator));
+                    Assert.That(SEntMan.HasComponent<ApcPowerReceiverComponent>(generator));
                 });
 
-                var powerComponent = entityMan.GetComponent<ApcPowerReceiverComponent>(generator);
+                var powerComponent = SEntMan.GetComponent<ApcPowerReceiverComponent>(generator);
                 powerComponent.NeedsPower = false;
             });
 
-            await server.WaitRunTicks(5);
+            await Server.WaitRunTicks(5);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
-                var generatorComponent = entityMan.GetComponent<GravityGeneratorComponent>(generator);
-                var powerComponent = entityMan.GetComponent<ApcPowerReceiverComponent>(generator);
+                var generatorComponent = SEntMan.GetComponent<GravityGeneratorComponent>(generator);
+                var powerComponent = SEntMan.GetComponent<ApcPowerReceiverComponent>(generator);
 
                 Assert.Multiple(() =>
                 {
                     Assert.That(generatorComponent.GravityActive, Is.True);
-                    Assert.That(!entityMan.GetComponent<GravityComponent>(grid1).Enabled);
-                    Assert.That(entityMan.GetComponent<GravityComponent>(grid2).Enabled);
+                    Assert.That(!SEntMan.GetComponent<GravityComponent>(grid1).Enabled);
+                    Assert.That(SEntMan.GetComponent<GravityComponent>(grid2).Enabled);
                 });
 
                 // Re-enable needs power so it turns off again.
@@ -84,17 +80,19 @@ namespace Content.IntegrationTests.Tests
                 powerComponent.NeedsPower = true;
             });
 
-            await server.WaitRunTicks(5);
+            await Server.WaitRunTicks(5);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
-                var generatorComponent = entityMan.GetComponent<GravityGeneratorComponent>(generator);
+                var generatorComponent = SEntMan.GetComponent<GravityGeneratorComponent>(generator);
 
                 Assert.Multiple(() =>
                 {
                     Assert.That(generatorComponent.GravityActive, Is.False);
-                    Assert.That(entityMan.GetComponent<GravityComponent>(grid2).Enabled, Is.False);
+                    Assert.That(SEntMan.GetComponent<GravityComponent>(grid2).Enabled, Is.False);
                 });
+
+                mapSys.DeleteMap(testMap.MapId);
             });
         }
     }

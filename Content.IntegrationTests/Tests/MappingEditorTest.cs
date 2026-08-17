@@ -11,11 +11,9 @@ public sealed class MappingEditorTest : GameTest
     [Test]
     public async Task StopHardCodingWidgetsJesusChristTest()
     {
-        var pair = Pair;
-        var client = pair.Client;
-        var state = client.ResolveDependency<IStateManager>();
+        var state = Client.ResolveDependency<IStateManager>();
 
-        await client.WaitPost(() =>
+        await Client.WaitPost(() =>
         {
             Assert.DoesNotThrow(() =>
             {
@@ -24,9 +22,9 @@ public sealed class MappingEditorTest : GameTest
         });
 
         // arbitrary short time
-        await client.WaitRunTicks(30);
+        await Client.WaitRunTicks(30);
 
-        await client.WaitPost(() =>
+        await Client.WaitPost(() =>
         {
             Assert.DoesNotThrow(() =>
             {
