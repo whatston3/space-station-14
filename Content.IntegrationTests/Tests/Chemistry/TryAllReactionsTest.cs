@@ -51,7 +51,7 @@ public sealed class TryAllReactionsTest : GameTest
                 {
                     await Pair.Server.WaitAssertion(() =>
                     {
-                        beaker = SEntMan.SpawnEntity("TestSolutionContainer", coordinates);
+                        beaker = SSpawnAtPosition("TestSolutionContainer", coordinates);
                         Assert.That(_solutionContainerSystem
                             .TryGetSolution(beaker, "beaker", out var solutionEnt, out solution));
                         _solutionContainerSystem.SetCanReact(solutionEnt!.Value, false);
@@ -103,7 +103,7 @@ public sealed class TryAllReactionsTest : GameTest
 
                         if (reactionPrototype.MixingCategories != null)
                         {
-                            var dummyEntity = SEntMan.SpawnEntity(null, MapCoordinates.Nullspace);
+                            var dummyEntity = SSpawn(null);
                             var mixerComponent = SEntMan.AddComponent<ReactionMixerComponent>(dummyEntity);
                             mixerComponent.ReactionTypes = reactionPrototype.MixingCategories;
                             _solutionContainerSystem.UpdateChemicals(solutionEnt.Value, true, mixerComponent);

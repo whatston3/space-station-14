@@ -3,8 +3,6 @@ using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Shared.Body;
 using Robust.Shared.Containers;
-using Robust.Shared.GameObjects;
-using Robust.Shared.Map;
 
 namespace Content.IntegrationTests.Tests.Body;
 
@@ -107,5 +105,7 @@ public sealed class DetachableOrganSystemTest : GameTest
         Assert.That(SComp<OrganComponent>(child).Body, Is.EqualTo(newBody));
         Assert.That(SComp<OrganComponent>(grandParent).Body, Is.EqualTo(oldBody));
         Assert.That(SComp<OrganComponent>(sibling).Body, Is.EqualTo(oldBody));
+
+        SEntMan.DeleteEntity(newBody);
     }
 }

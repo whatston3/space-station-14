@@ -7,8 +7,6 @@ using Content.Shared.Damage.Systems;
 using Content.Shared.FixedPoint;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
-using Robust.Shared.GameObjects;
-using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests.Commands
@@ -38,25 +36,21 @@ namespace Content.IntegrationTests.Tests.Commands
         [Test]
         public async Task RejuvenateDeadTest()
         {
-            var pair = Pair;
-            var server = pair.Server;
-            var entManager = server.ResolveDependency<IEntityManager>();
-            var prototypeManager = server.ResolveDependency<IPrototypeManager>();
-            var mobStateSystem = entManager.System<MobStateSystem>();
-            var damSystem = entManager.System<DamageableSystem>();
-            var rejuvenateSystem = entManager.System<RejuvenateSystem>();
+            var mobStateSystem = Server.System<MobStateSystem>();
+            var damSystem = Server.System<DamageableSystem>();
+            var rejuvenateSystem = Server.System<RejuvenateSystem>();
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
-                var human = entManager.SpawnEntity("DamageableDummy", MapCoordinates.Nullspace);
+                var human = SSpawn("DamageableDummy");
                 DamageableComponent damageable = null;
                 MobStateComponent mobState = null;
 
                 // Sanity check
                 Assert.Multiple(() =>
                 {
-                    Assert.That(entManager.TryGetComponent(human, out damageable));
-                    Assert.That(entManager.TryGetComponent(human, out mobState));
+                    Assert.That(SEntMan.TryGetComponent(human, out damageable));
+                    Assert.That(SEntMan.TryGetComponent(human, out mobState));
                 });
                 Assert.Multiple(() =>
                 {
@@ -67,7 +61,7 @@ namespace Content.IntegrationTests.Tests.Commands
                 });
 
                 // Kill the entity
-                DamageSpecifier damage = new(prototypeManager.Index(TestDamageGroup), FixedPoint2.New(10000000));
+                DamageSpecifier damage = new(SProtoMan.Index(TestDamageGroup), FixedPoint2.New(10000000));
 
                 damSystem.TryChangeDamage(human, damage, true);
 

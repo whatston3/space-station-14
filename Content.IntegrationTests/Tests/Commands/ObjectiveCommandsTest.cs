@@ -41,20 +41,17 @@ public sealed class ObjectiveCommandsTest : GameTest
     [Test]
     public async Task AddListRemoveObjectiveTest()
     {
-        var pair = Pair;
-        var server = pair.Server;
-        var entMan = server.EntMan;
-        var playerMan = server.ResolveDependency<ISharedPlayerManager>();
-        var mindSys = server.System<SharedMindSystem>();
-        var objectivesSystem = server.System<ObjectivesSystem>();
+        var playerMan = Server.ResolveDependency<ISharedPlayerManager>();
+        var mindSys = Server.System<SharedMindSystem>();
+        var objectivesSystem = Server.System<ObjectivesSystem>();
 
-        await server.AddDummySession(DummyUsername);
-        await server.WaitRunTicks(5);
+        await Server.AddDummySession(DummyUsername);
+        await Server.WaitRunTicks(5);
 
         var playerSession = playerMan.Sessions.Single();
 
         Entity<MindComponent>? mindEnt = null;
-        await server.WaitPost(() =>
+        await Server.WaitPost(() =>
         {
             mindEnt = mindSys.CreateMind(playerSession.UserId);
         });
@@ -63,14 +60,16 @@ public sealed class ObjectiveCommandsTest : GameTest
         var mindComp = mindEnt!.Value.Comp;
         Assert.That(mindComp.Objectives, Is.Empty, "Dummy player started with objectives.");
 
-        await pair.WaitCommand($"addobjective {playerSession.Name} {ObjectiveProtoId}");
+        await Pair.WaitCommand($"addobjective {playerSession.Name} {ObjectiveProtoId}");
 
         Assert.That(mindComp.Objectives, Has.Count.EqualTo(1), "addobjective failed to increase Objectives count.");
 
-        await pair.WaitCommand($"lsobjectives {playerSession.Name}");
+        await Pair.WaitCommand($"lsobjectives {playerSession.Name}");
 
-        await pair.WaitCommand($"rmobjective {playerSession.Name} 0");
+        await Pair.WaitCommand($"rmobjective {playerSession.Name} 0");
 
         Assert.That(mindComp.Objectives, Is.Empty, "rmobjective failed to remove objective");
+
+        await Server.WaitPost(() => { SEntMan.DeleteEntity(mindEnt); });
     }
 }
