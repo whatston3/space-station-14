@@ -184,7 +184,6 @@ public sealed class DeltaPressureTest : AtmosTest
 
             await Server.WaitRunTicks(1);
         }
-        await Server.WaitPost(() => { Server.System<SharedMapSystem>().DeleteMap(TestMap.MapId); }); // FIXME: without this, client entities linger.
     }
 
     /// <summary>
@@ -256,7 +255,6 @@ public sealed class DeltaPressureTest : AtmosTest
                 }
             });
         }
-        await Server.WaitPost(() => { Server.System<SharedMapSystem>().DeleteMap(TestMap.MapId); }); // FIXME: without this, client entities linger.
     }
 
     /// <summary>
@@ -307,7 +305,6 @@ public sealed class DeltaPressureTest : AtmosTest
 
             await Server.WaitRunTicks(1);
         }
-        await Server.WaitPost(() => { Server.System<SharedMapSystem>().DeleteMap(TestMap.MapId); }); // FIXME: without this, client entities linger.
     }
 
     /// <summary>
@@ -360,7 +357,6 @@ public sealed class DeltaPressureTest : AtmosTest
                 tile.Air!.Clear();
             });
         }
-        await Server.WaitPost(() => { Server.System<SharedMapSystem>().DeleteMap(TestMap.MapId); }); // FIXME: without this, client entities linger.
     }
 
     /// <summary>
@@ -452,6 +448,5 @@ public sealed class DeltaPressureTest : AtmosTest
                 mix.Clear();
             }
         });
-        await Server.WaitPost(() => { Server.System<SharedMapSystem>().DeleteMap(TestMap.MapId); }); // FIXME: without this, client entities linger.
     }
 }
