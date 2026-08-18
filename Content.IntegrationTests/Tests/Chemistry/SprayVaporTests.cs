@@ -75,6 +75,8 @@ public sealed class SprayVaporTests : GameTest
         await Server.WaitAssertion(() =>
         {
             Assert.That(!puddle.Comp.Solution.ContainsPrototype(Blood));
+
+            SEntMan.DeleteEntity(testMap.MapUid);
         });
     }
 }

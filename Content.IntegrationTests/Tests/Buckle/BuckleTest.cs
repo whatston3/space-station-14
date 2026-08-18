@@ -224,6 +224,8 @@ namespace Content.IntegrationTests.Tests.Buckle
                     Assert.That(buckle.BuckledTo, Is.Null);
                     Assert.That(strap.BuckledEntities, Is.Empty);
                 });
+
+                Server.System<SharedMapSystem>().DeleteMap(testMap.MapId);
             });
         }
 
@@ -288,6 +290,8 @@ namespace Content.IntegrationTests.Tests.Buckle
 
                 buckleSystem.Unbuckle(human, human);
                 Assert.That(buckle.Buckled, Is.False);
+
+                Server.System<SharedMapSystem>().DeleteMap(testMap.MapId);
             });
         }
 
@@ -357,6 +361,8 @@ namespace Content.IntegrationTests.Tests.Buckle
                     Assert.That(buckle.BuckledTo, Is.Not.Null);
                     Assert.That(buckle.Buckled);
                 });
+
+                Server.System<SharedMapSystem>().DeleteMap(testMap.MapId);
             });
         }
     }
