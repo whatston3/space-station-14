@@ -225,6 +225,4 @@ public abstract partial class GameTest
     {
         CEntMan.QueueDeleteEntity(id);
     }
-
-    public sealed class DirtyTestException(string reason) : Exception(reason);
 }
