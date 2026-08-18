@@ -114,29 +114,34 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.GetAllNodeIndices(artifactEnt).Count(), Is.EqualTo(3));
 
         // Add connection from 1 -> 2 and 2-> 3
-        _sArtifactSystem.AddEdge(artifactEnt, node1!.Value, node2!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node2!.Value, node3!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node1.Value, node2.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node2.Value, node3.Value, false);
 
         // Assert that successors and direct successors are counted correctly for node 1.
-        Assert.That(_sArtifactSystem.GetDirectSuccessorNodes(artifactEnt, node1!.Value), Has.Count.EqualTo(1));
-        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node1!.Value), Has.Count.EqualTo(2));
+        Assert.That(_sArtifactSystem.GetDirectSuccessorNodes(artifactEnt, node1.Value), Has.Count.EqualTo(1));
+        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node1.Value), Has.Count.EqualTo(2));
         // Assert that we didn't somehow get predecessors on node 1.
-        Assert.That(_sArtifactSystem.GetDirectPredecessorNodes(artifactEnt, node1!.Value), Is.Empty);
-        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node1!.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetDirectPredecessorNodes(artifactEnt, node1.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node1.Value), Is.Empty);
 
         // Assert that successors and direct successors are counted correctly for node 2.
-        Assert.That(_sArtifactSystem.GetDirectSuccessorNodes(artifactEnt, node2!.Value), Has.Count.EqualTo(1));
-        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node2!.Value), Has.Count.EqualTo(1));
+        Assert.That(_sArtifactSystem.GetDirectSuccessorNodes(artifactEnt, node2.Value), Has.Count.EqualTo(1));
+        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node2.Value), Has.Count.EqualTo(1));
         // Assert that predecessors and direct predecessors are counted correctly for node 2.
-        Assert.That(_sArtifactSystem.GetDirectPredecessorNodes(artifactEnt, node2!.Value), Has.Count.EqualTo(1));
-        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node2!.Value), Has.Count.EqualTo(1));
+        Assert.That(_sArtifactSystem.GetDirectPredecessorNodes(artifactEnt, node2.Value), Has.Count.EqualTo(1));
+        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node2.Value), Has.Count.EqualTo(1));
 
         // Assert that successors and direct successors are counted correctly for node 3.
-        Assert.That(_sArtifactSystem.GetDirectSuccessorNodes(artifactEnt, node3!.Value), Is.Empty);
-        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node3!.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetDirectSuccessorNodes(artifactEnt, node3.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node3.Value), Is.Empty);
         // Assert that predecessors and direct predecessors are counted correctly for node 3.
-        Assert.That(_sArtifactSystem.GetDirectPredecessorNodes(artifactEnt, node3!.Value), Has.Count.EqualTo(1));
-        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node3!.Value), Has.Count.EqualTo(2));
+        Assert.That(_sArtifactSystem.GetDirectPredecessorNodes(artifactEnt, node3.Value), Has.Count.EqualTo(1));
+        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node3.Value), Has.Count.EqualTo(2));
+
+        // Teardown nodes to clean up.
+        SEntMan.DeleteEntity(node1.Value);
+        SEntMan.DeleteEntity(node2.Value);
+        SEntMan.DeleteEntity(node3.Value);
     }
 
     /// <summary>
@@ -160,22 +165,29 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.GetAllNodeIndices(artifactEnt).Count(), Is.EqualTo(5));
 
         // Add connection: 1 -> 2 -> 3 -> 4 -> 5
-        _sArtifactSystem.AddEdge(artifactEnt, node1!.Value, node2!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node2!.Value, node3!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node3!.Value, node4!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node4!.Value, node5!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node1.Value, node2.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node2.Value, node3.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node3.Value, node4.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node4.Value, node5.Value, false);
 
         // Make sure we have a continuous connection between the two ends of the graph.
         Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node1.Value), Has.Count.EqualTo(4));
         Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node5.Value), Has.Count.EqualTo(4));
 
         // Remove the node and make sure it's no longer in the artifact.
-        Assert.That(_sArtifactSystem.RemoveNode(artifactEnt, node3!.Value, false));
-        Assert.That(_sArtifactSystem.TryGetIndex(artifactEnt, node3!.Value, out _), Is.False, "Node 3 still present in artifact.");
+        Assert.That(_sArtifactSystem.RemoveNode(artifactEnt, node3.Value, false));
+        Assert.That(_sArtifactSystem.TryGetIndex(artifactEnt, node3.Value, out _), Is.False, "Node 3 still present in artifact.");
 
         // Check to make sure that we got rid of all the connections.
-        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node2!.Value), Is.Empty);
-        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node4!.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node2.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node4.Value), Is.Empty);
+
+        // Teardown nodes to clean up.
+        SEntMan.DeleteEntity(node1.Value);
+        SEntMan.DeleteEntity(node2.Value);
+        SEntMan.DeleteEntity(node3.Value);
+        SEntMan.DeleteEntity(node4.Value);
+        SEntMan.DeleteEntity(node5.Value);
     }
 
     /// <summary>
@@ -195,8 +207,8 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var node3, false));
 
         // Add connection: 1 -> 2 -> 3
-        _sArtifactSystem.AddEdge(artifactEnt, node1!.Value, node2!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node2!.Value, node3!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node1.Value, node2.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node2.Value, node3.Value, false);
 
         // Make sure our connection is set up
         Assert.That(_sArtifactSystem.NodeHasEdge(artifactEnt, node1.Value, node2.Value));
@@ -206,9 +218,9 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.NodeHasEdge(artifactEnt, node1.Value, node3.Value), Is.False);
         Assert.That(_sArtifactSystem.NodeHasEdge(artifactEnt, node3.Value, node1.Value), Is.False);
 
-        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node1!.Value), Is.Zero);
-        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node2!.Value), Is.EqualTo(1));
-        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node3!.Value), Is.EqualTo(2));
+        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node1.Value), Is.Zero);
+        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node2.Value), Is.EqualTo(1));
+        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node3.Value), Is.EqualTo(2));
 
         // Add a new node, resizing the original adjacency matrix and array.
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var node4));
@@ -222,13 +234,19 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.NodeHasEdge(artifactEnt, node3.Value, node1.Value), Is.False);
 
         // Has our array shifted any when we resized?
-        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node1!.Value), Is.Zero);
-        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node2!.Value), Is.EqualTo(1));
-        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node3!.Value), Is.EqualTo(2));
+        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node1.Value), Is.Zero);
+        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node2.Value), Is.EqualTo(1));
+        Assert.That(_sArtifactSystem.GetIndex(artifactEnt, node3.Value), Is.EqualTo(2));
 
         // Check that 4 didn't somehow end up with connections
-        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node4!.Value), Is.Empty);
-        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node4!.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node4.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node4.Value), Is.Empty);
+
+        // Teardown nodes to clean up.
+        SEntMan.DeleteEntity(node1.Value);
+        SEntMan.DeleteEntity(node2.Value);
+        SEntMan.DeleteEntity(node3.Value);
+        SEntMan.DeleteEntity(node4.Value);
     }
 
     /// <summary>
@@ -248,15 +266,15 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var node3, false));
 
         // Add connection: 1 -> 2 -> 3
-        _sArtifactSystem.AddEdge(artifactEnt, node1!.Value, node2!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node2!.Value, node3!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node1.Value, node2.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node2.Value, node3.Value, false);
 
         // Make sure our connection is set up
         Assert.That(_sArtifactSystem.NodeHasEdge(artifactEnt, node1.Value, node2.Value));
         Assert.That(_sArtifactSystem.NodeHasEdge(artifactEnt, node2.Value, node3.Value));
 
         // Remove middle node, severing connections
-        _sArtifactSystem.RemoveNode(artifactEnt, node2!.Value, false);
+        _sArtifactSystem.RemoveNode(artifactEnt, node2.Value, false);
 
         // Make sure our connection are properly severed.
         Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node1.Value), Is.Empty);
@@ -275,8 +293,14 @@ public sealed class XenoArtifactTest : GameTest
         // Ensure that all connections are still severed
         Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node1.Value), Is.Empty);
         Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node3.Value), Is.Empty);
-        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node4!.Value), Is.Empty);
-        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node4!.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetSuccessorNodes(artifactEnt, node4.Value), Is.Empty);
+        Assert.That(_sArtifactSystem.GetPredecessorNodes(artifactEnt, node4.Value), Is.Empty);
+
+        // Teardown nodes to clean up.
+        SEntMan.DeleteEntity(node1.Value);
+        SEntMan.DeleteEntity(node2.Value);
+        SEntMan.DeleteEntity(node3.Value);
+        SEntMan.DeleteEntity(node4.Value);
     }
 
     /// <summary>
@@ -306,29 +330,39 @@ public sealed class XenoArtifactTest : GameTest
         // [ 1 ]--/----[ 2 ]--/----( 4 )
         // Diagram of the example generation. Nodes in [brackets] are unlocked, nodes in (braces) are locked
         // and nodes with an *asterisk are supposed to be active.
-        _sArtifactSystem.AddEdge(artifactEnt, node1!.Value, node2!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node1!.Value, node3!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node1.Value, node2.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node1.Value, node3.Value, false);
 
-        _sArtifactSystem.AddEdge(artifactEnt, node2!.Value, node4!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node2!.Value, node5!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node2.Value, node4.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node2.Value, node5.Value, false);
 
-        _sArtifactSystem.AddEdge(artifactEnt, node3!.Value, node6!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, node3!.Value, node7!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node3.Value, node6.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node3.Value, node7.Value, false);
 
-        _sArtifactSystem.AddEdge(artifactEnt, node7!.Value, node8!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, node7.Value, node8.Value, false);
 
-        _sArtifactSystem.SetNodeUnlocked(node1!.Value);
-        _sArtifactSystem.SetNodeUnlocked(node2!.Value);
-        _sArtifactSystem.SetNodeUnlocked(node3!.Value);
-        _sArtifactSystem.SetNodeUnlocked(node5!.Value);
+        _sArtifactSystem.SetNodeUnlocked(node1.Value);
+        _sArtifactSystem.SetNodeUnlocked(node2.Value);
+        _sArtifactSystem.SetNodeUnlocked(node3.Value);
+        _sArtifactSystem.SetNodeUnlocked(node5.Value);
 
         NetEntity[] expectedActiveNodes =
         [
-            SEntMan.GetNetEntity(node3!.Value.Owner),
-            SEntMan.GetNetEntity(node5!.Value.Owner)
+            SEntMan.GetNetEntity(node3.Value.Owner),
+            SEntMan.GetNetEntity(node5.Value.Owner)
         ];
         Assert.That(artifactEnt.Comp.CachedActiveNodes, Is.SupersetOf(expectedActiveNodes));
         Assert.That(artifactEnt.Comp.CachedActiveNodes, Has.Count.EqualTo(expectedActiveNodes.Length));
+
+        // Teardown nodes to clean up.
+        SEntMan.DeleteEntity(node1.Value);
+        SEntMan.DeleteEntity(node2.Value);
+        SEntMan.DeleteEntity(node3.Value);
+        SEntMan.DeleteEntity(node4.Value);
+        SEntMan.DeleteEntity(node5.Value);
+        SEntMan.DeleteEntity(node6.Value);
+        SEntMan.DeleteEntity(node7.Value);
+        SEntMan.DeleteEntity(node8.Value);
     }
 
     [Test]
@@ -378,8 +412,8 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var nodeB, false));
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var nodeC, false));
 
-        _sArtifactSystem.AddEdge(artifactEnt, nodeA!.Value, nodeC!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, nodeB!.Value, nodeC!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, nodeA.Value, nodeC.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, nodeB.Value, nodeC.Value, false);
 
         _sArtifactSystem.SetNodeUnlocked(nodeA.Value);
         _sArtifactSystem.SetNodeUnlocked(nodeB.Value);
@@ -395,7 +429,7 @@ public sealed class XenoArtifactTest : GameTest
         var baseEndTime = unlocking.EndTime;
 
         // Triggering the sibling node B has to extend the unlocking time, even though it is
-        // not on the same path as A. 
+        // not on the same path as A.
         _sArtifactSystem.TriggerXenoArtifact(artifactEnt, nodeB.Value, force: true);
         Assert.That(unlocking.EndTime - baseEndTime, Is.EqualTo(artifactEnt.Comp.UnlockStateIncrementPerNode));
 
@@ -406,7 +440,12 @@ public sealed class XenoArtifactTest : GameTest
 
         // With the full required set triggered, C is exactly the node that will get unlocked.
         Assert.That(_sArtifactSystem.TryGetNodeFromUnlockState((artifactUid, unlocking, artifactEnt.Comp), out var unlockable), Is.True);
-        Assert.That(unlockable!.Value.Owner, Is.EqualTo(nodeC.Value.Owner));
+        Assert.That(unlockable.Value.Owner, Is.EqualTo(nodeC.Value.Owner));
+
+        // Teardown nodes to clean up.
+        SEntMan.DeleteEntity(nodeA.Value);
+        SEntMan.DeleteEntity(nodeB.Value);
+        SEntMan.DeleteEntity(nodeC.Value);
     }
 
     [Test]
@@ -422,7 +461,7 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var nodeC, false));
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var nodeD, false));
 
-        _sArtifactSystem.AddEdge(artifactEnt, nodeA!.Value, nodeC!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, nodeA.Value, nodeC.Value, false);
         _sArtifactSystem.SetNodeUnlocked(nodeA.Value);
 
         _sArtifactSystem.TriggerXenoArtifact(artifactEnt, nodeA.Value, force: true);
@@ -431,11 +470,16 @@ public sealed class XenoArtifactTest : GameTest
 
         // D is not a predecessor of the unlockable node C, so no unlockable node has both A and D
         // within its required set. This trigger guarantees the unlock will fail - no time is added.
-        _sArtifactSystem.TriggerXenoArtifact(artifactEnt, nodeD!.Value, force: true);
+        _sArtifactSystem.TriggerXenoArtifact(artifactEnt, nodeD.Value, force: true);
         unlocking = SComp<XenoArtifactUnlockingComponent>(artifactUid);
         Assert.That(unlocking.EndTime, Is.EqualTo(baseEndTime));
 
         Assert.That(_sArtifactSystem.TryGetNodeFromUnlockState((artifactUid, unlocking, artifactEnt.Comp), out _), Is.False);
+
+        // Teardown nodes to clean up.
+        SEntMan.DeleteEntity(nodeA.Value);
+        SEntMan.DeleteEntity(nodeC.Value);
+        SEntMan.DeleteEntity(nodeD.Value);
     }
 
     [Test]
@@ -450,8 +494,8 @@ public sealed class XenoArtifactTest : GameTest
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var nodeB, false));
         Assert.That(_sArtifactSystem.AddNode(artifactEnt, TestArtifactNode, out var nodeC, false));
 
-        _sArtifactSystem.AddEdge(artifactEnt, nodeA!.Value, nodeB!.Value, false);
-        _sArtifactSystem.AddEdge(artifactEnt, nodeB!.Value, nodeC!.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, nodeA.Value, nodeB.Value, false);
+        _sArtifactSystem.AddEdge(artifactEnt, nodeB.Value, nodeC.Value, false);
         _sArtifactSystem.SetNodeUnlocked(nodeA.Value);
 
         _sArtifactSystem.TriggerXenoArtifact(artifactEnt, nodeA.Value, force: true);
@@ -467,5 +511,10 @@ public sealed class XenoArtifactTest : GameTest
         _sArtifactSystem.TriggerXenoArtifact(artifactEnt, nodeC.Value, force: true);
         unlocking = SComp<XenoArtifactUnlockingComponent>(artifactUid);
         Assert.That(unlocking.EndTime, Is.EqualTo(baseEndTime));
+
+        // Teardown nodes to clean up.
+        SEntMan.DeleteEntity(nodeA.Value);
+        SEntMan.DeleteEntity(nodeB.Value);
+        SEntMan.DeleteEntity(nodeC.Value);
     }
 }

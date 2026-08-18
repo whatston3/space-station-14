@@ -1,11 +1,11 @@
 #nullable enable
 using System.Linq;
 using Content.IntegrationTests.Fixtures;
+using Content.Server.GameTicking;
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
 using Content.Shared.CombatMode;
 using Robust.Server.Player;
-using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests.Actions;
 
@@ -23,36 +23,31 @@ public sealed class ActionsAddedTest : GameTest
     [Test]
     public async Task TestCombatActionsAdded()
     {
-        var pair = Pair;
-        var server = pair.Server;
-        var client = pair.Client;
-        var sEntMan = server.ResolveDependency<IEntityManager>();
-        var cEntMan = client.ResolveDependency<IEntityManager>();
-        var clientSession = client.Session;
-        var serverSession = server.ResolveDependency<IPlayerManager>().Sessions.Single();
-        var sActionSystem = server.System<SharedActionsSystem>();
-        var cActionSystem = client.System<SharedActionsSystem>();
+        var clientSession = Client.Session;
+        var serverSession = Server.ResolveDependency<IPlayerManager>().Sessions.Single();
+        var sActionSystem = Server.System<SharedActionsSystem>();
+        var cActionSystem = Client.System<SharedActionsSystem>();
 
         // Dummy ticker is disabled - client should be in control of a normal mob.
         Assert.That(serverSession.AttachedEntity, Is.Not.Null);
         var serverEnt = serverSession.AttachedEntity!.Value;
         var clientEnt = clientSession!.AttachedEntity!.Value;
-        Assert.That(sEntMan.EntityExists(serverEnt));
-        Assert.That(cEntMan.EntityExists(clientEnt));
-        Assert.That(sEntMan.HasComponent<ActionsComponent>(serverEnt));
-        Assert.That(cEntMan.HasComponent<ActionsComponent>(clientEnt));
-        Assert.That(sEntMan.HasComponent<CombatModeComponent>(serverEnt));
-        Assert.That(cEntMan.HasComponent<CombatModeComponent>(clientEnt));
+        Assert.That(SEntMan.EntityExists(serverEnt));
+        Assert.That(CEntMan.EntityExists(clientEnt));
+        Assert.That(SEntMan.HasComponent<ActionsComponent>(serverEnt));
+        Assert.That(CEntMan.HasComponent<ActionsComponent>(clientEnt));
+        Assert.That(SEntMan.HasComponent<CombatModeComponent>(serverEnt));
+        Assert.That(CEntMan.HasComponent<CombatModeComponent>(clientEnt));
 
-        var sComp = sEntMan.GetComponent<ActionsComponent>(serverEnt);
-        var cComp = cEntMan.GetComponent<ActionsComponent>(clientEnt);
+        var sComp = SEntMan.GetComponent<ActionsComponent>(serverEnt);
+        var cComp = CEntMan.GetComponent<ActionsComponent>(clientEnt);
 
         // Mob should have a combat-mode action.
         // This action should have a non-null event both on the server & client.
         var evType = typeof(ToggleCombatActionEvent);
 
-        var sQuery = sEntMan.GetEntityQuery<InstantActionComponent>();
-        var cQuery = cEntMan.GetEntityQuery<InstantActionComponent>();
+        var sQuery = SEntMan.GetEntityQuery<InstantActionComponent>();
+        var cQuery = CEntMan.GetEntityQuery<InstantActionComponent>();
         var sActions = sActionSystem.GetActions(serverEnt).Where(
             ent => sQuery.CompOrNull(ent)?.Event?.GetType() == evType).ToArray();
         var cActions = cActionSystem.GetActions(clientEnt).Where(
@@ -71,5 +66,7 @@ public sealed class ActionsAddedTest : GameTest
         // required, because integration tests do not respect the [NonSerialized] attribute and will simply events by reference.
         Assert.That(ReferenceEquals(sAct.Comp, cAct.Comp), Is.False);
         Assert.That(ReferenceEquals(sQuery.GetComponent(sAct).Event, cQuery.GetComponent(cAct).Event), Is.False);
+
+        await Server.WaitPost(() => Server.System<GameTicker>().RestartRound());
     }
 }

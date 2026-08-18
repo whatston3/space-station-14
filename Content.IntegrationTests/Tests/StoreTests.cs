@@ -61,9 +61,9 @@ public sealed class StoreTests : GameTest
             var invSystem = Server.System<InventorySystem>();
             var mindSystem = Server.System<SharedMindSystem>();
 
-            human = SEntMan.SpawnAttachedTo("MobHuman", coordinates);
-            uniform = SEntMan.SpawnAttachedTo("UniformDummy", coordinates);
-            pda = SEntMan.SpawnAttachedTo("InventoryPdaDummy", coordinates);
+            human = SSpawnAtPosition("MobHuman", coordinates);
+            uniform = SSpawnAtPosition("UniformDummy", coordinates);
+            pda = SSpawnAtPosition("InventoryPdaDummy", coordinates);
 
             Assert.That(invSystem.TryEquip(human, uniform, "jumpsuit"));
             Assert.That(invSystem.TryEquip(human, pda, "id"));
@@ -124,7 +124,7 @@ public sealed class StoreTests : GameTest
                     Assert.That(plainDiscountedCost.Value, Is.LessThan(prototypeCost.Value), "Expected discounted cost to be lower then prototype cost.");
 
 
-                    var buyMsg = new StoreBuyListingMessage(discountedListingItem.ID, null){Actor = human};
+                    var buyMsg = new StoreBuyListingMessage(discountedListingItem.ID, null){ Actor = human };
                     SEntMan.EventBus.RaiseLocalEvent(storeEnt.Value, buyMsg);
 
                     var newBalance = storeComponent.Balance[UplinkSystem.TelecrystalCurrencyPrototype];
@@ -164,6 +164,13 @@ public sealed class StoreTests : GameTest
                 });
             }
 
+            // Manually delete our entities - need to get rid of the mind and store ourselves,
+            // and the human carries a reference to the mind.
+            SEntMan.DeleteEntity(human);
+            SEntMan.DeleteEntity(pda);
+            SEntMan.DeleteEntity(uniform);
+            SEntMan.DeleteEntity(mind);
+            SEntMan.DeleteEntity(storeEnt);
         });
     }
 }
