@@ -41,21 +41,6 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    /// Checks that non-dirty tests do not leak entities.
-    /// Must be called after CleanUpEntities.
-    /// </summary>
-    private void CheckForLeakedEntities()
-    {
-        if (Pair.Settings.Dirty)
-            return;
-
-        if (SEntMan.EntityCount != 0)
-            throw new DirtyTestException("Lingering server entities.");
-        if (CEntMan.EntityCount != 0)
-            throw new DirtyTestException("Lingering client entities.");
-    }
-
-    /// <summary>
     /// Returns a string representation of an entity for the server.
     /// </summary>
     public string SToPrettyString(EntityUid uid)
