@@ -33,34 +33,29 @@ public sealed class PrototypeSaveTest : GameTest
     [Test]
     public async Task UninitializedSaveTest()
     {
-        var pair = Pair;
-        var server = pair.Server;
-
-        var entityMan = server.ResolveDependency<IEntityManager>();
-        var prototypeMan = server.ResolveDependency<IPrototypeManager>();
-        var seriMan = server.ResolveDependency<ISerializationManager>();
-        var compFact = server.ResolveDependency<IComponentFactory>();
-        var mapSystem = server.System<SharedMapSystem>();
+        var seriMan = Server.ResolveDependency<ISerializationManager>();
+        var compFact = Server.ResolveDependency<IComponentFactory>();
+        var mapSystem = Server.System<SharedMapSystem>();
 
         var prototypes = new List<EntityPrototype>();
         EntityUid uid;
 
-        await pair.CreateTestMap(false, "FloorSteel"); // Wires n such disable ambiance while under the floor
-        var mapId = pair.TestMap.MapId;
-        var grid = pair.TestMap.Grid;
+        var testMap = await Pair.CreateTestMap(false, "FloorSteel"); // Wires n such disable ambiance while under the floor
+        var mapId = testMap.MapId;
+        var grid = testMap.Grid;
 
-        await server.WaitRunTicks(5);
+        await Server.WaitRunTicks(5);
 
         //Generate list of non-abstract prototypes to test
-        foreach (var prototype in prototypeMan.EnumeratePrototypes<EntityPrototype>())
+        foreach (var prototype in SProtoMan.EnumeratePrototypes<EntityPrototype>())
         {
             if (prototype.Abstract)
                 continue;
 
-            if (pair.IsTestPrototype(prototype))
+            if (Pair.IsTestPrototype(prototype))
                 continue;
 
-            // Yea this test just doesn't work with this, it parents a grid to another grid and causes game logic to explode.
+            // Yeah, this test just doesn't work with this, it parents a grid to another grid and causes game logic to explode.
             if (prototype.Components.ContainsKey("MapGrid"))
                 continue;
 
@@ -76,7 +71,7 @@ public sealed class PrototypeSaveTest : GameTest
 
         var context = new TestEntityUidContext(seriMan);
 
-        await server.WaitAssertion(() =>
+        await Server.WaitAssertion(() =>
         {
             Assert.That(!mapSystem.IsInitialized(mapId));
             var testLocation = grid.Owner.ToCoordinates();
@@ -86,7 +81,7 @@ public sealed class PrototypeSaveTest : GameTest
                 //Iterate list of prototypes to spawn
                 foreach (var prototype in prototypes)
                 {
-                    uid = entityMan.SpawnEntity(prototype.ID, testLocation);
+                    uid = SEntMan.SpawnAttachedTo(prototype.ID, testLocation);
                     context.Prototype = prototype;
 
                     // get default prototype data
@@ -110,7 +105,7 @@ public sealed class PrototypeSaveTest : GameTest
                         continue;
                     }
 
-                    var comps = new HashSet<IComponent>(entityMan.GetComponents(uid));
+                    var comps = new HashSet<IComponent>(SEntMan.GetComponents(uid));
                     var compNames = new HashSet<string>(comps.Count);
                     foreach (var component in comps)
                     {
@@ -152,10 +147,12 @@ public sealed class PrototypeSaveTest : GameTest
                         Assert.That(compNames, Does.Contain(compType), $"Prototype {prototype.ID} removes component {compType} on spawn.");
                     }
 
-                    if (!entityMan.Deleted(uid))
-                        entityMan.DeleteEntity(uid);
+                    if (!SEntMan.Deleted(uid))
+                        SEntMan.DeleteEntity(uid);
                 }
             });
+
+            mapSystem.DeleteMap(mapId);
         });
     }
 

@@ -244,16 +244,8 @@ public abstract partial class GameTest
 
             await CleanUpEntities();
 
-            CheckForLeakedEntities();
-
             // And other teardown logic will go here. Eventually.
 
-        }
-        catch (DirtyTestException)
-        {
-            _pairDestroyed = true;
-            Assert.Fail($"Test was not declared as dirty, but leaked entities.  Server count: {SEntMan.EntityCount}, client count: {CEntMan.EntityCount}");
-            throw;
         }
         catch (Exception)
         {
@@ -266,7 +258,23 @@ public abstract partial class GameTest
             PreFinalizeHook?.Invoke();
 
             if (!_pairDestroyed)
+            {
                 await Pair.CleanReturnAsync();
+
+                try
+                {
+                    CheckForLeakedEntities();
+                }
+                catch (DirtyTestException)
+                {
+                    var serverEntCount = SEntMan.EntityCount;
+                    var clientEntCount = CEntMan.EntityCount;
+                    _pairDestroyed = true;
+                    await Pair.DisposeAsync();
+                    Assert.Fail($"Test was not declared as dirty, but leaked entities.  Server count: {serverEntCount}, client count: {clientEntCount}.  Post dispose: server {SEntMan.EntityCount}, client {CEntMan.EntityCount}");
+                    throw;
+                }
+            }
             else
                 await Pair.DisposeAsync();
         }

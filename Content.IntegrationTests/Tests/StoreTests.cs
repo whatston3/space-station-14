@@ -34,19 +34,13 @@ public sealed class StoreTests : GameTest
     [Test]
     public async Task StoreDiscountAndRefund()
     {
-        var pair = Pair;
-        var server = pair.Server;
+        var testMap = await Pair.CreateTestMap();
+        await Server.WaitIdleAsync();
 
-        var testMap = await pair.CreateTestMap();
-        await server.WaitIdleAsync();
-
-        var serverRandom = server.ResolveDependency<IRobustRandom>();
+        var serverRandom = Server.ResolveDependency<IRobustRandom>();
         serverRandom.SetSeed(534);
 
-        var entManager = server.ResolveDependency<IEntityManager>();
-
-        var mapSystem = server.System<SharedMapSystem>();
-        var prototypeManager = server.ProtoMan;
+        var mapSystem = Server.System<SharedMapSystem>();
 
         Assert.That(mapSystem.IsInitialized(testMap.MapId));
 
@@ -55,21 +49,21 @@ public sealed class StoreTests : GameTest
         EntityUid uniform = default;
         EntityUid pda = default;
 
-        var uplinkSystem = entManager.System<UplinkSystem>();
-        var ringerSystem = entManager.System<RingerSystem>();
+        var uplinkSystem = Server.System<UplinkSystem>();
+        var ringerSystem = Server.System<RingerSystem>();
 
-        var listingPrototypes = prototypeManager.EnumeratePrototypes<ListingPrototype>()
-                                                .ToArray();
+        var listingPrototypes = SProtoMan.EnumeratePrototypes<ListingPrototype>()
+                                         .ToArray();
 
         var coordinates = testMap.GridCoords;
-        await server.WaitAssertion(() =>
+        await Server.WaitAssertion(() =>
         {
-            var invSystem = entManager.System<InventorySystem>();
-            var mindSystem = entManager.System<SharedMindSystem>();
+            var invSystem = Server.System<InventorySystem>();
+            var mindSystem = Server.System<SharedMindSystem>();
 
-            human = entManager.SpawnEntity("MobHuman", coordinates);
-            uniform = entManager.SpawnEntity("UniformDummy", coordinates);
-            pda = entManager.SpawnEntity("InventoryPdaDummy", coordinates);
+            human = SEntMan.SpawnAttachedTo("MobHuman", coordinates);
+            uniform = SEntMan.SpawnAttachedTo("UniformDummy", coordinates);
+            pda = SEntMan.SpawnAttachedTo("InventoryPdaDummy", coordinates);
 
             Assert.That(invSystem.TryEquip(human, uniform, "jumpsuit"));
             Assert.That(invSystem.TryEquip(human, pda, "id"));
@@ -83,8 +77,8 @@ public sealed class StoreTests : GameTest
             Assert.That(notes != null);
             ringerSystem.TryMatchRingtoneToStore(notes, out var storeEnt);
             Assert.That(storeEnt.HasValue);
-            var storeComponent = entManager.GetComponent<StoreComponent>(storeEnt.Value);
-            var discountComponent = entManager.GetComponent<StoreDiscountComponent>(storeEnt.Value);
+            var storeComponent = SEntMan.GetComponent<StoreComponent>(storeEnt.Value);
+            var discountComponent = SEntMan.GetComponent<StoreDiscountComponent>(storeEnt.Value);
             Assert.That(
                 discountComponent.Discounts,
                 Has.Exactly(6).Items,
@@ -131,7 +125,7 @@ public sealed class StoreTests : GameTest
 
 
                     var buyMsg = new StoreBuyListingMessage(discountedListingItem.ID, null){Actor = human};
-                    server.EntMan.EventBus.RaiseLocalEvent(storeEnt.Value, buyMsg);
+                    SEntMan.EventBus.RaiseLocalEvent(storeEnt.Value, buyMsg);
 
                     var newBalance = storeComponent.Balance[UplinkSystem.TelecrystalCurrencyPrototype];
                     Assert.That(newBalance.Value, Is.EqualTo((originalBalance - plainDiscountedCost).Value), "Expected to have balance reduced by discounted cost");
@@ -144,7 +138,7 @@ public sealed class StoreTests : GameTest
                     Assert.That(costAfterBuy.Value, Is.EqualTo(prototypeCost.Value), "Expected cost after discount refund to be equal to prototype cost.");
 
                     var refundMsg = new StoreRequestRefundMessage { Actor = human };
-                    server.EntMan.EventBus.RaiseLocalEvent(storeEnt.Value, refundMsg);
+                    SEntMan.EventBus.RaiseLocalEvent(storeEnt.Value, refundMsg);
 
                     // get refreshed item after refund re-generated items
                     discountedListingItem = storeComponent.FullListingsCatalog.First(x => x.ID == itemId);
