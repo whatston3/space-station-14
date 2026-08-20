@@ -1,7 +1,6 @@
 using Content.Shared.Changeling.Systems;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
-using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Changeling.Components;
 
@@ -20,6 +19,12 @@ public sealed partial class RegenerativeStasisActionComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool IsInStasis;
+
+    /// <summary>
+    /// The last value of <see cref="MobThresholdsComponent.AllowRevives"/> before entering stasis.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool PreviousAllowRevives;
 
     /// <summary>
     /// Whether the entity can ghost out during their stasis.
@@ -62,4 +67,18 @@ public sealed partial class RegenerativeStasisActionComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public string? InitialDescription;
+
+    /// <summary>
+    /// As a ratio, the amount of minimal additional damage to deal to kill the entity as it enters stasis.
+    /// So, for a mob with 200 health, a value of 0.05 would deal 10 extra damage minimum.
+    /// </summary>
+    [DataField]
+    public float MinAdditionalDamage = 0.05f;
+
+    /// <summary>
+    /// As a ratio, the amount of minimal additional damage to deal to kill the entity as it enters stasis.
+    /// So, for a mob with 200 health, a value of 0.35 would deal 70 extra damage minimum.
+    /// </summary>
+    [DataField]
+    public float MaxAdditionalDamage = 0.35f;
 }

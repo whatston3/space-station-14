@@ -2,27 +2,48 @@
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
 using Content.Shared.Changeling.Components;
+using Content.Shared.Damage;
+using Content.Shared.Damage.Components;
+using Content.Shared.Damage.Prototypes;
 using Content.Shared.Damage.Systems;
-using Content.Shared.Ghost;
+using Content.Shared.FixedPoint;
 using Content.Shared.Ghost.Systems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Mobs;
+using Content.Shared.Mobs.Components;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Popups;
+using Content.Shared.Random.Helpers;
 using Robust.Shared.Audio.Systems;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Random;
+using Robust.Shared.Timing;
 
 namespace Content.Shared.Changeling.Systems;
 
 public sealed partial class RegenerativeStasisSystem : EntitySystem
 {
-    [Dependency] private SharedActionsSystem _actions = default!;
-    [Dependency] private SharedAudioSystem _audio = default!;
-    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private IGameTiming _timing = default!;
+    [Dependency] private IRobustRandom _random = default!;
+    [Dependency] private BloodstreamSystem _bloodstream = default!;
+    [Dependency] private DamageableSystem _damage = default!;
     [Dependency] private MetaDataSystem _metaData = default!;
     [Dependency] private MobStateSystem _mobs = default!;
-    [Dependency] private DamageableSystem _damage = default!;
-    [Dependency] private BloodstreamSystem _bloodstream = default!;
+    [Dependency] private MobThresholdSystem _mobThresholds = default!;
+    [Dependency] private SharedActionsSystem _actions = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
     [Dependency] private SharedDeathgaspSystem _deathgasp = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+
+    [Dependency] private EntityQuery<BloodstreamComponent> _bloodstreamQuery = default!;
+    [Dependency] private EntityQuery<DamageableComponent> _damageableQuery = default!;
+    [Dependency] private EntityQuery<InjurableComponent> _injurableQuery = default!;
+    [Dependency] private EntityQuery<MobThresholdsComponent> _mobThresholdsQuery = default!;
+
+    private static readonly ProtoId<DamageGroupPrototype> BruteGroup = new("Brute");
+    private static readonly ProtoId<DamageTypePrototype> BluntType = new("Blunt");
+    private static readonly ProtoId<DamageTypePrototype> SlashType = new("Slash");
+    private static readonly ProtoId<DamageTypePrototype> PierceType = new("Piercing");
 
     [SubscribeLocalEvent]
     private void OnMapInit(Entity<RegenerativeStasisActionComponent> ent, ref MapInitEvent args)
@@ -67,19 +88,85 @@ public sealed partial class RegenerativeStasisSystem : EntitySystem
     /// </summary>
     public void EnterStasis(Entity<RegenerativeStasisActionComponent?> ent, EntityUid target)
     {
-        if (!Resolve(ent.Owner, ref ent.Comp))
+        if (!Resolve(ent, ref ent.Comp))
             return;
 
         if (ent.Comp.IsInStasis)
             return;
 
-        // If going from Alive to Dead fake a death gasp.
-        // If going from Critical to Dead then DeathGaspSystem is already doing this,
-        // so we don't want to do it twice.
-        if (_mobs.IsAlive(target))
-            _deathgasp.Deathgasp(target);
+        // Damage ourselves to the point of death.
+        if (!_mobs.IsDead(target)
+            && _mobThresholdsQuery.TryComp(target, out var thresholdComp)
+            && _damageableQuery.TryComp(target, out var damageableComp)
+            && _mobThresholds.TryGetDeadThreshold(target, out var deadThreshold, thresholdComp))
+        {
+            var damage = _damage.GetPositiveDamage((target, damageableComp));
+            var totalDamage = damage.GetTotal();
+            var random = SharedRandomExtensions.PredictedRandom(_timing, GetNetEntity(ent), GetNetEntity(target));
+            var targetDamage = deadThreshold * (1.0f + random.NextFloat(ent.Comp.MinAdditionalDamage, ent.Comp.MaxAdditionalDamage));
+            if (totalDamage <= 0)
+            {
+                // Create damage from scratch from the known damageable types.
+                if (_injurableQuery.TryComp(target, out var injurableComp)
+                    && ProtoMan.TryIndex(injurableComp.DamageContainer, out var damageCont))
+                {
+                    // Try to deal some amount of brute damage if possible, otherwise deal whatever we can at random.
+                    var hasBrute = damageCont.SupportedGroups.Contains(BruteGroup);
+                    var bluntSupported = hasBrute || damageCont.SupportedTypes.Contains(BluntType);
+                    var slashSupported = hasBrute || damageCont.SupportedTypes.Contains(SlashType);
+                    var pierceSupported = hasBrute || damageCont.SupportedTypes.Contains(PierceType);
 
-        // Die temporarily until we revive.
+                    if (!bluntSupported && !slashSupported && !pierceSupported)
+                    {
+                        if (damageCont.SupportedGroups.Count > 0)
+                        {
+                            DamageSpecifier damageToAdd = new(ProtoMan.Index(_random.Pick(damageCont.SupportedGroups)), targetDamage.Value);
+                            _damage.ChangeDamage((target, damageableComp), damageToAdd, ignoreResistances: true, ignoreGlobalModifiers: true);
+                        }
+                        else if (damageCont.SupportedTypes.Count > 0)
+                        {
+                            DamageSpecifier damageToAdd = new(ProtoMan.Index(_random.Pick(damageCont.SupportedGroups)), targetDamage.Value);
+                            _damage.ChangeDamage((target, damageableComp), damageToAdd, ignoreResistances: true, ignoreGlobalModifiers: true);
+                        }
+                    }
+                    else
+                    {
+                        var bluntAmount = bluntSupported ? _random.Next() + 0.01f : 0.0f;
+                        var slashAmount = slashSupported ? _random.Next() + 0.01f : 0.0f;
+                        var pierceAmount = pierceSupported ? _random.Next() + 0.01f : 0.0f;
+                        var totalAmount = bluntAmount + slashAmount + pierceAmount;
+
+                        DamageSpecifier damageToAdd = new();
+                        if (bluntAmount > 0)
+                            damageToAdd += new DamageSpecifier(ProtoMan.Index(BluntType), targetDamage.Value * (bluntAmount / totalAmount));
+                        if (slashAmount > 0)
+                            damageToAdd += new DamageSpecifier(ProtoMan.Index(SlashType), targetDamage.Value * (slashAmount / totalAmount));
+                        if (bluntAmount > 0)
+                            damageToAdd += new DamageSpecifier(ProtoMan.Index(PierceType), targetDamage.Value * (pierceAmount / totalAmount));
+                        _damage.ChangeDamage((target, damageableComp), damageToAdd, ignoreResistances: true, ignoreGlobalModifiers: true);
+                    }
+                }
+            }
+            else if (totalDamage < deadThreshold)
+            {
+                // Scale our damage up.
+                var damageToAdd = damage * (float)(deadThreshold - totalDamage / totalDamage);
+                _damage.ChangeDamage((target, damageableComp), damageToAdd);
+            }
+        }
+
+        // Just in case, this should explicitly disallow revival.
+        if (_mobThresholdsQuery.TryComp(target, out var mobThresholds))
+        {
+            ent.Comp.PreviousAllowRevives = mobThresholds.AllowRevives;
+            _mobThresholds.SetAllowRevives(target, false, mobThresholds);
+        }
+        else
+        {
+            ent.Comp.PreviousAllowRevives = false;
+        }
+
+        // If we didn't die yet, die temporarily until we revive.
         // Ghosting will be blocked while in stasis.
         if (!_mobs.IsDead(target))
             _mobs.ChangeMobState(target, MobState.Dead);
@@ -117,11 +204,14 @@ public sealed partial class RegenerativeStasisSystem : EntitySystem
         _damage.ClearAllDamage(target);
 
         // Heal bloodloss and stop bleeding.
-        if (TryComp<BloodstreamComponent>(target, out var bloodstream))
+        if (_bloodstreamQuery.TryComp(target, out var bloodstream))
         {
             _bloodstream.TryRegulateBloodLevel((target, bloodstream), bloodstream.BloodReferenceSolution.MaxVolume);
             _bloodstream.TryModifyBleedAmount((target, bloodstream), -bloodstream.BleedAmount);
         }
+
+        // Restore prior revivability (just in case)
+        _mobThresholds.SetAllowRevives(target, ent.Comp.PreviousAllowRevives);
 
         // Revive.
         _mobs.ChangeMobState(target, MobState.Alive);
