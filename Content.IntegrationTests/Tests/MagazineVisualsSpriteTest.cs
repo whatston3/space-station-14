@@ -15,24 +15,22 @@ public sealed class MagazineVisualsSpriteTest : GameTest
     [Test]
     public async Task MagazineVisualsSpritesExist()
     {
-        var pair = Pair;
-        var client = pair.Client;
         var toTest = new List<(int, string)>();
-        var protos = pair.GetPrototypesWithComponent<MagazineVisualsComponent>();
-        var spriteSys = client.System<SpriteSystem>();
+        var protos = Pair.GetPrototypesWithComponent<MagazineVisualsComponent>();
+        var spriteSys = Client.System<SpriteSystem>();
 
-        await client.WaitAssertion(() =>
+        await Client.WaitAssertion(() =>
         {
             Assert.Multiple(() =>
             {
                 foreach (var (proto, _) in protos)
                 {
-                    var uid = client.EntMan.Spawn(proto.ID);
-                    var visuals = client.EntMan.GetComponent<MagazineVisualsComponent>(uid);
+                    var uid = CSpawn(proto.ID);
+                    var visuals = CEntMan.GetComponent<MagazineVisualsComponent>(uid);
 
-                    Assert.That(client.EntMan.TryGetComponent(uid, out SpriteComponent sprite),
+                    Assert.That(CEntMan.TryGetComponent(uid, out SpriteComponent sprite),
                         @$"{proto.ID} has MagazineVisualsComponent but no SpriteComponent.");
-                    Assert.That(client.EntMan.HasComponent<AppearanceComponent>(uid),
+                    Assert.That(CEntMan.HasComponent<AppearanceComponent>(uid),
                         @$"{proto.ID} has MagazineVisualsComponent but no AppearanceComponent.");
 
                     toTest.Clear();
@@ -62,8 +60,6 @@ public sealed class MagazineVisualsSpriteTest : GameTest
                         var extraState = $"{visuals.MagState}{midfix}-{visuals.MagSteps}";
                         Assert.That(rsi.TryGetState(extraState, out _), Is.False,
                             @$"{proto.ID} has MagazineVisualsComponent with MagSteps = {visuals.MagSteps}, but more states exist!");
-
-                        client.EntMan.DeleteEntity(uid);
                     }
                 }
             });

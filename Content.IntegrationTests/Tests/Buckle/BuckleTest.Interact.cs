@@ -1,9 +1,7 @@
 ﻿using Content.Shared.Buckle;
 using Content.Shared.Buckle.Components;
 using Content.Shared.Interaction;
-using Robust.Server.GameObjects;
 using Robust.Shared.GameObjects;
-using Robust.Shared.Map;
 
 namespace Content.IntegrationTests.Tests.Buckle;
 
@@ -12,11 +10,7 @@ public sealed partial class BuckleTest
     [Test]
     public async Task BuckleInteractUnbuckleOther()
     {
-        var pair = Pair;
-        var server = pair.Server;
-
-        var entMan = server.ResolveDependency<IServerEntityManager>();
-        var buckleSystem = entMan.System<SharedBuckleSystem>();
+        var buckleSystem = Server.System<SharedBuckleSystem>();
 
         EntityUid user = default;
         EntityUid victim = default;
@@ -24,14 +18,14 @@ public sealed partial class BuckleTest
         BuckleComponent buckle = null;
         StrapComponent strap = null;
 
-        await server.WaitAssertion(() =>
+        await Server.WaitAssertion(() =>
         {
-            user = entMan.SpawnEntity(BuckleDummyId, MapCoordinates.Nullspace);
-            victim = entMan.SpawnEntity(BuckleDummyId, MapCoordinates.Nullspace);
-            chair = entMan.SpawnEntity(StrapDummyId, MapCoordinates.Nullspace);
+            user = SSpawn(BuckleDummyId);
+            victim = SSpawn(BuckleDummyId);
+            chair = SSpawn(StrapDummyId);
 
-            Assert.That(entMan.TryGetComponent(victim, out buckle));
-            Assert.That(entMan.TryGetComponent(chair, out strap));
+            Assert.That(SEntMan.TryGetComponent(victim, out buckle));
+            Assert.That(SEntMan.TryGetComponent(chair, out strap));
 
 #pragma warning disable RA0002
             buckle.Delay = TimeSpan.Zero;
@@ -47,7 +41,7 @@ public sealed partial class BuckleTest
             });
 
             // InteractHand with chair to unbuckle victim
-            entMan.EventBus.RaiseLocalEvent(chair, new InteractHandEvent(user, chair));
+            SEntMan.EventBus.RaiseLocalEvent(chair, new InteractHandEvent(user, chair));
             Assert.Multiple(() =>
             {
                 Assert.That(buckle.BuckledTo, Is.Null);
@@ -60,30 +54,25 @@ public sealed partial class BuckleTest
     [Test]
     public async Task BuckleInteractBuckleUnbuckleSelf()
     {
-        var pair = Pair;
-        var server = pair.Server;
-
-        var entMan = server.ResolveDependency<IServerEntityManager>();
-
         EntityUid user = default;
         EntityUid chair = default;
         BuckleComponent buckle = null;
         StrapComponent strap = null;
 
-        await server.WaitAssertion(() =>
+        await Server.WaitAssertion(() =>
         {
-            user = entMan.SpawnEntity(BuckleDummyId, MapCoordinates.Nullspace);
-            chair = entMan.SpawnEntity(StrapDummyId, MapCoordinates.Nullspace);
+            user = SSpawn(BuckleDummyId);
+            chair = SSpawn(StrapDummyId);
 
-            Assert.That(entMan.TryGetComponent(user, out buckle));
-            Assert.That(entMan.TryGetComponent(chair, out strap));
+            Assert.That(SEntMan.TryGetComponent(user, out buckle));
+            Assert.That(SEntMan.TryGetComponent(chair, out strap));
 
 #pragma warning disable RA0002
             buckle.Delay = TimeSpan.Zero;
 #pragma warning restore RA0002
 
             // Buckle user to chair
-            entMan.EventBus.RaiseLocalEvent(chair, new InteractHandEvent(user, chair));
+            SEntMan.EventBus.RaiseLocalEvent(chair, new InteractHandEvent(user, chair));
             Assert.Multiple(() =>
             {
                 Assert.That(buckle.BuckledTo, Is.EqualTo(chair), "Victim did not get buckled to the chair.");
@@ -92,7 +81,7 @@ public sealed partial class BuckleTest
             });
 
             // InteractHand with chair to unbuckle
-            entMan.EventBus.RaiseLocalEvent(chair, new InteractHandEvent(user, chair));
+            SEntMan.EventBus.RaiseLocalEvent(chair, new InteractHandEvent(user, chair));
             Assert.Multiple(() =>
             {
                 Assert.That(buckle.BuckledTo, Is.Null);

@@ -2,8 +2,6 @@ using System.Numerics;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
 using Content.Shared.CCVar;
-using Robust.Server.GameObjects;
-using Robust.Shared.Configuration;
 using Robust.Shared.ContentPack;
 using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
@@ -93,6 +91,7 @@ namespace Content.IntegrationTests.Tests
                         Assert.That(mapSystem.GetTileRef(gridUid, mapGrid, new Vector2i(0, 0)).Tile, Is.EqualTo(new Tile(typeId: 2, flags: 1, variant: 254)));
                     });
                 }
+                mapSystem.DeleteMap(newMap);
             });
         }
     }

@@ -1,7 +1,6 @@
 using Content.Shared.Chemistry.Reaction;
 using Content.Shared.Chemistry.Components;
 using Robust.Shared.GameObjects;
-using Robust.Shared.Map;
 using Robust.Shared.Utility;
 using System.Linq;
 using Content.IntegrationTests.Fixtures;
@@ -27,6 +26,9 @@ public sealed class TryAllReactionsTest : GameTest
 
     private static readonly string[] Reactions = GameDataScrounger.PrototypesOfKind<ReactionPrototype>();
 
+    // FIXME: crystals spawn in nullspace - when spawning on the same map, they'll get torn down along with it.
+    public override PoolSettings PoolSettings => new() { Connected = true, Dirty = true };
+
     [SidedDependency(Side.Server)] private readonly SharedSolutionContainerSystem _solutionContainerSystem = default!;
 
     [Test]
@@ -51,10 +53,10 @@ public sealed class TryAllReactionsTest : GameTest
                 {
                     await Pair.Server.WaitAssertion(() =>
                     {
-                        beaker = SEntMan.SpawnEntity("TestSolutionContainer", coordinates);
+                        beaker = SSpawnAtPosition("TestSolutionContainer", coordinates);
                         Assert.That(_solutionContainerSystem
                             .TryGetSolution(beaker, "beaker", out var solutionEnt, out solution));
-                        _solutionContainerSystem.SetCanReact(solutionEnt!.Value, false);
+                        _solutionContainerSystem.SetCanReact(solutionEnt.Value, false);
                         foreach (var (id, reactant) in reactionPrototype.Reactants)
                         {
                             Assert.That(_solutionContainerSystem
@@ -103,7 +105,7 @@ public sealed class TryAllReactionsTest : GameTest
 
                         if (reactionPrototype.MixingCategories != null)
                         {
-                            var dummyEntity = SEntMan.SpawnEntity(null, MapCoordinates.Nullspace);
+                            var dummyEntity = SSpawn(null);
                             var mixerComponent = SEntMan.AddComponent<ReactionMixerComponent>(dummyEntity);
                             mixerComponent.ReactionTypes = reactionPrototype.MixingCategories;
                             _solutionContainerSystem.UpdateChemicals(solutionEnt.Value, true, mixerComponent);

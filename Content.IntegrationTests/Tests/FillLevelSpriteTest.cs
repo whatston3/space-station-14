@@ -21,18 +21,14 @@ public sealed class FillLevelSpriteTest : GameTest
     [Test]
     public async Task FillLevelSpritesExist()
     {
-        var pair = Pair;
-        var client = pair.Client;
-        var protoMan = client.ResolveDependency<IPrototypeManager>();
-        var componentFactory = client.ResolveDependency<IComponentFactory>();
-        var entMan = client.ResolveDependency<IEntityManager>();
-        var spriteSystem = client.System<SpriteSystem>();
+        var componentFactory = Client.ResolveDependency<IComponentFactory>();
+        var spriteSystem = Client.System<SpriteSystem>();
 
-        await client.WaitAssertion(() =>
+        await Client.WaitAssertion(() =>
         {
-            var protos = protoMan.EnumeratePrototypes<EntityPrototype>()
+            var protos = CProtoMan.EnumeratePrototypes<EntityPrototype>()
                 .Where(p => !p.Abstract)
-                .Where(p => !pair.IsTestPrototype(p))
+                .Where(p => !Pair.IsTestPrototype(p))
                 .Where(p => p.TryComp<SolutionContainerVisualsComponent>(out _, componentFactory))
                 .OrderBy(p => p.ID)
                 .ToList();
@@ -43,7 +39,7 @@ public sealed class FillLevelSpriteTest : GameTest
                 {
                     Assert.That(proto.TryComp<SolutionContainerVisualsComponent>(out var visuals, componentFactory));
                     Assert.That(proto.TryComp<SpriteComponent>(out var sprite, componentFactory));
-                    if (!proto.HasComponent<AppearanceComponent>(componentFactory))
+                    if (!proto.HasComp<AppearanceComponent>(componentFactory))
                     {
                         Assert.Fail(@$"{proto.ID} has SolutionContainerVisualsComponent but no AppearanceComponent.");
                     }
@@ -51,7 +47,7 @@ public sealed class FillLevelSpriteTest : GameTest
                     // Test base sprite fills
                     if (!string.IsNullOrEmpty(visuals.FillBaseName) && visuals.MaxFillLevels > 0)
                     {
-                        var entity = entMan.Spawn(proto.ID);
+                        var entity = CSpawn(proto.ID);
                         if (!spriteSystem.LayerMapTryGet(entity, SolutionContainerLayers.Fill, out var fillLayerId, false))
                         {
                             Assert.Fail(@$"{proto.ID} has SolutionContainerVisualsComponent but no fill layer map.");

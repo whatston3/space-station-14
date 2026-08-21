@@ -9,12 +9,12 @@ namespace Content.IntegrationTests.Fixtures;
 public abstract partial class GameTest
 {
     /// <summary>
-    ///     Contains all server entities spawned using GameTest proxy methods.
+    /// Contains all server entities spawned using GameTest proxy methods.
     /// </summary>
     private readonly List<EntityUid> _serverEntitiesToClean = new();
 
     /// <summary>
-    ///     Contains all client entities spawned using GameTest proxy methods.
+    /// Contains all client entities spawned using GameTest proxy methods.
     /// </summary>
     private readonly List<EntityUid> _clientEntitiesToClean = new();
 
@@ -41,7 +41,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Returns a string representation of an entity for the server.
+    /// Returns a string representation of an entity for the server.
     /// </summary>
     public string SToPrettyString(EntityUid uid)
     {
@@ -49,7 +49,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Returns a string representation of an entity for the client.
+    /// Returns a string representation of an entity for the client.
     /// </summary>
     public string CToPrettyString(EntityUid uid)
     {
@@ -57,7 +57,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Converts a server EntityUid into the client-side equivalent entity.
+    /// Converts a server EntityUid into the client-side equivalent entity.
     /// </summary>
     public EntityUid ToClientUid(EntityUid serverUid)
     {
@@ -65,7 +65,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Converts a client EntityUid into the server-side equivalent entity.
+    /// Converts a client EntityUid into the server-side equivalent entity.
     /// </summary>
     public EntityUid ToServerUid(EntityUid clientUid)
     {
@@ -73,7 +73,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Retrieves the given component from an entity on the server.
+    /// Retrieves the given component from an entity on the server.
     /// </summary>
     public T SComp<T>(EntityUid target)
         where T : IComponent
@@ -82,7 +82,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Attempts to retrieve the given component from an entity on the server.
+    /// Attempts to retrieve the given component from an entity on the server.
     /// </summary>
     public bool STryComp<T>(EntityUid? target, [NotNullWhen(true)] out T? component)
         where T : IComponent
@@ -91,7 +91,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Retrieves the given component from an entity on the client.
+    /// Retrieves the given component from an entity on the client.
     /// </summary>
     public T CComp<T>(EntityUid target)
         where T : IComponent
@@ -100,7 +100,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Attempts to retrieve the given component from an entity on the client.
+    /// Attempts to retrieve the given component from an entity on the client.
     /// </summary>
     public bool CTryComp<T>(EntityUid? target, [NotNullWhen(true)] out T? component)
         where T : IComponent
@@ -109,7 +109,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Pairs an EntityUid with the given component, from the server.
+    /// Pairs an EntityUid with the given component, from the server.
     /// </summary>
     public Entity<T> SEntity<T>(EntityUid target)
         where T : IComponent
@@ -118,7 +118,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Pairs an EntityUid with the given component, from the client.
+    /// Pairs an EntityUid with the given component, from the client.
     /// </summary>
     public Entity<T> CEntity<T>(EntityUid target)
         where T : IComponent
@@ -127,7 +127,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Spawns an entity on the server.
+    /// Spawns an entity on the server.
     /// </summary>
     /// <remarks>This tracks the entity for post-test cleanup.</remarks>
     public EntityUid SSpawn(string? id)
@@ -138,7 +138,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Spawns an entity on the server at a location.
+    /// Spawns an entity on the server at a location.
     /// </summary>
     /// <remarks>This tracks the entity for post-test cleanup.</remarks>
     public EntityUid SSpawnAtPosition(string? id, EntityCoordinates coordinates)
@@ -149,7 +149,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Spawns an entity on the client.
+    /// Spawns an entity on the client.
     /// </summary>
     /// <remarks>This tracks the entity for post-test cleanup.</remarks>
     public EntityUid CSpawn(string? id)
@@ -160,7 +160,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Spawns an entity on the server at a location.
+    /// Spawns an entity on the server at a location.
     /// </summary>
     /// <remarks>This tracks the entity for post-test cleanup.</remarks>
     public EntityUid CSpawnAtPosition(string? id, EntityCoordinates coordinates)
@@ -171,7 +171,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Asynchronously spawns an entity on the server.
+    /// Asynchronously spawns an entity on the server.
     /// </summary>
     public async Task<EntityUid> Spawn(string? id)
     {
@@ -183,7 +183,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Asynchronously spawns an entity on the server at the given position.
+    /// Asynchronously spawns an entity on the server at the given position.
     /// </summary>
     public async Task<EntityUid> SpawnAtPosition(string? id, EntityCoordinates coords)
     {
@@ -195,7 +195,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Deletes an entity on the server immediately.
+    /// Deletes an entity on the server immediately.
     /// </summary>
     public void SDeleteNow(EntityUid id)
     {
@@ -203,7 +203,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Deletes an entity on the client immediately.
+    /// Deletes an entity on the client immediately.
     /// </summary>
     public void CDeleteNow(EntityUid id)
     {
@@ -211,7 +211,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Queues an entity for deletion at the end of the tick on the server.
+    /// Queues an entity for deletion at the end of the tick on the server.
     /// </summary>
     public void SQueueDel(EntityUid id)
     {
@@ -219,7 +219,7 @@ public abstract partial class GameTest
     }
 
     /// <summary>
-    ///     Queues an entity for deletion at the end of the tick on the client.
+    /// Queues an entity for deletion at the end of the tick on the client.
     /// </summary>
     public void CQueueDel(EntityUid id)
     {

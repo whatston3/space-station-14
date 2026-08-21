@@ -40,16 +40,10 @@ namespace Content.IntegrationTests.Tests
         [Test]
         public async Task SpawnItemInSlotTest()
         {
-            var pair = Pair;
-            var server = pair.Server;
-
-            var sEntities = server.ResolveDependency<IEntityManager>();
-            var systemMan = sEntities.EntitySysManager;
-
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
-                var human = sEntities.SpawnEntity("InventoryStunnableDummy", MapCoordinates.Nullspace);
-                var invSystem = systemMan.GetEntitySystem<InventorySystem>();
+                var human = SEntMan.SpawnEntity("InventoryStunnableDummy", MapCoordinates.Nullspace);
+                var invSystem = Server.System<InventorySystem>();
 
                 Assert.Multiple(() =>
                 {
@@ -63,13 +57,13 @@ namespace Content.IntegrationTests.Tests
 #pragma warning disable NUnit2045
                 // Do we actually have the uniform equipped?
                 Assert.That(invSystem.TryGetSlotEntity(human, "jumpsuit", out var uniform));
-                Assert.That(sEntities.GetComponent<MetaDataComponent>(uniform.Value).EntityPrototype is
+                Assert.That(SEntMan.GetComponent<MetaDataComponent>(uniform.Value).EntityPrototype is
                 {
                     ID: "InventoryJumpsuitJanitorDummy"
                 });
 #pragma warning restore NUnit2045
 
-                systemMan.GetEntitySystem<StunSystem>().TryUpdateStunDuration(human, TimeSpan.FromSeconds(1f));
+                Server.System<StunSystem>().TryUpdateStunDuration(human, TimeSpan.FromSeconds(1f));
 
 #pragma warning disable NUnit2045
                 // Since the mob is stunned, they can't equip this.
@@ -81,12 +75,12 @@ namespace Content.IntegrationTests.Tests
                 // Let's try skipping the interaction check and see if it equips it!
                 Assert.That(invSystem.SpawnItemInSlot(human, "id", "InventoryIDCardDummy", true, true));
                 Assert.That(invSystem.TryGetSlotEntity(human, "id", out var idUid));
-                Assert.That(sEntities.GetComponent<MetaDataComponent>(idUid.Value).EntityPrototype is
+                Assert.That(SEntMan.GetComponent<MetaDataComponent>(idUid.Value).EntityPrototype is
                 {
                     ID: "InventoryIDCardDummy"
                 });
 #pragma warning restore NUnit2045
-                sEntities.DeleteEntity(human);
+                SEntMan.DeleteEntity(human);
             });
         }
     }

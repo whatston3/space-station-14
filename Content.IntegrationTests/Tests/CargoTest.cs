@@ -43,34 +43,36 @@ public sealed class CargoTest : GameTest
 
         var testMap = await pair.CreateTestMap();
 
-        var entManager = server.ResolveDependency<IEntityManager>();
-        var protoManager = server.ResolveDependency<IPrototypeManager>();
-        var pricing = server.ResolveDependency<IEntitySystemManager>().GetEntitySystem<PricingSystem>();
+        var map = SEntMan.System<SharedMapSystem>();
+        var pricing = SEntMan.System<PricingSystem>();
 
         await server.WaitAssertion(() =>
         {
             Assert.Multiple(() =>
             {
-                foreach (var proto in protoManager.EnumeratePrototypes<CargoProductPrototype>())
+                foreach (var proto in SProtoMan.EnumeratePrototypes<CargoProductPrototype>())
                 {
                     if (Ignored.Contains(proto.ID))
                         continue;
 
-                    var ent = entManager.SpawnEntity(proto.Product, testMap.MapCoords);
+                    var ent = SEntMan.SpawnEntity(proto.Product, testMap.MapCoords);
                     var price = pricing.GetPrice(ent);
 
                     Assert.That(price, Is.AtMost(proto.Cost), $"Found arbitrage on {proto.ID} cargo product! Cost is {proto.Cost} but sell is {price}!");
                     SDeleteNow(ent);
                 }
             });
+
+            map.DeleteMap(testMap.MapId);
         });
     }
 
     [Test]
     public async Task NoCargoBountyArbitrageTest()
     {
-        await Pair.CreateTestMap();
+        var testMap = await Pair.CreateTestMap();
         var coordinates = Pair.TestMap!.GridCoords;
+        var map = SEntMan.System<SharedMapSystem>();
 
         await Server.WaitAssertion(() =>
         {
@@ -93,6 +95,7 @@ public sealed class CargoTest : GameTest
                     SDeleteNow(ent);
                 }
             }
+            map.DeleteMap(testMap.MapId);
         });
     }
 
@@ -139,8 +142,9 @@ public sealed class CargoTest : GameTest
     [Test]
     public async Task NoSliceableBountyArbitrageTest()
     {
-        await Pair.CreateTestMap();
+        var testMap = await Pair.CreateTestMap();
         var coordinates = Pair.TestMap!.GridCoords;
+        var map = SEntMan.System<SharedMapSystem>();
 
         var bounties = SProtoMan.EnumeratePrototypes<CargoBountyPrototype>().ToList();
 
@@ -195,6 +199,7 @@ public sealed class CargoTest : GameTest
 
                 SDeleteNow(ent);
             }
+            map.DeleteMap(testMap.MapId);
         });
     }
 
@@ -223,13 +228,16 @@ public sealed class CargoTest : GameTest
     [Test]
     public async Task StackPrice()
     {
-        await Pair.CreateTestMap();
+        var testMap = await Pair.CreateTestMap();
         var coordinates = Pair.TestMap!.GridCoords;
+        var map = SEntMan.System<SharedMapSystem>();
+
         await Server.WaitAssertion(() =>
         {
             var ent = SSpawnAtPosition(StackEnt, coordinates);
             var price = _sPricing.GetPrice(ent);
             Assert.That(price, Is.EqualTo(double.Parse(StackCount) * double.Parse(StackUnitPrice)));
+            map.DeleteMap(testMap.MapId);
         });
     }
 

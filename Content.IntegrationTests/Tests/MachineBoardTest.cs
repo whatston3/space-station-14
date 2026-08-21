@@ -33,17 +33,13 @@ public sealed class MachineBoardTest : GameTest
     [Test]
     public async Task TestMachineBoardHasValidMachine()
     {
-        var pair = Pair;
-        var server = pair.Server;
+        var compFact = Server.ResolveDependency<IComponentFactory>();
 
-        var protoMan = server.ResolveDependency<IPrototypeManager>();
-        var compFact = server.ResolveDependency<IComponentFactory>();
-
-        await server.WaitAssertion(() =>
+        await Server.WaitAssertion(() =>
         {
-            foreach (var p in protoMan.EnumeratePrototypes<EntityPrototype>()
+            foreach (var p in SProtoMan.EnumeratePrototypes<EntityPrototype>()
                          .Where(p => !p.Abstract)
-                         .Where(p => !pair.IsTestPrototype(p))
+                         .Where(p => !Pair.IsTestPrototype(p))
                          .Where(p => !_ignoredPrototypes.Contains(p.ID)))
             {
                 if (!p.TryComp<MachineBoardComponent>(out var mbc, compFact))
@@ -52,7 +48,7 @@ public sealed class MachineBoardTest : GameTest
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(protoMan.TryIndex<EntityPrototype>(mId, out var mProto),
+                    Assert.That(SProtoMan.TryIndex<EntityPrototype>(mId, out var mProto),
                         $"Machine board {p.ID}'s corresponding machine has an invalid prototype.");
                     Assert.That(mProto.TryComp<MachineComponent>(out var mComp, compFact),
                         $"Machine board {p.ID}'s corresponding machine {mId} does not have MachineComponent");
@@ -70,17 +66,13 @@ public sealed class MachineBoardTest : GameTest
     [Test]
     public async Task TestComputerBoardHasValidComputer()
     {
-        var pair = Pair;
-        var server = pair.Server;
+        var compFact = Server.ResolveDependency<IComponentFactory>();
 
-        var protoMan = server.ResolveDependency<IPrototypeManager>();
-        var compFact = server.ResolveDependency<IComponentFactory>();
-
-        await server.WaitAssertion(() =>
+        await Server.WaitAssertion(() =>
         {
-            foreach (var p in protoMan.EnumeratePrototypes<EntityPrototype>()
+            foreach (var p in SProtoMan.EnumeratePrototypes<EntityPrototype>()
                          .Where(p => !p.Abstract)
-                         .Where(p => !pair.IsTestPrototype(p))
+                         .Where(p => !Pair.IsTestPrototype(p))
                          .Where(p => !_ignoredPrototypes.Contains(p.ID)))
             {
                 if (!p.TryComp<ComputerBoardComponent>(out var cbc, compFact))
@@ -90,7 +82,7 @@ public sealed class MachineBoardTest : GameTest
                 Assert.Multiple(() =>
                 {
                     Assert.That(cId, Is.Not.Null, $"Computer board \"{p.ID}\" does not have a corresponding computer.");
-                    Assert.That(protoMan.TryIndex<EntityPrototype>(cId, out var cProto),
+                    Assert.That(SProtoMan.TryIndex<EntityPrototype>(cId, out var cProto),
                         $"Computer board \"{p.ID}\"'s corresponding computer has an invalid prototype.");
                     Assert.That(cProto.TryComp<ComputerComponent>(out var cComp, compFact),
                         $"Computer board {p.ID}'s corresponding computer \"{cId}\" does not have ComputerComponent");
@@ -108,27 +100,21 @@ public sealed class MachineBoardTest : GameTest
     [Test]
     public async Task TestValidateBoardComponentRequirements()
     {
-        var pair = Pair;
-        var server = pair.Server;
-
-        var entMan = server.ResolveDependency<IEntityManager>();
-        var protoMan = server.ResolveDependency<IPrototypeManager>();
-
-        await server.WaitAssertion(() =>
+        await Server.WaitAssertion(() =>
         {
-            foreach (var p in protoMan.EnumeratePrototypes<EntityPrototype>()
+            foreach (var p in SProtoMan.EnumeratePrototypes<EntityPrototype>()
                          .Where(p => !p.Abstract)
-                         .Where(p => !pair.IsTestPrototype(p))
+                         .Where(p => !Pair.IsTestPrototype(p))
                          .Where(p => !_ignoredPrototypes.Contains(p.ID)))
             {
-                if (!p.TryComp<MachineBoardComponent>(out var board, entMan.ComponentFactory))
+                if (!p.TryComp<MachineBoardComponent>(out var board, SEntMan.ComponentFactory))
                     continue;
 
                 Assert.Multiple(() =>
                 {
                     foreach (var component in board.ComponentRequirements.Keys)
                     {
-                        Assert.That(entMan.ComponentFactory.TryGetRegistration(component, out _), $"Invalid component requirement {component} specified on machine board entity {p}");
+                        Assert.That(SEntMan.ComponentFactory.TryGetRegistration(component, out _), $"Invalid component requirement {component} specified on machine board entity {p}");
                     }
                 });
             }

@@ -101,6 +101,17 @@ public abstract partial class AtmosTest : GameTest
         await RunUntilSynced();
     }
 
+    [TearDown]
+    public override async Task DoTeardown()
+    {
+        if (Pair.TestMap is not { } testMap)
+            return;
+
+        await Server.WaitPost(() => { Server.System<SharedMapSystem>().DeleteMap(TestMap.MapId); }); // FIXME: without this, client entities linger.
+
+        await base.DoTeardown();
+    }
+
     [MemberNotNullWhen(true,
         nameof(ProcessEnt),
         nameof(RelevantAtmos),

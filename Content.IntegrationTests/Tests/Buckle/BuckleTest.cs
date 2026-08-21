@@ -51,29 +51,25 @@ namespace Content.IntegrationTests.Tests.Buckle
         [Test]
         public async Task BuckleUnbuckleCooldownRangeTest()
         {
-            var pair = Pair;
-            var server = pair.Server;
-
-            var testMap = await pair.CreateTestMap();
+            var testMap = await Pair.CreateTestMap();
             var coordinates = testMap.GridCoords;
-            var entityManager = server.ResolveDependency<IEntityManager>();
-            var actionBlocker = entityManager.System<ActionBlockerSystem>();
-            var buckleSystem = entityManager.System<SharedBuckleSystem>();
-            var standingState = entityManager.System<StandingStateSystem>();
-            var xformSystem = entityManager.System<SharedTransformSystem>();
+            var actionBlocker = Server.System<ActionBlockerSystem>();
+            var buckleSystem = Server.System<SharedBuckleSystem>();
+            var standingState = Server.System<StandingStateSystem>();
+            var xformSystem = Server.System<SharedTransformSystem>();
 
             EntityUid human = default;
             EntityUid chair = default;
             BuckleComponent buckle = null;
             StrapComponent strap = null;
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
-                human = entityManager.SpawnEntity(BuckleDummyId, coordinates);
-                chair = entityManager.SpawnEntity(StrapDummyId, coordinates);
+                human = SSpawnAtPosition(BuckleDummyId, coordinates);
+                chair = SSpawnAtPosition(StrapDummyId, coordinates);
 
                 // Default state, unbuckled
-                Assert.That(entityManager.TryGetComponent(human, out buckle));
+                Assert.That(SEntMan.TryGetComponent(human, out buckle));
                 Assert.Multiple(() =>
                 {
                     Assert.That(buckle, Is.Not.Null);
@@ -86,7 +82,7 @@ namespace Content.IntegrationTests.Tests.Buckle
                 });
 
                 // Default state, no buckled entities, strap
-                Assert.That(entityManager.TryGetComponent(chair, out strap));
+                Assert.That(SEntMan.TryGetComponent(chair, out strap));
                 Assert.Multiple(() =>
                 {
                     Assert.That(strap, Is.Not.Null);
@@ -125,9 +121,9 @@ namespace Content.IntegrationTests.Tests.Buckle
             });
 
             // Wait enough ticks for the unbuckling cooldown to run out
-            await server.WaitRunTicks(60);
+            await Server.WaitRunTicks(60);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
 #pragma warning disable NUnit2045 // Interdependent asserts.
                 Assert.That(buckle.Buckled);
@@ -164,9 +160,9 @@ namespace Content.IntegrationTests.Tests.Buckle
             });
 
             // Wait enough ticks for the unbuckling cooldown to run out
-            await server.WaitRunTicks(60);
+            await Server.WaitRunTicks(60);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
 #pragma warning disable NUnit2045 // Interdependent asserts.
                 // Still buckled
@@ -217,9 +213,9 @@ namespace Content.IntegrationTests.Tests.Buckle
                 xformSystem.SetWorldPosition(human, oldWorldPosition + new Vector2(1, 0));
             });
 
-            await server.WaitRunTicks(1);
+            await Server.WaitRunTicks(1);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
                 // No longer buckled
                 Assert.Multiple(() =>
@@ -228,40 +224,38 @@ namespace Content.IntegrationTests.Tests.Buckle
                     Assert.That(buckle.BuckledTo, Is.Null);
                     Assert.That(strap.BuckledEntities, Is.Empty);
                 });
+
+                Server.System<SharedMapSystem>().DeleteMap(testMap.MapId);
             });
         }
 
         [Test]
         public async Task BuckledDyingDropItemsTest()
         {
-            var pair = Pair;
-            var server = pair.Server;
-
-            var testMap = await pair.CreateTestMap();
+            var testMap = await Pair.CreateTestMap();
             var coordinates = testMap.GridCoords;
 
             EntityUid human = default;
             BuckleComponent buckle = null;
             HandsComponent hands = null;
 
-            await server.WaitIdleAsync();
+            await Server.WaitIdleAsync();
 
-            var entityManager = server.ResolveDependency<IEntityManager>();
-            var handsSys = entityManager.EntitySysManager.GetEntitySystem<SharedHandsSystem>();
-            var buckleSystem = entityManager.EntitySysManager.GetEntitySystem<SharedBuckleSystem>();
-            var xformSystem = entityManager.System<SharedTransformSystem>();
+            var handsSys = Server.System<SharedHandsSystem>();
+            var buckleSystem = Server.System<SharedBuckleSystem>();
+            var xformSystem = Server.System<SharedTransformSystem>();
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
-                human = entityManager.SpawnEntity(BuckleDummyId, coordinates);
-                var chair = entityManager.SpawnEntity(StrapDummyId, coordinates);
+                human = SSpawnAtPosition(BuckleDummyId, coordinates);
+                var chair = SSpawnAtPosition(StrapDummyId, coordinates);
 
                 // Component sanity check
                 Assert.Multiple(() =>
                 {
-                    Assert.That(entityManager.TryGetComponent(human, out buckle));
-                    Assert.That(entityManager.HasComponent<StrapComponent>(chair));
-                    Assert.That(entityManager.TryGetComponent(human, out hands));
+                    Assert.That(SEntMan.TryGetComponent(human, out buckle));
+                    Assert.That(SEntMan.HasComponent<StrapComponent>(chair));
+                    Assert.That(SEntMan.TryGetComponent(human, out hands));
                 });
 
                 // Buckle
@@ -275,15 +269,15 @@ namespace Content.IntegrationTests.Tests.Buckle
                 // Put an item into every hand
                 for (var i = 0; i < hands.Count; i++)
                 {
-                    var akms = entityManager.SpawnEntity(ItemDummyId, coordinates);
+                    var akms = SSpawnAtPosition(ItemDummyId, coordinates);
 
                     Assert.That(handsSys.TryPickupAnyHand(human, akms));
                 }
             });
 
-            await server.WaitRunTicks(10);
+            await Server.WaitRunTicks(10);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
                 // Still buckled
                 Assert.That(buckle.Buckled);
@@ -296,35 +290,33 @@ namespace Content.IntegrationTests.Tests.Buckle
 
                 buckleSystem.Unbuckle(human, human);
                 Assert.That(buckle.Buckled, Is.False);
+
+                Server.System<SharedMapSystem>().DeleteMap(testMap.MapId);
             });
         }
 
         [Test]
         public async Task ForceUnbuckleBuckleTest()
         {
-            var pair = Pair;
-            var server = pair.Server;
-
-            var testMap = await pair.CreateTestMap();
+            var testMap = await Pair.CreateTestMap();
             var coordinates = testMap.GridCoords;
-            var entityManager = server.ResolveDependency<IEntityManager>();
-            var buckleSystem = entityManager.System<SharedBuckleSystem>();
-            var xformSystem = entityManager.System<SharedTransformSystem>();
+            var buckleSystem = Server.System<SharedBuckleSystem>();
+            var xformSystem = Server.System<SharedTransformSystem>();
 
             EntityUid human = default;
             EntityUid chair = default;
             BuckleComponent buckle = null;
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
-                human = entityManager.SpawnEntity(BuckleDummyId, coordinates);
-                chair = entityManager.SpawnEntity(StrapDummyId, coordinates);
+                human = SSpawnAtPosition(BuckleDummyId, coordinates);
+                chair = SSpawnAtPosition(StrapDummyId, coordinates);
 
                 // Component sanity check
                 Assert.Multiple(() =>
                 {
-                    Assert.That(entityManager.TryGetComponent(human, out buckle));
-                    Assert.That(entityManager.HasComponent<StrapComponent>(chair));
+                    Assert.That(SEntMan.TryGetComponent(human, out buckle));
+                    Assert.That(SEntMan.HasComponent<StrapComponent>(chair));
                 });
 
                 // Buckle
@@ -340,11 +332,11 @@ namespace Content.IntegrationTests.Tests.Buckle
                 xformSystem.SetWorldPosition(human, oldWorldPosition + new Vector2(100, 0));
             });
 
-            await PoolManager.WaitUntil(server, () => !buckle.Buckled, 10);
+            await PoolManager.WaitUntil(Server, () => !buckle.Buckled, 10);
 
             Assert.That(buckle.Buckled, Is.False);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
                 // Move the now unbuckled entity back onto the chair
                 var oldWorldPosition = xformSystem.GetWorldPosition(chair);
@@ -359,9 +351,9 @@ namespace Content.IntegrationTests.Tests.Buckle
                 });
             });
 
-            await server.WaitRunTicks(60);
+            await Server.WaitRunTicks(60);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
                 // Still buckled
                 Assert.Multiple(() =>
@@ -369,6 +361,8 @@ namespace Content.IntegrationTests.Tests.Buckle
                     Assert.That(buckle.BuckledTo, Is.Not.Null);
                     Assert.That(buckle.Buckled);
                 });
+
+                Server.System<SharedMapSystem>().DeleteMap(testMap.MapId);
             });
         }
     }

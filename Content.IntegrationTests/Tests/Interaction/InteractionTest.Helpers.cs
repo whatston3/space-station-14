@@ -102,7 +102,7 @@ public abstract partial class InteractionTest
         Target = NetEntity.Invalid;
         await Server.WaitPost(() =>
         {
-            Target = SEntMan.GetNetEntity(SEntMan.SpawnAtPosition(prototype, SEntMan.GetCoordinates(coords.Value)));
+            Target = SEntMan.GetNetEntity(SSpawnAtPosition(prototype, SEntMan.GetCoordinates(coords.Value)));
         });
 
         await RunTicks(5);

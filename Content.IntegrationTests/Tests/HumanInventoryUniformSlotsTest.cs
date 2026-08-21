@@ -56,9 +56,7 @@ namespace Content.IntegrationTests.Tests
         [Test]
         public async Task Test()
         {
-            var pair = Pair;
-            var server = pair.Server;
-            var testMap = await pair.CreateTestMap();
+            var testMap = await Pair.CreateTestMap();
             var coordinates = testMap.GridCoords;
 
             EntityUid human = default;
@@ -67,18 +65,17 @@ namespace Content.IntegrationTests.Tests
             EntityUid pocketItem = default;
 
             InventorySystem invSystem = default!;
-            var mapSystem = server.System<SharedMapSystem>();
-            var entityMan = server.ResolveDependency<IEntityManager>();
+            var mapSystem = Server.System<SharedMapSystem>();
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
-                invSystem = entityMan.System<InventorySystem>();
+                invSystem = Server.System<InventorySystem>();
 
-                human = entityMan.SpawnEntity("HumanUniformDummy", coordinates);
-                uniform = entityMan.SpawnEntity("UniformDummy", coordinates);
-                idCard = entityMan.SpawnEntity("IDCardDummy", coordinates);
-                pocketItem = entityMan.SpawnEntity("FlashlightDummy", coordinates);
-                var tooBigItem = entityMan.SpawnEntity("ToolboxDummy", coordinates);
+                human = SEntMan.SpawnAttachedTo("HumanUniformDummy", coordinates);
+                uniform = SEntMan.SpawnAttachedTo("UniformDummy", coordinates);
+                idCard = SEntMan.SpawnAttachedTo("IDCardDummy", coordinates);
+                pocketItem = SEntMan.SpawnAttachedTo("FlashlightDummy", coordinates);
+                var tooBigItem = SEntMan.SpawnAttachedTo("ToolboxDummy", coordinates);
 
 
                 Assert.Multiple(() =>
@@ -104,24 +101,24 @@ namespace Content.IntegrationTests.Tests
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(IsDescendant(idCard, human, entityMan));
-                    Assert.That(IsDescendant(pocketItem, human, entityMan));
+                    Assert.That(IsDescendant(idCard, human, SEntMan));
+                    Assert.That(IsDescendant(pocketItem, human, SEntMan));
                 });
 
                 // Now drop the jumpsuit.
                 Assert.That(invSystem.TryUnequip(human, "jumpsuit"));
             });
 
-            await server.WaitRunTicks(2);
+            await Server.WaitRunTicks(2);
 
-            await server.WaitAssertion(() =>
+            await Server.WaitAssertion(() =>
             {
                 Assert.Multiple(() =>
                 {
                     // Items have been dropped!
-                    Assert.That(IsDescendant(uniform, human, entityMan), Is.False);
-                    Assert.That(IsDescendant(idCard, human, entityMan), Is.False);
-                    Assert.That(IsDescendant(pocketItem, human, entityMan), Is.False);
+                    Assert.That(IsDescendant(uniform, human, SEntMan), Is.False);
+                    Assert.That(IsDescendant(idCard, human, SEntMan), Is.False);
+                    Assert.That(IsDescendant(pocketItem, human, SEntMan), Is.False);
 
                     // Ensure everything null here.
                     Assert.That(!invSystem.TryGetSlotEntity(human, "jumpsuit", out _));
