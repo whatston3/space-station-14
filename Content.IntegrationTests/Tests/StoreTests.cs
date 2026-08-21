@@ -76,7 +76,7 @@ public sealed class StoreTests : GameTest
             uplinkSystem.AddUplink(human, originalBalance, out var notes, pda, true);
 
             Assert.That(notes != null);
-            ringerSystem.TryMatchRingtoneToStore(notes, out var storeEnt);
+            ringerSystem.TryMatchRingtoneToStore(notes!, out var storeEnt);
             Assert.That(storeEnt.HasValue);
             var storeComponent = SEntMan.GetComponent<StoreComponent>(storeEnt.Value);
             var discountComponent = SEntMan.GetComponent<StoreDiscountComponent>(storeEnt.Value);

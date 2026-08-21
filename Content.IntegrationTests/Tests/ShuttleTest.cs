@@ -17,8 +17,6 @@ public sealed class ShuttleTest : GameTest
     {
         var physicsSystem = Server.System<SharedPhysicsSystem>();
 
-        PhysicsComponent gridPhys = null;
-
         await Pair.CreateTestMap();
 
         Assume.That(TestMap, Is.Not.Null);
@@ -27,6 +25,7 @@ public sealed class ShuttleTest : GameTest
         {
             var mapId = TestMap.MapId;
             var grid = TestMap.Grid;
+            PhysicsComponent? gridPhys = null;
 
             Assert.Multiple(() =>
             {
@@ -35,7 +34,7 @@ public sealed class ShuttleTest : GameTest
             });
             Assert.Multiple(() =>
             {
-                Assert.That(gridPhys.BodyType, Is.EqualTo(BodyType.Dynamic));
+                Assert.That(gridPhys!.BodyType, Is.EqualTo(BodyType.Dynamic));
                 Assert.That(SEntMan.GetComponent<TransformComponent>(grid).LocalPosition, Is.EqualTo(Vector2.Zero));
             });
             physicsSystem.ApplyLinearImpulse(grid, Vector2.One, body: gridPhys);
