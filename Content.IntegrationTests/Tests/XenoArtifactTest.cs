@@ -1,3 +1,4 @@
+#nullable enable
 using System.Linq;
 using Content.IntegrationTests.Fixtures;
 using Content.IntegrationTests.Fixtures.Attributes;
@@ -7,7 +8,6 @@ using Robust.Shared.GameObjects;
 
 namespace Content.IntegrationTests.Tests;
 
-[TestFixture]
 [TestOf(typeof(SharedXenoArtifactSystem))]
 public sealed class XenoArtifactTest : GameTest
 {
@@ -99,8 +99,8 @@ public sealed class XenoArtifactTest : GameTest
     /// Checks that adding nodes and edges properly adds them into the adjacency matrix
     /// </summary>
     [Test]
-    [Description("Checks that adding nodes and edges properly adds them into the adjacency matrix")]
     [RunOnSide(Side.Server)]
+    [Description("Checks that adding nodes and edges properly adds them into the adjacency matrix")]
     public async Task XenoArtifactAddNodeTest()
     {
         var artifactUid = SSpawn(TestArtifact);
@@ -143,8 +143,8 @@ public sealed class XenoArtifactTest : GameTest
     /// Checks to make sure that removing nodes properly cleans up all connections.
     /// </summary>
     [Test]
-    [Description("Checks to make sure that removing nodes properly cleans up all connections.")]
     [RunOnSide(Side.Server)]
+    [Description("Checks to make sure that removing nodes properly cleans up all connections.")]
     public async Task XenoArtifactRemoveNodeTest()
     {
         var artifactUid = SSpawn(TestArtifact);
@@ -182,8 +182,8 @@ public sealed class XenoArtifactTest : GameTest
     /// Sets up series of linked nodes and ensures that resizing the adjacency matrix doesn't disturb the connections
     /// </summary>
     [Test]
-    [Description("Sets up series of linked nodes and ensures that resizing the adjacency matrix doesn't disturb the connections")]
     [RunOnSide(Side.Server)]
+    [Description("Sets up series of linked nodes and ensures that resizing the adjacency matrix doesn't disturb the connections")]
     public async Task XenoArtifactResizeTest()
     {
         var artifactUid = SSpawn(TestArtifact);
@@ -235,8 +235,8 @@ public sealed class XenoArtifactTest : GameTest
     /// Checks if removing a node and adding a new node into its place in the adjacency matrix doesn't accidentally retain extra data.
     /// </summary>
     [Test]
-    [Description("Checks if removing a node and adding a new node into its place in the adjacency matrix doesn't accidentally retain extra data.")]
     [RunOnSide(Side.Server)]
+    [Description("Checks if removing a node and adding a new node into its place in the adjacency matrix doesn't accidentally retain extra data.")]
     public async Task XenoArtifactReplaceTest()
     {
         var artifactUid = SSpawn(TestArtifact);
@@ -283,8 +283,8 @@ public sealed class XenoArtifactTest : GameTest
     /// Checks if the active nodes are properly detected.
     /// </summary>
     [Test]
-    [Description("Checks if the active nodes are properly detected.")]
     [RunOnSide(Side.Server)]
+    [Description("Checks if the active nodes are properly detected.")]
     public async Task XenoArtifactBuildActiveNodesTest()
     {
         var artifactUid = SSpawn(TestArtifact);
@@ -333,6 +333,7 @@ public sealed class XenoArtifactTest : GameTest
 
     [Test]
     [RunOnSide(Side.Server)]
+    [Description("Checks the shape and number of segments on artifacts with different generation params.")]
     public async Task XenoArtifactGenerateSegmentsTest()
     {
         var artifact1Uid = SSpawn(TestGenArtifactFlat);
@@ -365,8 +366,8 @@ public sealed class XenoArtifactTest : GameTest
     }
 
     [Test]
-    [Description("Checks that triggering sibling nodes which converge on an unlockable node extends the unlocking time")]
     [RunOnSide(Side.Server)]
+    [Description("Checks that triggering sibling nodes which converge on an unlockable node extends the unlocking time")]
     public async Task XenoArtifactSiblingTriggerTimeTest()
     {
         var artifactUid = SSpawn(TestArtifact);
@@ -395,7 +396,7 @@ public sealed class XenoArtifactTest : GameTest
         var baseEndTime = unlocking.EndTime;
 
         // Triggering the sibling node B has to extend the unlocking time, even though it is
-        // not on the same path as A. 
+        // not on the same path as A.
         _sArtifactSystem.TriggerXenoArtifact(artifactEnt, nodeB.Value, force: true);
         Assert.That(unlocking.EndTime - baseEndTime, Is.EqualTo(artifactEnt.Comp.UnlockStateIncrementPerNode));
 
@@ -410,8 +411,8 @@ public sealed class XenoArtifactTest : GameTest
     }
 
     [Test]
-    [Description("Checks that a trigger which makes the unlocking attempt impossible doesn't extend the time")]
     [RunOnSide(Side.Server)]
+    [Description("Checks that a trigger which makes the unlocking attempt impossible doesn't extend the time")]
     public async Task XenoArtifactImpossibleTriggerTimeTest()
     {
         var artifactUid = SSpawn(TestArtifact);
@@ -439,8 +440,8 @@ public sealed class XenoArtifactTest : GameTest
     }
 
     [Test]
-    [Description("Checks that a full required trigger set doesn't extend the time when artifexium is applied")]
     [RunOnSide(Side.Server)]
+    [Description("Checks that a full required trigger set doesn't extend the time when artifexium is applied")]
     public async Task XenoArtifactArtifexiumTimeTest()
     {
         var artifactUid = SSpawn(TestArtifact);
