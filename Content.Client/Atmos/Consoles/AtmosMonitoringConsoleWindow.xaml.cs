@@ -36,13 +36,16 @@ public sealed partial class AtmosMonitoringConsoleWindow : FancyWindow
 
     private readonly Vector2[] _pipeLayerOffsets = { new Vector2(0f, 0f), new Vector2(0.25f, 0.25f), new Vector2(-0.25f, -0.25f) };
 
-    public AtmosMonitoringConsoleWindow(AtmosMonitoringConsoleBoundUserInterface userInterface, EntityUid? owner)
+    public AtmosMonitoringConsoleWindow()
     {
         RobustXamlLoader.Load(this);
         _entManager = IoCManager.Resolve<IEntityManager>();
         _protoManager = IoCManager.Resolve<IPrototypeManager>();
         _spriteSystem = _entManager.System<SpriteSystem>();
+    }
 
+    public void SetEntity(EntityUid owner)
+    {
         // Pass the owner to nav map
         _owner = owner;
         NavMap.Owner = _owner;
