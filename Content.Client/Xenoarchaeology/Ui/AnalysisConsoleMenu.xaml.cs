@@ -72,15 +72,9 @@ public sealed partial class AnalysisConsoleMenu : FancyWindow
     /// Set entity that corresponds analysis console, for which window is opened.
     /// Closes window if <see cref="AnalysisConsoleComponent"/> is not present on entity.
     /// </summary>
-    public void SetOwner(EntityUid owner)
+    public void SetOwner(Entity<AnalysisConsoleComponent> owner)
     {
-        if (!_ent.TryGetComponent<AnalysisConsoleComponent>(owner, out var comp))
-        {
-            Close();
-            return;
-        }
-
-        _owner = (owner, comp);
+        _owner = owner;
         Update(_owner);
     }
 

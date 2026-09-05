@@ -24,7 +24,14 @@ public sealed class AnalysisConsoleBoundUserInterface(EntityUid owner, Enum uiKe
         base.Open();
 
         _consoleMenu = this.CreateWindow<AnalysisConsoleMenu>();
-        _consoleMenu.SetOwner(Owner);
+
+        if (!EntMan.TryGetComponent<AnalysisConsoleComponent>(Owner, out var comp))
+        {
+            Close();
+            return;
+        }
+
+        _consoleMenu.SetOwner((Owner, comp));
 
         _consoleMenu.OnServerSelectionButtonPressed += () =>
         {
@@ -44,4 +51,3 @@ public sealed class AnalysisConsoleBoundUserInterface(EntityUid owner, Enum uiKe
         _consoleMenu?.Update(ent);
     }
 }
-
