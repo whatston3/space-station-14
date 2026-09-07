@@ -97,7 +97,7 @@ public sealed partial class AdminLogsEui : BaseEui
         _currentlyExportingLogs = true;
         LogsControl.ExportLogs.Disabled = true;
 
-        var file = await _dialogManager.SaveFile(new FileDialogFilters(new FileDialogFilters.Group("csv")));
+        var file = await _dialogManager.SaveFile(new FileDialogFilters(new FileDialogFilters.Group("csv")), appendExtension: true);
 
         if (file == null)
             return;

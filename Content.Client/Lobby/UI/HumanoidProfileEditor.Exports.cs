@@ -61,7 +61,7 @@ public sealed partial class HumanoidProfileEditor
             return;
 
         StartExport();
-        var file = await _dialogManager.SaveFile(new FileDialogFilters(new FileDialogFilters.Group("yml")));
+        var file = await _dialogManager.SaveFile(new FileDialogFilters(new FileDialogFilters.Group("yml")), appendExtension: true);
 
         if (file == null)
         {
