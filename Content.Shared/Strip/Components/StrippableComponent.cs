@@ -9,10 +9,16 @@ namespace Content.Shared.Strip.Components
     public sealed partial class StrippableComponent : Component
     {
         /// <summary>
-        ///     The strip delay for hands.
+        /// The strip delay for hands.
         /// </summary>
-        [ViewVariables(VVAccess.ReadWrite), DataField("handDelay")]
+        [DataField("handDelay")]
         public TimeSpan HandStripDelay = TimeSpan.FromSeconds(4f);
+
+        /// <summary>
+        /// If true, this entity can only be stripped by their verb.
+        /// </summary>
+        [DataField]
+        public bool PreventOpenOnActivate = false;
     }
 
     [NetSerializable, Serializable]
