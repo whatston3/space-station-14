@@ -4,7 +4,12 @@ using Robust.Shared.Utility;
 
 namespace Content.Shared.Weapons.Ranged.Components;
 
-// I have tried to make this as generic as possible but "delete joint on cycle / right-click reels in" is very specific behavior.
+/// <summary>
+/// A component for a grappling gun - shoots out a rope that can be reeled in.
+/// </summary>
+/// <remarks>
+/// Attempted to be as generic as possible but "delete joint on cycle, right-click reels in" is very specific behavior.
+/// </remarks>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(fieldDeltas: true)]
 public sealed partial class GrapplingGunComponent : Component
 {
@@ -109,4 +114,13 @@ public sealed partial class GrapplingGunComponent : Component
     /// </summary>
     [ViewVariables]
     public EntityUid? Stream;
+
+    /// <summary>
+    /// The time that the projectile should despawn at.
+    /// </summary>
+    /// <remarks>
+    /// If null, it should not despawn.
+    /// </remarks>
+    [DataField]
+    public TimeSpan? ProjectileDespawnTime;
 }

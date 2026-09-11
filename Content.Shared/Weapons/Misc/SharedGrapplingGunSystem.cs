@@ -11,30 +11,42 @@ using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
+using Robust.Shared.GameStates;
 using Robust.Shared.Network;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Controllers;
 using Robust.Shared.Physics.Dynamics.Joints;
 using Robust.Shared.Physics.Systems;
+using Robust.Shared.Player;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 
 namespace Content.Shared.Weapons.Misc;
 
+/// <summary>
+/// A system for handling grappling gun interactions - shooting projectiles, reeling in and snapping ropes.
+/// </summary>
 public abstract partial class SharedGrapplingGunSystem : VirtualController
 {
     [Dependency] protected IGameTiming Timing = default!;
     [Dependency] private INetManager _netManager = default!;
+    [Dependency] private ISharedPlayerManager _playerManager = default!;
     [Dependency] private SharedAppearanceSystem _appearance = default!;
     [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedContainerSystem _container = default!;
+    [Dependency] private SharedGravitySystem _gravity = default!;
+    [Dependency] private SharedGunSystem _gun = default!;
     [Dependency] private SharedHandsSystem _hands = default!;
     [Dependency] private SharedJointSystem _joints = default!;
-    [Dependency] private SharedGunSystem _gun = default!;
     [Dependency] private SharedPhysicsSystem _physics = default!;
+    [Dependency] private SharedPvsOverrideSystem _pvsOverride = default!;
     [Dependency] private SharedTransformSystem _transform = default!;
-    [Dependency] private SharedGravitySystem _gravity = default!;
-    [Dependency] private SharedContainerSystem _container = default!;
+
+    [Dependency] private EntityQuery<EmbeddableProjectileComponent> _embeddableProjectileQuery;
+    [Dependency] private EntityQuery<GrapplingGunComponent> _grapplingGunQuery;
+    [Dependency] private EntityQuery<GrapplingProjectileComponent> _grapplingProjectileQuery;
+    [Dependency] private EntityQuery<GrapplingProjectileEmbedComponent> _grapplingProjectileEmbedQuery;
 
     /// <summary>
     /// Name of the joint between a grappling gun and its hook.
@@ -64,10 +76,17 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
     [SubscribeLocalEvent]
     private void OnGrappleProjectileShutdown(Entity<GrapplingProjectileComponent> ent, ref ComponentShutdown args)
     {
-        if (!TryComp<EmbeddableProjectileComponent>(ent, out var embedComp) || embedComp.EmbeddedIntoUid == null)
+        if (ent.Comp.Shooter is { } shooter && _playerManager.TryGetSessionByEntity(shooter, out var session))
+        {
+            _pvsOverride.RemoveSessionOverride(ent, session);
+            if (ent.Comp.Gun is { } gun)
+                _pvsOverride.RemoveSessionOverride(gun, session);
+        }
+
+        if (!_embeddableProjectileQuery.TryComp(ent, out var embedComp) || embedComp.EmbeddedIntoUid == null)
             return;
 
-        if (!TryComp<GrapplingProjectileEmbedComponent>(embedComp.EmbeddedIntoUid, out var grapplingEmbedComp))
+        if (!_grapplingProjectileEmbedQuery.TryComp(embedComp.EmbeddedIntoUid, out var grapplingEmbedComp))
             return;
 
         grapplingEmbedComp.GrapplingProjectiles.Remove(ent);
@@ -76,7 +95,7 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
     [SubscribeLocalEvent]
     private void OnGrappleCollide(EntityUid uid, GrapplingProjectileComponent component, ref ProjectileEmbedEvent args)
     {
-        if (!args.Weapon.HasValue || !TryComp<GrapplingGunComponent>(args.Weapon, out var grapple))
+        if (!args.Weapon.HasValue || !_grapplingGunQuery.TryComp(args.Weapon, out var grapple))
             return;
 
         var grapplePos = _transform.GetWorldPosition(args.Weapon.Value);
@@ -86,6 +105,9 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
             Ungrapple((args.Weapon.Value, grapple), true);
             return;
         }
+
+        component.DespawnTime = null;
+        Dirty(uid, component);
 
         var embedComp = EnsureComp<GrapplingProjectileEmbedComponent>(args.Embedded);
         embedComp.GrapplingProjectiles.Add(uid);
@@ -109,8 +131,19 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
     {
         foreach (var (shotUid, _) in args.Ammo)
         {
-            if (!HasComp<GrapplingProjectileComponent>(shotUid))
+            if (!_grapplingProjectileQuery.TryComp(shotUid, out var projectile))
                 continue;
+
+            if (_playerManager.TryGetSessionByEntity(args.User, out var session))
+            {
+                _pvsOverride.AddSessionOverride(shotUid.Value, session);
+                _pvsOverride.AddSessionOverride(entity, session);
+            }
+
+            projectile.Gun = entity;
+            projectile.Shooter = args.User;
+            projectile.DespawnTime = entity.Comp.ProjectileDespawnTime is { } despawnTime ? Timing.CurTime + despawnTime : null;
+            Dirty(shotUid.Value, projectile);
 
             //todo: this doesn't actually support multigrapple
             // At least show the visuals.
@@ -126,6 +159,18 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
             _appearance.SetData(entity.Owner, SharedTetherGunSystem.TetherVisualsStatus.Key, false, appearance);
     }
 
+    /// <summary>
+    /// Removed from container - handles removal from hands, dropping on the ground, etc.
+    /// </summary>
+    [SubscribeLocalEvent]
+    private void OnGrapplingRemovedFromContainer(Entity<GrapplingGunComponent> entity, ref EntGotRemovedFromContainerMessage args)
+    {
+        if (entity.Comp.Projectile != null)
+        {
+            Ungrapple(entity, false);
+        }
+    }
+
     [SubscribeLocalEvent]
     private void OnGunActivate(Entity<GrapplingGunComponent> entity, ref ActivateInWorldEvent args)
     {
@@ -133,7 +178,7 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
             return;
 
         _audio.PlayPredicted(entity.Comp.CycleSound, entity.Owner, args.User);
-        Ungrapple((entity), false, args.User);
+        Ungrapple(entity, false, args.User);
         args.Handled = true;
     }
 
@@ -150,7 +195,7 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
             return;
 
         if (!_hands.TryGetActiveItem(player, out var activeItem) ||
-            !TryComp<GrapplingGunComponent>(activeItem, out var grappling))
+            !_grapplingGunQuery.TryComp(activeItem, out var grappling))
         {
             return;
         }
@@ -184,6 +229,9 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
     [SubscribeLocalEvent]
     private void OnAnchorStateChanged(Entity<GrapplingProjectileEmbedComponent> entity, ref AnchorStateChangedEvent args)
     {
+        if (TerminatingOrDeleted(entity))
+            return;
+
         foreach (var hook in entity.Comp.GrapplingProjectiles)
         {
             if (!TryComp<ProjectileComponent>(hook, out var projectileComp) || !TryComp<JointComponent>(hook, out var jointComp))
@@ -208,8 +256,7 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
                 joint is not DistanceJoint distance ||
                 !TryComp<JointComponent>(joint.BodyAUid, out var hookJointComp))
             {
-                if (_netManager.IsServer) // Client might not receive the joint due to PVS culling, so lets not spam them with 23895739 mispredicted ungrapples
-                    Ungrapple((uid, grappling), true);
+                Ungrapple((uid, grappling), true);
                 continue;
             }
 
@@ -340,6 +387,14 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
             }
 
             Dirty(uid, jointComp);
+        }
+
+        var projectileQuery = EntityQueryEnumerator<GrapplingProjectileComponent>();
+
+        while (projectileQuery.MoveNext(out var uid, out var grappling))
+        {
+            if (grappling.DespawnTime != null && Timing.CurTime >= grappling.DespawnTime)
+                QueueDel(uid);
         }
     }
 

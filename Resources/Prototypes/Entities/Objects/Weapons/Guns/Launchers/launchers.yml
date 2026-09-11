@@ -313,6 +313,8 @@
     storedOffset: 0,-6
   - type: AmmoCounter
   - type: GrapplingGun
+    projectileDespawnTime: 2s
+    ropeMaxLength: 60
   - type: Gun
     soundGunshot: /Audio/Weapons/Guns/Gunshots/harpoon.ogg
     fireRate: 1
