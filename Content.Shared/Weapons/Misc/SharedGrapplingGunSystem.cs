@@ -69,8 +69,7 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
     [SubscribeLocalEvent]
     private void OnGrappleJointRemoved(Entity<GrapplingProjectileComponent> entity, ref JointRemovedEvent args)
     {
-        if (_netManager.IsServer)
-            QueueDel(entity);
+        PredictedQueueDel(entity);
     }
 
     [SubscribeLocalEvent]
@@ -167,7 +166,10 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
     {
         if (entity.Comp.Projectile != null)
         {
-            Ungrapple(entity, false);
+            _grapplingProjectileQuery.TryComp(entity.Comp.Projectile, out var projectile);
+            var shooter = projectile?.Shooter;
+            _audio.PlayPredicted(entity.Comp.CycleSound, entity.Owner, shooter);
+            Ungrapple(entity, false, shooter);
         }
     }
 
@@ -394,7 +396,7 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
         while (projectileQuery.MoveNext(out var uid, out var grappling))
         {
             if (grappling.DespawnTime != null && Timing.CurTime >= grappling.DespawnTime)
-                QueueDel(uid);
+                PredictedQueueDel(uid);
         }
     }
 
@@ -419,8 +421,7 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
 
         _appearance.SetData(grapple.Owner, SharedTetherGunSystem.TetherVisualsStatus.Key, true);
 
-        if (_netManager.IsServer)
-            QueueDel(projectile);
+        PredictedQueueDel(projectile);
 
         SetReeling(grapple, false, user);
         grapple.Comp.Projectile = null;
