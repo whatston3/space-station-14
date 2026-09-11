@@ -1,11 +1,12 @@
 using Robust.Shared.GameStates;
+using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
 namespace Content.Shared.Weapons.Misc;
 
 /// <summary>
 /// A component for projectiles shot from a grappling gun.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, AutoGenerateComponentPause]
 public sealed partial class GrapplingProjectileComponent : Component
 {
     /// <summary>
@@ -14,7 +15,7 @@ public sealed partial class GrapplingProjectileComponent : Component
     /// <remarks>
     /// If null, will not despawn.
     /// </remarks>
-    [DataField, AutoNetworkedField]
+    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer)), AutoNetworkedField, AutoPausedField]
     public TimeSpan? DespawnTime;
 
     /// <summary>

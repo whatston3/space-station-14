@@ -69,18 +69,15 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
     [SubscribeLocalEvent]
     private void OnGrappleJointRemoved(Entity<GrapplingProjectileComponent> entity, ref JointRemovedEvent args)
     {
-        PredictedQueueDel(entity);
+        if (_netManager.IsServer)
+            QueueDel(entity);
     }
 
     [SubscribeLocalEvent]
     private void OnGrappleProjectileShutdown(Entity<GrapplingProjectileComponent> ent, ref ComponentShutdown args)
     {
-        if (ent.Comp.Shooter is { } shooter && _playerManager.TryGetSessionByEntity(shooter, out var session))
-        {
-            _pvsOverride.RemoveSessionOverride(ent, session);
-            if (ent.Comp.Gun is { } gun)
-                _pvsOverride.RemoveSessionOverride(gun, session);
-        }
+        if (ent.Comp.Gun is { } gun && _grapplingGunQuery.TryComp(gun, out var grappling))
+            Ungrapple((gun, grappling), false, ent.Comp.Shooter);
 
         if (!_embeddableProjectileQuery.TryComp(ent, out var embedComp) || embedComp.EmbeddedIntoUid == null)
             return;
@@ -133,11 +130,8 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
             if (!_grapplingProjectileQuery.TryComp(shotUid, out var projectile))
                 continue;
 
-            if (_playerManager.TryGetSessionByEntity(args.User, out var session))
-            {
-                _pvsOverride.AddSessionOverride(shotUid.Value, session);
-                _pvsOverride.AddSessionOverride(entity, session);
-            }
+            _pvsOverride.AddGlobalOverride(shotUid.Value);
+            _pvsOverride.AddGlobalOverride(entity);
 
             projectile.Gun = entity;
             projectile.Shooter = args.User;
@@ -391,12 +385,15 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
             Dirty(uid, jointComp);
         }
 
+        if (_netManager.IsClient)
+            return;
+
         var projectileQuery = EntityQueryEnumerator<GrapplingProjectileComponent>();
 
         while (projectileQuery.MoveNext(out var uid, out var grappling))
         {
             if (grappling.DespawnTime != null && Timing.CurTime >= grappling.DespawnTime)
-                PredictedQueueDel(uid);
+                QueueDel(uid);
         }
     }
 
@@ -421,7 +418,11 @@ public abstract partial class SharedGrapplingGunSystem : VirtualController
 
         _appearance.SetData(grapple.Owner, SharedTetherGunSystem.TetherVisualsStatus.Key, true);
 
-        PredictedQueueDel(projectile);
+        _pvsOverride.RemoveGlobalOverride(grapple);
+        _pvsOverride.RemoveGlobalOverride(projectile);
+
+        if (_netManager.IsServer)
+            QueueDel(projectile);
 
         SetReeling(grapple, false, user);
         grapple.Comp.Projectile = null;
