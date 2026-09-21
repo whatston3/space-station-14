@@ -16,7 +16,7 @@ namespace Content.Client.Materials.UI;
 public sealed partial class MaterialStorageControl : ScrollContainer
 {
     [Dependency] private IEntityManager _entityManager = default!;
-    private readonly MaterialStorageSystem _materialStorage;
+    private readonly SharedMaterialStorageSystem _materialStorage;
 
     private EntityUid? _owner;
 
@@ -27,7 +27,7 @@ public sealed partial class MaterialStorageControl : ScrollContainer
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
 
-        _materialStorage = _entityManager.System<MaterialStorageSystem>();
+        _materialStorage = _entityManager.System<SharedMaterialStorageSystem>();
     }
 
     public void SetOwner(EntityUid owner)

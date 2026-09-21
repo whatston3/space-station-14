@@ -21,7 +21,7 @@ public sealed partial class FlatpackCreatorMenu : FancyWindow
 
     private readonly ItemSlotsSystem _itemSlots;
     private readonly FlatpackSystem _flatpack;
-    private readonly MaterialStorageSystem _materialStorage;
+    private readonly SharedMaterialStorageSystem _materialStorage;
 
     private EntityUid _owner;
 
@@ -38,7 +38,7 @@ public sealed partial class FlatpackCreatorMenu : FancyWindow
 
         _itemSlots = _entityManager.System<ItemSlotsSystem>();
         _flatpack = _entityManager.System<FlatpackSystem>();
-        _materialStorage = _entityManager.System<MaterialStorageSystem>();
+        _materialStorage = _entityManager.System<SharedMaterialStorageSystem>();
 
         PackButton.OnPressed += _ => PackButtonPressed?.Invoke();
 

@@ -18,7 +18,7 @@ public sealed partial class MaterialDisplay : PanelContainer
     [Dependency] private IPrototypeManager _prototypeManager = default!;
     [Dependency] private IEntityManager _entityManager = default!;
 
-    private readonly MaterialStorageSystem _materialStorage;
+    private readonly SharedMaterialStorageSystem _materialStorage;
 
     private readonly MaterialStorageUIController _materialUIController;
 
@@ -32,7 +32,7 @@ public sealed partial class MaterialDisplay : PanelContainer
         RobustXamlLoader.Load(this);
         IoCManager.InjectDependencies(this);
 
-        _materialStorage = _entityManager.System<MaterialStorageSystem>();
+        _materialStorage = _entityManager.System<SharedMaterialStorageSystem>();
         _materialUIController = UserInterfaceManager.GetUIController<MaterialStorageUIController>();
 
         var spriteSys = _entityManager.System<SpriteSystem>();

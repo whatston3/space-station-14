@@ -23,8 +23,8 @@ public sealed partial class LatheMenu : FancyWindow
     [Dependency] private IPrototypeManager _prototypeManager = default!;
 
     private readonly SpriteSystem _spriteSystem;
-    private readonly LatheSystem _lathe;
-    private readonly MaterialStorageSystem _materialStorage;
+    private readonly SharedLatheSystem _lathe;
+    private readonly SharedMaterialStorageSystem _materialStorage;
 
     public event Action<BaseButton.ButtonEventArgs>? OnServerListButtonPressed;
     public event Action<string, int>? RecipeQueueAction;
@@ -47,8 +47,8 @@ public sealed partial class LatheMenu : FancyWindow
         IoCManager.InjectDependencies(this);
 
         _spriteSystem = _entityManager.System<SpriteSystem>();
-        _lathe = _entityManager.System<LatheSystem>();
-        _materialStorage = _entityManager.System<MaterialStorageSystem>();
+        _lathe = _entityManager.System<SharedLatheSystem>();
+        _materialStorage = _entityManager.System<SharedMaterialStorageSystem>();
 
         SearchBar.OnTextChanged += _ =>
         {
