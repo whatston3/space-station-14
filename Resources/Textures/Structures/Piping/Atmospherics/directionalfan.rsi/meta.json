@@ -9,7 +9,7 @@
     "states": [
         {
             "name": "icon",
-            "delays":[
+            "delays": [
                 [
                     0.05,
                     0.05,

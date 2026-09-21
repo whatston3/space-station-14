@@ -71,18 +71,21 @@
   - type: Sprite
     sprite: Structures/Piping/Atmospherics/tinyfanpowered.rsi
     layers:
-    - state: fan-off
     - state: fan-on
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - state: light
-      shader: "unshaded"
-      visible: false
+      shader: unshaded
+      color: "#3dfe3d"
+      map: ["light"]
   - type: GenericVisualizer
     visuals:
       enum.PowerDeviceVisuals.Powered:
         enum.PowerDeviceVisualLayers.Powered:
-          True: {visible: true}
-          False: {visible: false}
+          True: { state: fan-on }
+          False: { state: fan-off }
+        light:
+          True: { color: "#3dfe3d" }
+          False: { color: "#ff0000" }
 
 - type: entity
   parent: AtmosDeviceFanDirectional
@@ -99,15 +102,18 @@
   - type: Sprite
     sprite: Structures/Piping/Atmospherics/directionalfanpowered.rsi
     layers:
-    - state: fan-off
     - state: fan-on
       map: ["enum.PowerDeviceVisualLayers.Powered"]
     - state: light
-      shader: "unshaded"
-      visible: false
+      shader: unshaded
+      color: "#3dfe3d"
+      map: ["light"]
   - type: GenericVisualizer
     visuals:
       enum.PowerDeviceVisuals.Powered:
         enum.PowerDeviceVisualLayers.Powered:
-          True: {visible: true}
-          False: {visible: false}
+          True: { state: fan-on }
+          False: { state: fan-off }
+        light:
+          True: { color: "#3dfe3d" }
+          False: { color: "#ff0000" }
