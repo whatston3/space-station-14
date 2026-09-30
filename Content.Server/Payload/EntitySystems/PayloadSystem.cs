@@ -135,23 +135,26 @@ public sealed partial class PayloadSystem : EntitySystem
         trigger.GrantedComponents.Clear();
     }
 
-    private void OnExamined(EntityUid uid, PayloadCaseComponent component, ExaminedEvent args)
+    private void OnExamined(Entity<PayloadCaseComponent> ent, ref ExaminedEvent args)
     {
+        if (!ent.Comp.Examinable)
+            return;
+
         using (args.PushGroup(nameof(PayloadCaseComponent)))
         {
             if (!args.IsInDetailsRange)
             {
-                args.PushMarkup(Loc.GetString("payload-case-not-close-enough", ("ent", uid)));
+                args.PushMarkup(Loc.GetString("payload-case-not-close-enough", ("ent", ent)));
                 return;
             }
 
-            if (GetAllPayloads(uid).Any())
+            if (GetAllPayloads(ent).Any())
             {
-                args.PushMarkup(Loc.GetString("payload-case-has-payload", ("ent", uid)));
+                args.PushMarkup(Loc.GetString("payload-case-has-payload", ("ent", ent)));
             }
             else
             {
-                args.PushMarkup(Loc.GetString("payload-case-does-not-have-payload", ("ent", uid)));
+                args.PushMarkup(Loc.GetString("payload-case-does-not-have-payload", ("ent", ent)));
             }
         }
     }

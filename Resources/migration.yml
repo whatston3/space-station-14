@@ -1145,3 +1145,6 @@ WallMalign: WallSolid
 WallMalignIndestructible: WallSolid
 WallMalignIndestructibleNoOcclusion: WallSolid
 MalignWindow: Window
+
+# 2026-09-29
+WiredDetonator: EmptyDetonator

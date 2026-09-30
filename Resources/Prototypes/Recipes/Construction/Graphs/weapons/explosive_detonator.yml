@@ -9,51 +9,76 @@
       - material: Bananium
         amount: 1
         doAfter: 1
-  
+
   - node: emptyDetonator
     entity: EmptyDetonator
     actions:
     - !type:AppearanceChange
     edges:
+    # forwards
     - to: detonatorWithTrigger
-      steps:
+      steps: &payloadSteps
       - component: PayloadTrigger
         store: payloadTrigger
         name: construction-graph-component-payload-trigger
         doAfter: 0.5
+    - to: detonatorWithWire
+      steps: &wireSteps
+      - material: CableDet
+        doAfter: 0.5
 
   - node: detonatorWithTrigger
-    entity: EmptyDetonator
     actions:
     - !type:AppearanceChange
     - !type:PlaySound
       sound: /Audio/Machines/button.ogg
+    - !type:TriggerEntity
+      trigger: deconstructed
     edges:
+    # back
     - to: emptyDetonator
-      steps:
+      steps: &payloadDeconstructSteps
       - tool: Prying
         doAfter: 0.5
         completed:
         - !type:EmptyContainer
           container: payloadTrigger
+    # forwards
     - to: wiredDetonator
-      steps:
-      - material: CableDet
-        doAfter: 0.5
+      steps: *wireSteps
 
-  - node: wiredDetonator
-    entity: WiredDetonator
+  - node: detonatorWithWire
     actions:
     - !type:AppearanceChange
     - !type:PlaySound
       sound: /Audio/Machines/button.ogg
-    - !type:AdminLog
-      message: "A detonator cap was crafted"
+    - !type:TriggerEntity
+      trigger: deconstructed
     edges:
-    - to: detonatorWithTrigger
-      steps:
+    # back
+    - to: emptyDetonator
+      steps: &wireDeconstructSteps
       - tool: Cutting
         doAfter: 0.5
         completed:
         - !type:SpawnPrototype
           prototype: CableDetStack1
+    # forwards
+    - to: wiredDetonator
+      steps: *payloadSteps
+
+  - node: wiredDetonator
+    actions:
+    - !type:AppearanceChange
+    - !type:PlaySound
+      sound: /Audio/Machines/button.ogg
+    - !type:TriggerEntity
+      trigger: constructed
+    - !type:AdminLog
+      message: "A detonator cap was crafted"
+    edges:
+    # back
+    - to: detonatorWithTrigger
+      steps: *wireDeconstructSteps
+    - to: detonatorWithWire
+      steps: *payloadDeconstructSteps

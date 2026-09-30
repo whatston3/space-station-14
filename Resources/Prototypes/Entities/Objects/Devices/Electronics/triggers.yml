@@ -24,6 +24,8 @@
     components:
     - type: TriggerOnUse
       keyOut: startTimer
+    - type: TriggerOnActivate
+      keyOut: startTimer
     - type: TimerTrigger
       keysIn:
       - startTimer

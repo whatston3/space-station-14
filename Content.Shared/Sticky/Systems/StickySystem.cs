@@ -1,6 +1,7 @@
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Interaction;
+using Content.Shared.Item;
 using Content.Shared.Popups;
 using Content.Shared.Sticky.Components;
 using Content.Shared.Verbs;
@@ -21,24 +22,37 @@ public sealed partial class StickySystem : EntitySystem
 
     private const string StickerSlotId = "stickers_container";
 
-    public override void Initialize()
+    [SubscribeLocalEvent]
+    public void OnCanAccessOverride(Entity<StickyComponent> ent, ref AccessibleOverrideEvent args)
     {
-        base.Initialize();
+        if (args.Handled || args.Target != ent.Owner)
+            return;
 
-        SubscribeLocalEvent<StickyComponent, AfterInteractEvent>(OnAfterInteract);
-        SubscribeLocalEvent<StickyComponent, StickyDoAfterEvent>(OnStickyDoAfter);
-        SubscribeLocalEvent<StickyComponent, GetVerbsEvent<Verb>>(OnGetVerbs);
+        if (ent.Comp.StuckTo is { } stuck)
+        {
+            args.Handled = true;
+            args.Accessible = _interaction.CanAccess(args.User, stuck);
+        }
     }
 
+    [SubscribeLocalEvent]
+    private void OnGettingPickedupAttempt(Entity<StickyComponent> ent, ref GettingPickedUpAttemptEvent args)
+    {
+        if (ent.Comp.StuckTo != null)
+            args.Cancel();
+    }
+
+    [SubscribeLocalEvent]
     private void OnAfterInteract(Entity<StickyComponent> ent, ref AfterInteractEvent args)
     {
-        if (args.Handled || !args.CanReach || args.Target is not {} target)
+        if (args.Handled || !args.CanReach || args.Target is not { } target)
             return;
 
         // try stick object to a clicked target entity
         args.Handled = StartSticking(ent, target, args.User);
     }
 
+    [SubscribeLocalEvent]
     private void OnGetVerbs(Entity<StickyComponent> ent, ref GetVerbsEvent<Verb> args)
     {
         var (uid, comp) = ent;
@@ -100,10 +114,11 @@ public sealed partial class StickySystem : EntitySystem
         return true;
     }
 
+    [SubscribeLocalEvent]
     private void OnStickyDoAfter(Entity<StickyComponent> ent, ref StickyDoAfterEvent args)
     {
         // target is the surface when sticking/unsticking, it will never be null
-        if (args.Handled || args.Cancelled || args.Args.Target is not {} target)
+        if (args.Handled || args.Cancelled || args.Args.Target is not { } target)
             return;
 
         var user = args.User;
@@ -118,7 +133,7 @@ public sealed partial class StickySystem : EntitySystem
     private void StartUnsticking(Entity<StickyComponent> ent, EntityUid user)
     {
         var (uid, comp) = ent;
-        if (comp.StuckTo is not {} stuckTo)
+        if (comp.StuckTo is not { } stuckTo)
             return;
 
         var attemptEv = new AttemptEntityUnstickEvent(stuckTo, user);
@@ -182,7 +197,7 @@ public sealed partial class StickySystem : EntitySystem
     public void UnstickFromEntity(Entity<StickyComponent> ent, EntityUid user)
     {
         var (uid, comp) = ent;
-        if (comp.StuckTo is not {} stuckTo)
+        if (comp.StuckTo is not { } stuckTo)
             return;
 
         var attemptEv = new AttemptEntityUnstickEvent(stuckTo, user);
@@ -198,6 +213,9 @@ public sealed partial class StickySystem : EntitySystem
         if (container.ContainedEntities.Count == 0)
             _container.ShutdownContainer(container);
 
+        comp.StuckTo = null;
+        Dirty(uid, comp);
+
         // try place dropped entity into user hands
         _hands.PickupOrDrop(user, uid);
 
@@ -210,9 +228,6 @@ public sealed partial class StickySystem : EntitySystem
             var msg = Loc.GetString(comp.UnstickPopupSuccess);
             _popup.PopupEntity(msg, user, user);
         }
-
-        comp.StuckTo = null;
-        Dirty(uid, comp);
 
         var ev = new EntityUnstuckEvent(stuckTo, user);
         RaiseLocalEvent(uid, ref ev);

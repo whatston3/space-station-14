@@ -9,12 +9,18 @@
     layers:
     - state: empty
       map: [ "enum.ConstructionVisuals.Layer" ]
+    - state: addtrigger
+      visible: false
+      shader: unshaded
+      map: [ "trigger" ]
   - type: Item
     size: Small
   - type: PayloadCase
+    examinable: false
   - type: Construction
     graph: DetonatorGraph
     node: emptyDetonator
+    defaultTarget: wiredDetonator
   - type: Injurable
     damageContainer: StructuralInorganic
   - type: Destructible
@@ -35,39 +41,43 @@
       enum.ConstructionVisuals.Key:
         enum.ConstructionVisuals.Layer:
           emptyDetonator: { state: empty }
-          detonatorWithTrigger: { state: addtrigger }
+          detonatorWithTrigger: { state: empty }
+          detonatorWithWire: { state: complete }
           wiredDetonator: { state: complete }
+        trigger:
+          emptyDetonator: { visible: false }
+          detonatorWithTrigger: { visible: true }
+          detonatorWithWire: { visible: false }
+          wiredDetonator: { visible: true }
       enum.Trigger.TriggerVisuals.VisualState:
-        enum.ConstructionVisuals.Layer:
+        trigger:
           Primed: { state: primed }
-          Unprimed: { state: complete }
+          Unprimed: { state: addtrigger }
   - type: StaticPrice
     price: 25
-
-- type: entity
-  parent: EmptyDetonator
-  id: WiredDetonator
-  name: detonator cap
-  description: A detonator cap.
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Explosive # this is the cord, but its a little smaller because I dont want these to be grenades. They need to not really break walls themselves, but do enough to set off the cable. ~125 structural.
-    explosionType: DemolitionCharge
-    totalIntensity: 2.5
-    intensitySlope: 100
-    maxIntensity: 2.5
-    canCreateVacuum: false
-  - type: ExplodeOnTrigger
-  - type: Sticky
-    stickDelay: 2
-    unstickDelay: 2
-    stickPopupStart: comp-sticky-start-stick-bomb
-    stickPopupSuccess: comp-sticky-success-stick-bomb
-    unstickPopupStart: comp-sticky-start-unstick-bomb
-    unstickPopupSuccess: comp-sticky-success-unstick-bomb
-    whitelist:
-      tags:
-      - ExCable
-    blacklist: # can't stick it to other items
-      components:
-      - Item
+  - type: AddComponentsOnTrigger
+    keysIn: [ constructed ] # triggered from construction graph
+    components: &constructionComponents
+    - type: Explosive # this is the cord, but its a little smaller because I dont want these to be grenades. They need to not really break walls themselves, but do enough to set off the cable. ~125 structural.
+      explosionType: DemolitionCharge
+      totalIntensity: 2.5
+      intensitySlope: 100
+      maxIntensity: 2.5
+      canCreateVacuum: false
+    - type: ExplodeOnTrigger
+    - type: Sticky
+      stickDelay: 2
+      unstickDelay: 2
+      stickPopupStart: comp-sticky-start-stick-bomb
+      stickPopupSuccess: comp-sticky-success-stick-bomb
+      unstickPopupStart: comp-sticky-start-unstick-bomb
+      unstickPopupSuccess: comp-sticky-success-unstick-bomb
+      whitelist:
+        tags:
+        - ExCable
+      blacklist: # can't stick it to other items
+        components:
+        - Item
+  - type: RemoveComponentsOnTrigger
+    keysIn: [ deconstructed ] # triggered from construction graph
+    components: *constructionComponents
