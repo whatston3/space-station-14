@@ -7,7 +7,7 @@ namespace Content.Shared.Mind;
 /// for stuff like objectives and round-end
 /// used for nymphs and reformed diona.
 /// </summary>
-public sealed class IsDeadICSystem : EntitySystem
+public sealed partial class IsDeadICSystem : EntitySystem
 {
     public override void Initialize()
     {
